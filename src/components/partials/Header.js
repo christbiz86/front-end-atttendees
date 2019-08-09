@@ -1,11 +1,5 @@
 import React from 'react';
 import Navbar from './Navbar';
-import '../../assets/css/bootstrap.min.css';
-import '../../assets/css/core.css';
-import '../../assets/css/components.css';
-import '../../assets/css/icons.css';
-import '../../assets/css/pages.css';
-import '../../assets/css/responsive.css';
 
 export default function Header(){
     return(
