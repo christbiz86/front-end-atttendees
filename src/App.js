@@ -21,6 +21,8 @@ function App() {
                     <Route exact path="/shift" component={Shift} />
                     <Route exact path="/project" component={Project} />
                     <Route exact path="/libur" component={Libur} />
+                    <Route exact path="/annual/list" component={ListPengajuan} />
+                    <Route exact path="/annual/form" component={FormPengajuan} />
                   </Switch>
                 </div>
               </Router>
