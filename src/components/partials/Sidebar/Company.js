@@ -4,7 +4,7 @@ class Company extends Component {
     render(){
         return(
             <li>
-                <a href="#" className="waves-effect"><i className="md-location-city"></i> <span> Company </span></a>
+                <a href={'/company'} className="waves-effect"><i className="md-location-city"></i> <span> Company </span></a>
             </li>
         );
     }
