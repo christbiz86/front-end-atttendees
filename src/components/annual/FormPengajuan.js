@@ -63,19 +63,16 @@ class FormPengajuan extends Component {
         
         return (
 				<div class="content">
-					{/* <div class="container"> */}
-
-						{/* <!-- Page-Title --> */}
 						<div class="row">
 							<div class="col-sm-12">
 
-								<h4 class="page-title">Form Pengajuan Cuti</h4>
+								<h4 class="page-title">Form Annual</h4>
 								<ol class="breadcrumb">
 									<li>
-										<a href="#">Cuti</a>
+										<a href="#">Annual</a>
 									</li>
 									<li class="active">
-										Pengajuan
+										Form
 									</li>
 								</ol>
 							</div>

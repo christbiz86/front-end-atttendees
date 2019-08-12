@@ -15,7 +15,7 @@ export default function Navbar(){
                     <ul className="nav navbar-nav hidden-xs">
                         <li><a href="#" className="waves-effect waves-light">Files</a></li>
                         <li className="dropdown">
-                            <a href="#" className="dropdown-toggle waves-effect waves-light" data-toggle="dropdown"
+                            <a hr   ef="#" className="dropdown-toggle waves-effect waves-light" data-toggle="dropdown"
                                role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span
                                 className="caret"></span></a>
                             <ul className="dropdown-menu">
