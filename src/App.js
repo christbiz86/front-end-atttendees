@@ -7,6 +7,8 @@ import Company from './components/partials/Company/Company';
 import Shift from './components/partials/TimeSheet/Shift';
 import Project from './components/partials/TimeSheet/Project';
 import Libur from './components/partials/TimeSheet/Libur';
+import ListAnnual from './components/partials/Annual/ListAnnual';
+import FormAnnual from './components/partials/Annual/FormAnnual';
 
 function App() {
   return (
@@ -21,8 +23,8 @@ function App() {
                     <Route exact path="/shift" component={Shift} />
                     <Route exact path="/project" component={Project} />
                     <Route exact path="/libur" component={Libur} />
-                    <Route exact path="/annual/list" component={ListPengajuan} />
-                    <Route exact path="/annual/form" component={FormPengajuan} />
+                    <Route exact path="/annual/list" component={ListAnnual} />
+                    <Route exact path="/annual/form" component={FormAnnual} />
                   </Switch>
                 </div>
               </Router>
