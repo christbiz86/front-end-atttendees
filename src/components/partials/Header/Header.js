@@ -1,5 +1,7 @@
 import React from 'react';
 import Navbar from './Navbar';
+import Notifications from './Notifications';
+import Profile from './Profile';
 
 export default function Header(){
     return(
@@ -12,9 +14,15 @@ export default function Header(){
                         </a>
                     </div>
                 </div>
-
-                <Navbar/>
-
+                <div  className="navbar navbar-default" role="navigation">
+                    <div  className="container">
+                    <Navbar/>
+                        <ul className="nav navbar-nav navbar-right pull-right">
+                            <Notifications />
+                            <Profile />
+                        </ul> 
+                    </div>
+                </div>
             </div>
         </div>
     );
