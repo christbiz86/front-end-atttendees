@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Dashboard from './Dashboard';
 import TimeSheet from './TimeSheet';
-import User from './User';
+import Employee from './Employee';
 import Annual from './Annual';
 import Unit from './Unit';
 import Posisi from './Posisi';
@@ -17,7 +17,7 @@ class Sidebar extends Component {
                             <Dashboard />
                             <Company />
                             <TimeSheet />
-                            <User />
+                            <Employee />
                             <Annual />
                             <Unit />
                             <Posisi />

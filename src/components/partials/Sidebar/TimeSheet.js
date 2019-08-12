@@ -6,9 +6,9 @@ class TimeSheet extends Component {
             <li className="has_sub treeview">
                 <a href="#" className="waves-effect"><i className="ti-alarm-clock"></i> <span> Time Sheet</span> <span className="menu-arrow"></span></a>
                 <ul className="list-unstyled treeview-menu">
-                    <li><a href="#" className="waves-effect">Shift</a></li>
-                    <li><a href="#" className="waves-effect">Project</a></li>
-                    <li><a href="#" className="waves-effect">Libur</a></li>
+                    <li><a href={'/shift'} className="waves-effect">Shift</a></li>
+                    <li><a href={'/project'} className="waves-effect">Project</a></li>
+                    <li><a href={'/libur'} className="waves-effect">Libur</a></li>
                 </ul>
             </li>
         );
