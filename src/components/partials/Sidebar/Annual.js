@@ -16,6 +16,9 @@ class Annual extends Component {
                     <li>
                         <a href="#" className="waves-effect">Annual Request</a>
                     </li>
+                    <li>
+                        <a href={"/"} className="waves-effect">Login</a>
+                    </li>
                 </ul>
             </li>
         );
