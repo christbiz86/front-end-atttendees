@@ -8,7 +8,7 @@ export default class Content extends Component {
                 <div className="content">
                     <div className="container">
 
-                        <div className="row">
+                        {/* <div className="row">
                             <div className="col-sm-12">
                                 <div className="btn-group pull-right m-t-15">
                                     <button type="button" className="btn btn-default dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Settings <span className="m-l-5"><i className="fa fa-cog"></i></span></button>
@@ -24,7 +24,7 @@ export default class Content extends Component {
                                 <h4 className="page-title">Dashboard</h4>
                                 <p className="text-muted page-title-alt">Welcome to Ubold admin panel !</p>
                             </div>
-                        </div>
+                        </div> */}
                         <User />
                     </div>
                 </div>

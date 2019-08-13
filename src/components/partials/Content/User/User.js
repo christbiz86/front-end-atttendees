@@ -5,11 +5,18 @@ export default class User extends Component {
         super(props);
         this.state = { 
             isLoading: true,
-            userCompany: [{
-                idUser:'',
-                idCompanyUnitPosisi:'',
-                idTipeUser:''
-            }],
+            userCompany: [],
+            userCom: {
+                idUser:{
+                    nama: 'Sule',
+                },
+                idCompanyUnitPosisi:{
+                    id: null
+                },
+                idTipeUser:{
+                    id: null
+                }
+            },
             error: null
         }
     }
@@ -18,15 +25,15 @@ export default class User extends Component {
         event.preventDefault();
     }
 
-  
     fetchUser() {
-        const userCom = this.state.userCompany;
-        fetch(`http://localhost:8080/usercompany`, {
+        const userCom = this.state.userCom;
+        fetch(`http://localhost:8080/usercompany/filter`, {
+            method: 'POST',
             body: JSON.stringify(userCom),
             headers:{
                 'Content-Type': 'application/json'
             }
-        }) 
+        })
         .then(response => response.json())
         .then(data =>
             this.setState({
@@ -96,9 +103,13 @@ export default class User extends Component {
                                                 <td>{uc.idUser.tglLahir}</td>
                                                 <td>{uc.idUser.telp}</td>
                                                 <td>{uc.idUser.email}</td>
-                                                <td>{uc.idCompanyUnitPosisi.idCompany}</td>
-                                                <td>{uc.idCompanyUnitPosisi.idUnit}</td>
-                                                <td>{uc.idCompanyUnitPosisi.idPosisi}</td>
+                                                <td>{uc.idCompanyUnitPosisi.idCompany.nama}</td>
+                                                <td>
+                                                { uc.idCompanyUnitPosisi.idUnit==null ? "-" : uc.idCompanyUnitPosisi.idUnit.unit }
+                                                </td>
+                                                <td>
+                                                { uc.idCompanyUnitPosisi.idPosisi==null ? "-" : uc.idCompanyUnitPosisi.idPosisi.posisi }
+                                                </td>
                                                 <td>{uc.idTipeUser.tipe}</td>
                                             </tr>
                                         </tbody>
