@@ -1,43 +1,42 @@
 import React from 'react';
-import {Link} from "react-router-dom";
 import { connect } from 'react-redux';
-import { login } from '../../redux/reducer';
+import { userActions } from '../_actions';
 
-class Login extends React.Component{
-    constructor(props){
+class LoginPage extends React.Component{
+    constructor(props) {
         super(props);
+
+        // reset login status
+        this.props.logout();
+
+        this.state = {
+            email: '',
+            password: '',
+            submitted: false
+        };
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.state = {
-
-        };
     }
 
-    handleChange = event =>{
-        this.setState({ 
-            [event.target.name]:event.target.value
-         })
+    handleChange(e) {
+        const { name, value } = e.target;
+        this.setState({ [name]: value });
     }
 
-    handleSubmit = event => {
-        event.preventDefault();
-        let { email, password } = this.state;
-        this.props.login(email, password);
-        this.setState({
-            email: '',
-            password: ''
-          });
-    }
+    handleSubmit(e) {
+        e.preventDefault();
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.isLoginSuccess) {
-            this.props.history.push('/Annual');
+        this.setState({ submitted: true });
+        const { email, password } = this.state;
+        if (email && password) {
+            this.props.login(email, password);
         }
     }
 
     render(){
-        let {email, password} = this.state;
-        let {isLoginPending, isLoginSuccess, loginError} = this.props;
+        const { loggingIn } = this.props;
+        const { email, password, submitted } = this.state;
         return(
             <div>
                 <div className="account-pages"/>
@@ -52,13 +51,13 @@ class Login extends React.Component{
                             <form className="form-horizontal m-t-20" onSubmit={this.handleSubmit}>
                                 <div className="form-group ">
                                     <div className="col-xs-12">
-                                        <input className="form-control" type="email" name="email" required="" placeholder="Email" onChange={this.handleChange}/>
+                                        <input className="form-control" type="email" name="email" required value={email} placeholder="Email" onChange={this.handleChange}/>
                                     </div>
                                 </div>
     
                                 <div className="form-group">
                                     <div className="col-xs-12">
-                                        <input className="form-control" type="password" name="password" required="" placeholder="Password" onChange={this.handleChange}/>
+                                        <input className="form-control" type="password" name="password" required value={password} placeholder="Password" onChange={this.handleChange}/>
                                     </div>
                                 </div>
     
@@ -84,12 +83,6 @@ class Login extends React.Component{
                                         <a href="#" className="text-dark"><i className="fa fa-lock m-r-5"></i> Forgot your password?</a>
                                     </div>
                                 </div>
-
-                                <div className="message">
-                                    { isLoginPending && <div>Please wait...</div> }
-                                    { isLoginSuccess && <div>Success.</div> }
-                                    { loginError && <div>{loginError.message}</div> }
-                                </div>
                             </form>
                         </div>
                     </div>
@@ -97,9 +90,9 @@ class Login extends React.Component{
                     <div className="row">
                         <div className="col-sm-12 text-center">
                             <p>Don't have an account?
-                                <Link to="/Registrasi">
+                                <a href={'/registrasi'}>
                                     <b> Sign Up</b>
-                                </Link>
+                                </a> 
                             </p>
                         </div>
                     </div>
@@ -109,18 +102,15 @@ class Login extends React.Component{
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        isLoginPending: state.isLoginPending,
-        isLoginSuccess: state.isLoginSuccess,
-        loginError: state.loginError
-    };
+function mapState(state) {
+    const { loggingIn } = state.authentication;
+    return { loggingIn };
 }
-  
-const mapDispatchToProps = (dispatch) => {
-    return {
-        login: (email, password) => dispatch(login(email, password))
-    };
-}
-  
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+
+const actionCreators = {
+    login: userActions.login,
+    logout: userActions.logout
+};
+
+const connectedLoginPage = connect(mapState, actionCreators)(LoginPage);
+export { connectedLoginPage as LoginPage };
