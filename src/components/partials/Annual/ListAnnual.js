@@ -87,7 +87,6 @@ class ListPengajuan extends Component {
                                                         )
                                                     }):null
                                                 }
-
                                         </table>
                                         </div>
 

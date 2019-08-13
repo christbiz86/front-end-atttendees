@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Router, Route, Switch } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import { createBrowserHistory } from 'history';
@@ -11,36 +12,60 @@ import ListAnnual from './components/partials/Annual/ListAnnual';
 import FormAnnual from './components/partials/Annual/FormAnnual';
 import Login from './components/Auth/Login';
 import User from './components/partials/Employee/User';
+import Annual from './components/partials/Annual/ListAnnual';
+import Registrasi from './components/Auth/Registrasi';
 
-function App() {
-  return (
+import { PrivateRoute } from './components/_security/PrivateRoute';
+import { LoginPage } from './components/Auth/LoginPage';
+import { history } from './components/_helpers';
+import { alertActions } from './components/_actions';
+
+class App extends React.Component {
+  constructor(props) {
+      super(props);
+
+      history.listen((location, action) => {
+          // clear alert on location change
+          this.props.clearAlerts();
+      });
+  }
+
+  render(){
+    return (
       <div>
-          <Layout />
             <div className="App">
-              <Router history={createBrowserHistory({basename:process.env.PUBLIC_URL})}>
+              {alert.message &&
+                <div className={`alert ${alert.type}`}>{alert.message}</div>
+              }
+              <Router history={history}>
                 <div className="route">
                   <Switch>
                     <Route exact path="/" component={Login} />
-                    <Route exact path="/company" component={Company} />
-                    <Route exact path="/shift" component={Shift} />
-                    <Route exact path="/project" component={Project} />
-                    <Route exact path="/libur" component={Libur} />
-                    <Route exact path="/annual/list" component={ListAnnual} />
-                    <Route exact path="/annual/form" component={FormAnnual} />
-                    <Route exact path="/user" component={User} />
+                    <PrivateRoute exact path="/company" component={Company} />
+                    <PrivateRoute exact path="/shift" component={Shift} />
+                    <PrivateRoute exact path="/project" component={Project} />
+                    <PrivateRoute exact path="/libur" component={Libur} />
+                    <PrivateRoute exact path="/annual/list" component={ListAnnual} />
+                    <PrivateRoute exact path="/annual/form" component={FormAnnual} />
+                    <PrivateRoute exact path="/user" component={User} />
+                    <Route exact path="/login" component={LoginPage} />
+                    <Route exact path="/registrasi" component={Registrasi} />
                   </Switch>
                 </div>
               </Router>
             </div>
-          {/* <div className="App">
-            <Router history={createBrowserHistory({basename:process.env.PUBLIC_URL})}>
-              <div className="route">
-                <Route exact path="/" component={} />
-              </div>
-            </Router>
-          </div> */}
       </div>
   );
+  }
 }
 
-export default App;
+function mapState(state) {
+  const { alert } = state;
+  return { alert };
+}
+
+const actionCreators = {
+  clearAlerts: alertActions.clear
+};
+
+export default connect(mapState, actionCreators)(App);
