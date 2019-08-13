@@ -17,7 +17,7 @@ function login(email, password) {
         // .then(handleResponse)
         .then(res => res.json()).then((response)=>{
             localStorage.setItem('token',response.token.accessToken);
-            localStorage.setItem('user',response.userCompany);
+
         })
         // .then(user => {
         //     // store user details and jwt token in local storage to keep user logged in between page refreshes

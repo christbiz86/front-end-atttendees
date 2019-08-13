@@ -28,21 +28,7 @@ class FormPengajuan extends Component {
     }
     
     handleRequest = event => {
-        event.preventDefault();
-        
-        const form = event.target;
-        const data = new FormData(form);
-    
-        for (let name of data.keys()) {
-          const input = form.elements[name];
-          const parserName = input.dataset.parse;
-    
-          if (parserName) {
-            const parser = this.inputParsers[parserName];
-            const parsedValue = parser(data.get(name));
-            data.set(name, parsedValue);
-          }
-        }
+        event.preventDefault();   
         this.Request();
     };
 
@@ -56,9 +42,7 @@ class FormPengajuan extends Component {
                 body: JSON.stringify({
                     
                     kode:'req0010',
-                    user:{
-                        id:"c75efe02-8529-49ac-92fe-a85cc7d9f15b"
-                    },
+                    user:localStorage.getItem('user').idUser,
                     tglMulai:this.state.tglMulai,
                     tglAkhir:this.state.tglAkhir,
                     status:{
