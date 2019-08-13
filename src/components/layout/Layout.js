@@ -9,8 +9,8 @@ const layout = ( props ) => (
     <Aux>
         {/* <Header />
         <Sidebar /> */}
-        {/* <Login /> */}
-        <Registrasi />
+        <Login />
+        {/* <Registrasi /> */}
     </Aux>
 );
 
