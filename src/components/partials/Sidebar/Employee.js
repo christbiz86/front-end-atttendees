@@ -4,7 +4,7 @@ class Employee extends Component {
     render(){
         return(
             <li>
-                <a href="#" className="waves-effect"><i className="ti-user"></i> <span> Employee </span></a>
+                <a href={'./employee'} className="waves-effect"><i className="ti-user"></i> <span> Employee </span></a>
             </li>
         );
     }
