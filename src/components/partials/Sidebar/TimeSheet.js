@@ -8,7 +8,7 @@ class TimeSheet extends Component {
                 <ul className="list-unstyled treeview-menu">
                     <li><a href={'/shift'} className="waves-effect">Shift</a></li>
                     <li><a href={'/project'} className="waves-effect">Project</a></li>
-                    <li><a href={'/libur'} className="waves-effect">Libur</a></li>
+                    <li><a href={'/holiday'} className="waves-effect">Holiday</a></li>
                 </ul>
             </li>
         );
