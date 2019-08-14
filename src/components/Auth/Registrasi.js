@@ -23,10 +23,6 @@ export default class Registrasi extends React.Component{
          })
     }
 
-    handleClick = event =>{
-        
-    }
-
     handleSubmit = event => {
         event.preventDefault();
         const data = { 
@@ -105,7 +101,7 @@ export default class Registrasi extends React.Component{
                                 <label className="col-sm-3 control-label">Tanggal Lahir</label>
                                 <div className="col-sm-6">
                                     <div className="input-group">
-                                        <input type="text" className="form-control" name="tglLahir" placeholder="mm/dd/yyyy" id="datepicker-autoclose" onChange={this.handleDateChange}/>
+                                        <input type="text" className="form-control" name="tglLahir" placeholder="mm/dd/yyyy" id="datepicker-autoclose" onChange={this.handleChange}/>
                                         <span className="input-group-addon bg-custom b-0 text-white"><i className="icon-calender"></i></span>
                                     </div>
                                 </div>
