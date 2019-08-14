@@ -5,15 +5,20 @@ export default class Registrasi extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            kodeCompany:'COM0000',
+            statusCompany:'Active',
+            kodeUser:'USER000000',
+            statusUser:'Active',
+
             namaCompany:'',
             namaUser:'',
             jatahCuti:'',
             toleransiKeterlambatan:'',
             alamat:'',
-            tglLahir: Moment('',Moment.ISO_8601),
-            telepon:'',
-            email:''
-            // foto:''
+            tglLahir: Moment().format('YYYY-MM-DD'),
+            telp:'',
+            email:'',
+            foto:'foto'
         };
     }
 
@@ -30,15 +35,20 @@ export default class Registrasi extends React.Component{
     handleSubmit = event => {
         event.preventDefault();
         const data = { 
+            kodeCompany:this.state.kodeCompany,
+            statusCompany:this.state.statusCompany,
+            kodeUser:this.state.kodeUser,
+            statusUser:this.state.statusUser,
+
             namaCompany:this.state.namaCompany,
             namaUser:this.state.namaUser,
             jatahCuti:this.state.jatahCuti,
             toleransiKeterlambatan:this.state.toleransiKeterlambatan,
             alamat:this.state.alamat,
             tglLahir:this.state.tglLahir,
-            telepon:this.state.telepon,
-            email:this.state.email
-            // foto:this.state.foto
+            telp:this.state.telp,
+            email:this.state.email,
+            foto:this.state.foto
         }
 
         fetch('http://149.129.213.242:8080/attendee/company', {
@@ -105,7 +115,7 @@ export default class Registrasi extends React.Component{
                                 <label className="col-sm-3 control-label">Tanggal Lahir</label>
                                 <div className="col-sm-6">
                                     <div className="input-group">
-                                        <input type="text" className="form-control" name="tglLahir" placeholder="mm/dd/yyyy" id="datepicker-autoclose" onChange={this.handleChange}/>
+                                        <input type="text" className="form-control" name="tglLahir" placeholder="mm/dd/yyyy" id="datepicker-autoclose" onChange={this.handleDateChange}/>
                                         <span className="input-group-addon bg-custom b-0 text-white"><i className="icon-calender"></i></span>
                                     </div>
                                 </div>
@@ -114,7 +124,7 @@ export default class Registrasi extends React.Component{
                             <div className="form-group">
                                 <label className="col-sm-3 control-label">Telepon</label>
                                 <div class="col-sm-3">
-                                    <input data-parsley-type="number" name="telepon" type="text" class="form-control" required placeholder="Enter only numbers" onChange={this.handleChange}/>
+                                    <input data-parsley-type="number" name="telp" type="text" class="form-control" required placeholder="Enter only numbers" onChange={this.handleChange}/>
                                 </div>
                             </div>
     
@@ -143,6 +153,14 @@ export default class Registrasi extends React.Component{
 								</div>
 							</div>
                         </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <p>
+                            Already have account?<a href={'/login'} class="text-primary m-l-5"><b>Sign In</b></a>
+                        </p>
                     </div>
                 </div>
             </div>
