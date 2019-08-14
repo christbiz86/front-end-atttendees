@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import User from './User/User'
+import UserForm from './User/UserForm'
 
 export default class Content extends Component {
     render () {
@@ -25,7 +26,8 @@ export default class Content extends Component {
                                 <p className="text-muted page-title-alt">Welcome to Ubold admin panel !</p>
                             </div>
                         </div> */}
-                        <User />
+                        {/* <User /> */}
+                        <UserForm />
                     </div>
                 </div>
 

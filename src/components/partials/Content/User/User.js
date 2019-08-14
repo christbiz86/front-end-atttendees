@@ -9,23 +9,44 @@ export default class User extends Component {
             userCom: {
                 idUser:{
                     nama: 'Sule',
+                    alamat: null,
+                    email: null,
+                    tglLahir: null,
+                    telp: null,
                 },
                 idCompanyUnitPosisi:{
-                    id: null
+                    idCompany: {
+                        nama: null
+                    },
+                    idUnit: {
+                        unit: null
+                    },
+                    idPosisi: {
+                        posisi: null
+                    },
                 },
                 idTipeUser:{
-                    id: null
+                    tipe: null,
                 }
             },
             error: null
         }
     }
 
+    // constructor(props){
+    //     super(props);
+    //     this.state = {  
+    //         isLoading: true,             /* Constructor getAll() */
+    //         userCompany: [],
+    //         error: null
+    //     }
+    // }
+
     handleSubmit = event =>{
         event.preventDefault();
     }
 
-    fetchUser() {
+    fetchUserByFilter() {
         const userCom = this.state.userCom;
         fetch(`http://localhost:8080/usercompany/filter`, {
             method: 'POST',
@@ -43,9 +64,22 @@ export default class User extends Component {
         )
         .catch(error => this.setState({ error, isLoading: false }));
     }
+
+    // fetchUser() {
+    //     fetch(`http://localhost:8080/usercompany`)
+    //     .then(response => response.json())
+    //     .then(data =>
+    //         this.setState({
+    //             userCompany: data,
+    //             isLoading: false,
+    //         })
+    //     )
+    //     .catch(error => this.setState({ error, isLoading: false }));         /* fetch Method GET */
+    // }
   
     componentDidMount() {
-        this.fetchUser();
+        this.fetchUserByFilter();
+        // this.fetchUser();
     }
 
     render() {
@@ -97,7 +131,7 @@ export default class User extends Component {
                                 this.state.userCompany.map(uc => {
                                     return (
                                         <tbody>
-                                            <tr key={uc.id}>
+                                            <tr id={uc.id}>
                                                 <td>{uc.idUser.nama}</td>
                                                 <td>{uc.idUser.alamat}</td>
                                                 <td>{uc.idUser.tglLahir}</td>
