@@ -4,11 +4,11 @@ import Moment from "moment";
 class AnnualRequest extends Component {    
     constructor(props){
         super(props);
+
         this.handleApprove = this.handleApprove.bind(this);
         this.handleReject = this.handleReject.bind(this);
         this.state = {
-            annual:"",
-            listRequest: [],
+            listRequest: []
 
         };
     }
@@ -20,7 +20,9 @@ class AnnualRequest extends Component {
     }
     
     handleApprove = event => {
-        event.preventDefault();   
+        this.setState({
+            [event.target.name]:event.target.value
+        })
         this.Approve();
     };
     handleReject = event => {
@@ -28,12 +30,12 @@ class AnnualRequest extends Component {
         this.Reject();
     };
 
-    Approve(){
-        fetch('http://localhost:8181/Approved', {
+    Approve(annual){
+        fetch('http://localhost:8181/request/Approved', {
                 method: 'PATCH',
                 body: 
-                    this.state.annual
-                ,
+                JSON.stringify({annual
+                          })          ,
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -48,7 +50,7 @@ class AnnualRequest extends Component {
     }
 
     Reject(){
-        fetch('http://localhost:8181/Rejected', {
+        fetch('http://localhost:8181/request/Rejected', {
                 method: 'PATCH',
                 body: 
                     this.state.annual    
@@ -130,8 +132,6 @@ class AnnualRequest extends Component {
                                                 <tr>
                                                     <th data-priority="1">NIK</th>
                                                     <th data-priority="2">Nama</th>
-                                                    <th data-priority="3">Posisi</th>
-                                                    <th data-priority="4">Unit</th>
                                                     <th data-priority="5">Tanggal Mulai</th>
                                                     <th data-priority="6">Tanggal Selesai</th>
                                                     <th data-priority="7">Status</th>
@@ -147,16 +147,17 @@ class AnnualRequest extends Component {
                                                             <tr>
                                                                 <th data-priority="1">{annual.user.kode}</th>
                                                                 <th data-priority="2">{annual.user.nama}</th>
-                                                                <th data-priority="3">Posisi</th>
-                                                                <th data-priority="4">Unit</th>
                                                                 <th data-priority="5">{annual.tglMulai}</th>
                                                                 <th data-priority="6">{annual.tglAkhir}</th>
                                                                 <th data-priority="7">{annual.status.status}</th>
                                                                 <th>
-                                                                    <button type="submit" name ="approve" class="btn btn-primary waves-effect waves-light m-l-10 btn-sm" onSubmit={this.handleApprove}>
-                                                                        this.state.annual=annual
-                                                                         <b className="font-bold">Setujui</b></button>                                                            
-                                                                    <button type="submit" name="reject" class="btn btn-danger waves-effect waves-light m-l-10 btn-sm" onSubmit={this.handleReject}><b className="font-bold" >Tolak</b></button>
+                                                                    <button type="submit" name ="approve"  class="btn btn-primary waves-effect waves-light m-l-10 btn-sm" onClick={this.Approve(annual)}>
+                                                                         <b className="font-bold">Setujui</b>
+                                                                    </button>                                                            
+                                                                    
+                                                                    <button type="submit" name="reject" class="btn btn-danger waves-effect waves-light m-l-10 btn-sm" onClick={this.handleReject}>
+                                                                        <b className="font-bold" >Tolak</b>
+                                                                    </button>
                                                                 </th>
                                                             </tr>    
         

@@ -10,7 +10,7 @@ class ListPengajuan extends Component {
     }
 
     componentDidMount() {
-        fetch("http://localhost:8181/request/Approved",{
+        fetch("http://localhost:8181/request/",{
             method: 'GET',
             headers:{
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -59,24 +59,23 @@ class ListPengajuan extends Component {
 										{/* Most common form control, text-based input fields. Includes support for all HTML5 types: <code>text</code>, <code>password</code>, <code>datetime</code>, <code>datetime-local</code>, <code>date</code>, <code>month</code>, <code>time</code>, <code>week</code>, <code>number</code>, <code>email</code>, <code>url</code>, <code>search</code>, <code>tel</code>, and <code>color</code>. */}
 									</p>
 
-                                
-                                <div className="table-rep-plugin">
-                                    <div className="table-responsive" data-pattern="priority-columns">
-                                        <table id="tech-companies-1" className="table  table-striped">
-                                            <thead>
-                                                
-                                                <tr>
-                                                    <th data-priority="1">NIK</th>
-                                                    <th data-priority="2">Nama</th>
-                                                    <th data-priority="5">Tanggal Mulai</th>
-                                                    <th data-priority="6">Tanggal Selesai</th>
-                                                    <th data-priority="7">Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>                                                     
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="card-box table-responsive">
+                                                <table id="datatable" class="table table-striped table-bordered" ref={el => this.el = el}>
+                                                    <thead>
+                                                    <tr>
+                                                        <th>NIK</th>
+                                                        <th>Nama</th>
+                                                        <th>Tanggal Mulai</th>
+                                                        <th>Tanggal Selesai</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>                                                     
 
                                                 {
-                                                    listAnnual.length >0 ? listAnnual.map((annual,index)=> {
+                                                    listAnnual.map((annual,index)=> {
                                                         return (
                                                             <tr>
                                                                 <th data-priority="1">{annual.user.kode}</th>
@@ -87,13 +86,15 @@ class ListPengajuan extends Component {
                                                             </tr>    
         
                                                         )
-                                                    }):null
+                                                    })
                                                 }
                                             </tbody>
-                                        </table>
+                                                </table>
+                                            </div>
                                         </div>
-
                                     </div>
+
+                                
                                 </div>
                             </div>
                         </div>
