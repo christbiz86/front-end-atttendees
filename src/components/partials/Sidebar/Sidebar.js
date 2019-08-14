@@ -6,6 +6,7 @@ import Annual from './Annual';
 import Unit from './Unit';
 import Posisi from './Posisi';
 import Company from './Company';
+
 class Sidebar extends Component {
     render(){
         return(
@@ -32,3 +33,4 @@ class Sidebar extends Component {
 } 
 
 export default Sidebar;
+
