@@ -10,7 +10,7 @@ class ListPengajuan extends Component {
     }
 
     componentDidMount() {
-        fetch("http://149.129.213.242:8080/attendee/request",{
+        fetch("http://localhost:8181/request/Approved",{
             method: 'GET',
             headers:{
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -21,7 +21,7 @@ class ListPengajuan extends Component {
                 listAnnual
             }))
             .catch(error => console.log('parsing failed', error))
-        }
+    }
         render() {
         const {listAnnual } = this.state;
             return (
@@ -49,10 +49,10 @@ class ListPengajuan extends Component {
                         <div className="col-sm-12">
                             <div className="card-box">
 
-                                <div className="form-group clearfix">
-                                    <label className="col-sm-5 control-label" ></label>
-                                    <div className="col-lg-4">
-                                        <h4 className="m-t-0 header-title"><b>ANNUAL LIST</b></h4>    
+                                <div class="form-group clearfix">
+                                    <label class="col-sm-4 control-label" ></label>
+                                    <div class="col-lg-4">
+                                        <h4 class="m-t-0 header-title"><b>DAFTAR CUTI SEMUA KARYAWAN </b></h4>    
                                     </div>
                                 </div>
                         			<p className="text-muted m-b-30 font-13">
@@ -73,6 +73,8 @@ class ListPengajuan extends Component {
                                                     <th data-priority="7">Status</th>
                                                 </tr>
                                             </thead>
+                                            <tbody>                                                     
+
                                                 {
                                                     listAnnual.length >0 ? listAnnual.map((annual,index)=> {
                                                         return (
@@ -87,6 +89,7 @@ class ListPengajuan extends Component {
                                                         )
                                                     }):null
                                                 }
+                                            </tbody>
                                         </table>
                                         </div>
 
