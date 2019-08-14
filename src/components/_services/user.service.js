@@ -13,10 +13,11 @@ function login(email, password) {
         body: JSON.stringify({ email, password })
     };
 
-    return fetch("http://149.129.213.242:8080/attendee/signin", requestOptions)
+    return fetch("http://localhost:8181/signin", requestOptions)
         // .then(handleResponse)
         .then(res => res.json()).then((response)=>{
-            localStorage.setItem('token',response.accessToken);
+            localStorage.setItem('token',response.token.accessToken);
+            localStorage.setItem('user',JSON.stringify(response.userCompany));
         })
         // .then(user => {
         //     // store user details and jwt token in local storage to keep user logged in between page refreshes

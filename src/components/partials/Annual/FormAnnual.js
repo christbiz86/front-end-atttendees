@@ -1,20 +1,20 @@
 import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
+import Moment from "moment";
 
+let user = JSON.parse(localStorage.getItem('user'));
 class FormPengajuan extends Component {
     constructor(props){
         super(props);
 
         this.handleRequest = this.handleRequest.bind(this);
+        this.handleChange = this.handleChange.bind(this);
 
         this.state = {
-            nama:'',
-            tglMulai:'',
-            tglAkhir:'',
-            keterangan:'',
-            status :{
-                id:"a69f9f2e-c71f-4e3e-b8e7-7c4bb80fb376"
-            }
+            
+            namauser:user.idUser.nama,
+            tglMulai:Moment().format('YYYY-MM-DD'),
+            tglAkhir:Moment().format('YYYY-MM-DD'),
+            keterangan:''
         }    
     }
     
@@ -25,40 +25,35 @@ class FormPengajuan extends Component {
     }
     
     handleRequest = event => {
-        event.preventDefault();
+        event.preventDefault();   
         this.Request();
     };
 
-    Approve(){
-        fetch('http://149.129.213.242:8080/attendee/request', {
-                method: 'POST',
-                body: JSON.stringify(this.state.annualRequest),
-                headers:{
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(res => res.json())
-            .catch(error => console.error('Error:', error))
-            .then(response => console.log('Success:', response),
-            
-                <NavLink to ="/"></NavLink>
-             
-            ); 
+    user(){
+
     }
 
     Request(){
-        fetch('http://149.129.213.242:8080/attendee/request', {
+        fetch('http://localhost:8181/request', {
                 method: 'POST',
-                body: JSON.stringify(this.state.annualRequest),
+                body: JSON.stringify({
+                    
+                    kode:"",
+                    user:user.idUser,
+                    tglMulai:this.state.tglMulai,
+                    tglAkhir:this.state.tglAkhir,
+                    
+                
+                }),
                 headers:{
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             })
             .then(res => res.json())
             .catch(error => console.error('Error:', error))
             .then(response => console.log('Success:', response),
             
-                <NavLink to ="/"></NavLink>
              
             ); 
     }
@@ -101,43 +96,31 @@ class FormPengajuan extends Component {
 										{/* Most common form control, text-based input fields. Includes support for all HTML5 types: <code>text</code>, <code>password</code>, <code>datetime</code>, <code>datetime-local</code>, <code>date</code>, <code>month</code>, <code>time</code>, <code>week</code>, <code>number</code>, <code>email</code>, <code>url</code>, <code>search</code>, <code>tel</code>, and <code>color</code>. */}
 									</p>
 
-                                        <form id="basic-form"  onSubmit={this.handleRequest} action="#">   
+                                        <form id="basic-form"  onSubmit={this.handleRequest} >   
                                             
                                             <div class="form-group clearfix">
                                                 <label class="col-sm-2 control-label" >NIK</label>
                                                 <div class="col-lg-6">
-                                                    <input type="text" id="nik" name="nik" class="form-control" placeholder="NIK"/>
+                                                    <input type="text" id="kode" name="kode" class="form-control" disabled value={user.idUser.kode} placeholder="NIK"/>
                                                 </div>
                                             </div>
 
                                             <div class="form-group clearfix">
-                                                <label class="col-sm-2 control-label" >Nama</label>
-                                                <div class="col-md-6">
-                                                    <input type="text" id="nama" name="nama" class="form-control" onChange={this.handleChange} placeholder="Nama"/>
+                                                <label class="col-md-2 control-label" >Nama</label>
+                                                <div class="col-lg-6">
+                                                    <input type="text" id="nama" name="nama" class="form-control"  disabled value={this.state.namauser} placeholder="Nama"/>
                                                 </div>                                    
-                                            </div>
-
-                                            <div class="form-group clearfix">
-                                                <label class="col-md-2 control-label" >Posisi</label>
-                                                <div class="col-md-6">
-                                                    <input type="text" id="posisi" name="posisi" class="form-control" placeholder="Posisi"/>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group clearfix">
-                                                <label class="col-md-2 control-label" >Unit</label>
-                                                <div class="col-md-6">
-                                                    <input type="text" id="unit" name="unit" class="form-control" placeholder="Unit"/>
-                                                </div>
                                             </div>
 		                            
                                             <div class="form-group clearfix">
                                                 <label class="col-md-2 control-label">Tanggal Cuti</label>
-                                                <div class="col-sm-6">
+                                                <div class="col-lg-6">
                                                     <div class="input-daterange input-group" id="date-range">
-                                                        <input type="text" class="form-control" name="tglMulai" onChange={this.handleChange} placeholder="YYYY/MM/DD" />
+                                               
+                                                        <input type="text" class="form-control" name="tglMulai" onChange={this.handleChange} placeholder="DD/MM/YYYY" />
+                                                    
                                                             <span class="input-group-addon bg-custom b-0 text-white"> sampai </span>
-                                                        <input type="text" class="form-control" name="tglAkhir"onChange={this.handleChange}  placeholder="YYYY/MM/DD" />
+                                                        <input type="text" class="form-control" name="tglAkhir"onChange={this.handleChange}  placeholder="DD/MM/YYYY" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -152,14 +135,12 @@ class FormPengajuan extends Component {
                                             <div class="form-group clearfix">
                                                 <a class="col-md-2 control-label"   />
                                                 <div class="col-sm-2 control-label">
-                                                                                                    </div>
+                                                </div>
                                             </div>
-
-                                        </form>
-                                        <form class="form-horizontal" >
-                                            <div class="form-group">
-                                                <label  class="col-sm-2 control-label"></label>
-                                                <div class="col-sm-6 control-label">
+                                            
+                                            <div class="form-group clearfix">
+                                                <label  class="col-sm-6 control-label"></label>
+                                                <div class="col-sm-2 control-label">
                                                     <button type="submit" class="btn btn-success waves-effect waves-light m-l-10 btn-md"> Submit</button>
                                                 </div>
                                             </div>
@@ -180,4 +161,3 @@ class FormPengajuan extends Component {
 
   
   export default FormPengajuan;
-
