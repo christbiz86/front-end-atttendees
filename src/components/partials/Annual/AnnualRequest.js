@@ -20,22 +20,22 @@ class AnnualRequest extends Component {
     }
     
     handleApprove = event => {
-        this.setState({
-            [event.target.name]:event.target.value
-        })
-        this.Approve();
-    };
-    handleReject = event => {
         event.preventDefault();   
-        this.Reject();
+        this.Approve(event);
     };
 
-    Approve(annual){
-        fetch('http://localhost:8181/request/Approved', {
+    handleReject = event => {
+        event.preventDefault();   
+        this.Reject(event);
+    };
+
+    Approve(event){
+        const { value } = event.target;
+        fetch('http://localhost:8080/request/Approved', {
                 method: 'PATCH',
                 body: 
-                JSON.stringify({annual
-                          })          ,
+                    JSON.stringify(this.state.listRequest[value])
+                ,
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -49,11 +49,12 @@ class AnnualRequest extends Component {
             ); 
     }
 
-    Reject(){
-        fetch('http://localhost:8181/request/Rejected', {
+    Reject(event){
+        const { value } = event.target;
+        fetch('http://localhost:8080/request/Rejected', {
                 method: 'PATCH',
                 body: 
-                    this.state.annual    
+                    JSON.stringify(this.state.listRequest[value])
                 ,
                 headers:{
                     'Content-Type': 'application/json',
@@ -69,7 +70,7 @@ class AnnualRequest extends Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:8181/request/Request', {
+        fetch('http://localhost:8080/request/Request', {
                 method: 'GET',
                 headers:{
                     'Content-Type': 'application/json',
@@ -151,13 +152,10 @@ class AnnualRequest extends Component {
                                                                 <th data-priority="6">{annual.tglAkhir}</th>
                                                                 <th data-priority="7">{annual.status.status}</th>
                                                                 <th>
-                                                                    <button type="submit" name ="approve"  class="btn btn-primary waves-effect waves-light m-l-10 btn-sm" onClick={this.Approve(annual)}>
-                                                                         <b className="font-bold">Setujui</b>
-                                                                    </button>                                                            
-                                                                    
-                                                                    <button type="submit" name="reject" class="btn btn-danger waves-effect waves-light m-l-10 btn-sm" onClick={this.handleReject}>
-                                                                        <b className="font-bold" >Tolak</b>
-                                                                    </button>
+                                                                    <button type="submit" name ="approve" class="btn btn-primary waves-effect waves-light m-l-10 btn-sm" value={index} onClick={this.handleApprove}>
+                                                                         <b className="font-bold">Setujui</b></button>                                                            
+                                                                    <button type="submit" name="reject" class="btn btn-danger waves-effect waves-light m-l-10 btn-sm" value={index} onClick={this.handleReject}><b className="font-bold" >Tolak</b></button>
+                                                                    {index++}
                                                                 </th>
                                                             </tr>    
         
