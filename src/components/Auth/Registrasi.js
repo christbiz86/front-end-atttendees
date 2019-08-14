@@ -5,11 +5,6 @@ export default class Registrasi extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            kodeCompany:'COM0000',
-            statusCompany:'Active',
-            kodeUser:'USER000000',
-            statusUser:'Active',
-
             namaCompany:'',
             namaUser:'',
             jatahCuti:'',
@@ -35,11 +30,6 @@ export default class Registrasi extends React.Component{
     handleSubmit = event => {
         event.preventDefault();
         const data = { 
-            kodeCompany:this.state.kodeCompany,
-            statusCompany:this.state.statusCompany,
-            kodeUser:this.state.kodeUser,
-            statusUser:this.state.statusUser,
-
             namaCompany:this.state.namaCompany,
             namaUser:this.state.namaUser,
             jatahCuti:this.state.jatahCuti,
