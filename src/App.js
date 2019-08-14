@@ -1,16 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Router, Route, Switch } from 'react-router-dom';
-import Annual from './components/partials/Annual/ListAnnual';
-import Registrasi from './components/Auth/Registrasi';
+import Registrasi from './components/auth/Registrasi';
 import ListAnnual from './components/partials/Annual/ListAnnual';
 import FormAnnual from './components/partials/Annual/FormAnnual';
 import AnnualRequest from './components/partials/Annual/AnnualRequest';
-import Dashboard from './components/partials/Dashboard/Dashboard';
 import Layout from './components/layout/Layout'
 
 import { PrivateRoute } from './components/_security/PrivateRoute';
-import { LoginPage } from './components/Auth/LoginPage';
+import { LoginPage } from './components/auth/LoginPage';
 import { history } from './components/_helpers';
 import { alertActions } from './components/_actions';
 
