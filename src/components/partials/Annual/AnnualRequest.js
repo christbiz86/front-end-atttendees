@@ -29,7 +29,7 @@ class AnnualRequest extends Component {
     };
 
     Approve(){
-        fetch('http://localhost:8181/Approved', {
+        fetch('http://localhost:8080/Approved', {
                 method: 'PATCH',
                 body: 
                     this.state.annual
@@ -48,7 +48,7 @@ class AnnualRequest extends Component {
     }
 
     Reject(){
-        fetch('http://localhost:8181/Rejected', {
+        fetch('http://localhost:8080/Rejected', {
                 method: 'PATCH',
                 body: 
                     this.state.annual    
@@ -67,7 +67,7 @@ class AnnualRequest extends Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:8181/request/Request', {
+        fetch('http://localhost:8080/request/Request', {
                 method: 'GET',
                 headers:{
                     'Content-Type': 'application/json',

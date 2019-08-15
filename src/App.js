@@ -5,6 +5,8 @@ import Registrasi from './components/auth/Registrasi';
 import ListAnnual from './components/partials/Annual/ListAnnual';
 import FormAnnual from './components/partials/Annual/FormAnnual';
 import AnnualRequest from './components/partials/Annual/AnnualRequest';
+import EmployeeForm from './components/partials/Employee/EmployeeForm';
+import Employee from './components/partials/Employee/Employee';
 import Layout from './components/layout/Layout'
 
 import { PrivateRoute } from './components/_security/PrivateRoute';
@@ -39,6 +41,8 @@ class App extends React.Component {
                     <Route exact path="/annual/list" component={ListAnnual} />
                     <Route exact path="/annual/form" component={FormAnnual} />
                     <Route exact path="/annual/request" component={AnnualRequest} />
+                    <Route exact path="/employee" component={Employee} />
+                    <Route exact path="/employee/form" component={EmployeeForm} />
                   </Switch>
                 </div>
               </Router>
