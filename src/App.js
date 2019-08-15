@@ -2,10 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Router, Route, Switch } from 'react-router-dom';
 import Registrasi from './components/auth/Registrasi';
+
 import ListAnnual from './components/partials/Annual/ListAnnual';
 import FormAnnual from './components/partials/Annual/FormAnnual';
 import AnnualRequest from './components/partials/Annual/AnnualRequest';
-import Layout from './components/layout/Layout'
 
 import { PrivateRoute } from './components/_security/PrivateRoute';
 import { LoginPage } from './components/auth/LoginPage';
@@ -25,7 +25,6 @@ class App extends React.Component {
   render(){
     return (
       <div>
-        <Layout></Layout>
             <div className="App">
               {alert.message &&
                 <div className={`alert ${alert.type}`}>{alert.message}</div>
@@ -36,9 +35,9 @@ class App extends React.Component {
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/registrasi" component={Registrasi} />
                     <PrivateRoute exact path="/" component={AnnualRequest} />
-                    <Route exact path="/annual/list" component={ListAnnual} />
-                    <Route exact path="/annual/form" component={FormAnnual} />
-                    <Route exact path="/annual/request" component={AnnualRequest} />
+                    <PrivateRoute exact path="/annual/list" component={ListAnnual} />
+                    <PrivateRoute exact path="/annual/form" component={FormAnnual} />
+                    {/* <Route exact path="/annual/request" component={AnnualRequest} /> */}
                   </Switch>
                 </div>
               </Router>

@@ -13,7 +13,7 @@ export default class Registrasi extends React.Component{
             tglLahir: Moment().format('YYYY-MM-DD'),
             telp:'',
             email:'',
-            foto:'foto'
+            foto:''
         };
     }
 
@@ -121,12 +121,12 @@ export default class Registrasi extends React.Component{
                                 </div>
                             </div>
     
-                            {/* <div className="form-group">
+                            <div className="form-group">
                                 <label className="col-sm-3 control-label">Foto</label>
                                 <div className="col-sm-6">
                                     <input type="file" className="filestyle" data-buttonname="btn-primary"/>
                                 </div>
-                            </div> */}
+                            </div>
                             
                             <div class="form-group m-b-0">
 								<div class="col-sm-offset-3 col-sm-9 m-t-15">

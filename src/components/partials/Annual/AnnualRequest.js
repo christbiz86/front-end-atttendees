@@ -159,7 +159,6 @@ class AnnualRequest extends Component {
                                                                     <button type="submit" name ="approve" class="btn btn-primary waves-effect waves-light m-l-10 btn-sm" value={index} onClick={this.handleApprove}>
                                                                          <b className="font-bold">Setujui</b></button>                                                            
                                                                     <button type="submit" name="reject" class="btn btn-danger waves-effect waves-light m-l-10 btn-sm" value={index} onClick={this.handleReject}><b className="font-bold" >Tolak</b></button>
-                                                                    {index++}
                                                                 </th>
                                                             </tr>    
         
