@@ -15,16 +15,35 @@ class ListPengajuan extends Component {
         };
     }
 
+    
     componentWillMount=async() => {
-        await axios.get(url)
-        .then(response => response.data)
-        .then(data => {
-            this.setState({ items: data })
-        })
-        .then(async() => {
-            this.setState({ tableRows:this.assemblePosts(), isLoading:false });
-        })
+        await axios.request('http://localhost:8181/request/Approved', {
+                method: 'GET',
+                
+                headers:{
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+            .then(response => response.data)
+            .then(data => {
+                this.setState({ items: data })
+            })
+            .then(async() => {
+                this.setState({ tableRows:this.assemblePosts(), isLoading:false });
+            })
+            
     }
+    // componentWillMount=async() => {
+    //     await axios.get(url)
+    //     .then(response => response.data)
+    //     .then(data => {
+    //         this.setState({ items: data })
+    //     })
+    //     .then(async() => {
+    //         this.setState({ tableRows:this.assemblePosts(), isLoading:false });
+    //     })
+    // }
 
     assemblePosts= () => {
         let items = this.state.items.map((annual) => {
@@ -76,27 +95,28 @@ class ListPengajuan extends Component {
                 <div className="content-page">
                     <div className="content">
                         <div className="container">
-                            {/* Page Title */}
+                            
                             <div className="row">
                                 <div className="col-sm-12">
+
                                     <h4 className="page-title">Annual List</h4>
-                                    <ol classNameass="breadcrumb">
+                                    <ol className="breadcrumb">
                                         <li>
-                                            <a href="#">annual</a>
+                                            <a href="#">Annual</a>
                                         </li>
-                                        <li claclassNamess="active">
-                                            list
+                                        <li className="active">
+                                            List
                                         </li>
                                     </ol>
+                                </div>
+						    </div>
                             
 
                                     <div className="card-box table-responsive" id="shift-list">
                                         <h4 className="m-t-0 header-title"><b>Daftar Cuti Karyawan </b></h4>
                                         <MDBDataTable striped bordered data={data} />
                                     </div>
-                                    
-                                </div>
-                            </div>
+                                      
                         </div>
                     </div>
                 </div>

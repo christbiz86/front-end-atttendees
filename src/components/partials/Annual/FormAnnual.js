@@ -60,7 +60,7 @@ class FormPengajuan extends Component {
             ); 
     }
 
-    render() {
+    render() { 
         
         return (
             <div>

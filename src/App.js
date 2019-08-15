@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { Component } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import Registrasi from './components/auth/Registrasi';
+
 import ListAnnual from './components/partials/Annual/ListAnnual';
 import FormAnnual from './components/partials/Annual/FormAnnual';
 import AnnualRequest from './components/partials/Annual/AnnualRequest';
-import Layout from './components/layout/Layout'
 
 import { PrivateRoute } from './components/_security/PrivateRoute';
 import { LoginPage } from './components/auth/LoginPage';
@@ -36,57 +36,21 @@ class App extends Component {
   render(){
     const { alert } = this.props;
     return (
-        <div>
-              {/* <div className="App">
-                <Router history={createBrowserHistory({basename:process.env.PUBLIC_URL})}>
-                  <div className="route">
-                  <Route exact path="/login" component={Login} />
-                  <Layout />
-                    <Switch>
-                      <PrivateRoute exact path="/" component={Dashboard} />
-                      <Route path="/company" component={Company} />
-                      <Route path="/shift" component={Shift} />
-                      <Route path="/project" component={Project} />
-                      <Route path="/libur" component={Libur} />
-                      <Route path="/employee" component={Employee} />
-                    </Switch>
-                  </div>
-                </Router>
-              </div> */}
-              <div className="App">
-                <div className="jumbotron">
-                  <div className="col-sm-8 col-sm-offset-2">
-                    {/* {alert.message &&
-                      <div className={`alert ${alert.type}`}>{alert.message}</div>
-                    } */}
-                  </div>
-                  <Router history={history}>
-                    <div>
-                      <Route exact path="/login" component={LoginPage} />
-                      <Route exact path="/registrasi" component={Registrasi} />
-                      <Route exact path="/" component={Dashboard} />
-                      <Route path="/company" component={Company} />
-                      <Route path="/shift" component={Shift} />
-                      <Route path="/project" component={Project} />
-                      <Route path="/libur" component={Libur} />
-                      <Route path="/employee" component={Employee} />
-                      <Route path="/report-attendee" component={ReportAttendee} />
-                      <Route path="/report-annual" component={ReportAnnual} />
-                      <Route path="/coba" component={Coba} />
-            
-                      <PrivateRoute exact path="/" component={AnnualRequest} />
-                      <Route exact path="/annual/list" component={ListAnnual} />
-                      <Route exact path="/annual/form" component={FormAnnual} />
-                      <Route exact path="/annual/request" component={AnnualRequest} />
-                 
-                </div>
-              </Router>
-                </div>
-              </div>
-            {/* <div className="App">
-              <Router history={createBrowserHistory({basename:process.env.PUBLIC_URL})}>
+      <div>
+            <div className="App">
+              {alert.message &&
+                <div className={`alert ${alert.type}`}>{alert.message}</div>
+              }
+              <Router history={history}>
                 <div className="route">
-                  <Route exact path="/" component={} />
+                  <Switch>
+                    <Route exact path="/login" component={LoginPage} />
+                    <Route exact path="/registrasi" component={Registrasi} />
+                    <PrivateRoute exact path="/" component={AnnualRequest} />
+                    <PrivateRoute exact path="/annual/list" component={ListAnnual} />
+                    <PrivateRoute exact path="/annual/form" component={FormAnnual} />
+                    <PrivateRoute exact path="/annual/request" component={AnnualRequest} />
+                  </Switch>
                 </div>
               </Router>
             </div> */}
