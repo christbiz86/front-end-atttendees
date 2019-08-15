@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Moment from "moment";
+import Layout from '../../layout/Layout';
 
 class AnnualRequest extends Component {    
     constructor(props){
@@ -31,7 +32,7 @@ class AnnualRequest extends Component {
 
     Approve(event){
         const { value } = event.target;
-        fetch('http://localhost:8080/request/Approved', {
+        fetch('http://localhost:8181/request/Approved', {
                 method: 'PATCH',
                 body: 
                     JSON.stringify(this.state.listRequest[value])
@@ -51,7 +52,7 @@ class AnnualRequest extends Component {
 
     Reject(event){
         const { value } = event.target;
-        fetch('http://localhost:8080/request/Rejected', {
+        fetch('http://localhost:8181/request/Rejected', {
                 method: 'PATCH',
                 body: 
                     JSON.stringify(this.state.listRequest[value])
@@ -70,7 +71,7 @@ class AnnualRequest extends Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:8080/request/Request', {
+        fetch('http://localhost:8181/request/Request', {
                 method: 'GET',
                 headers:{
                     'Content-Type': 'application/json',
@@ -90,6 +91,8 @@ class AnnualRequest extends Component {
         const {listRequest } = this.state;
 
         return (
+            <div>
+            <Layout />
             <div className="content-page">
 
 				<div class="content">
@@ -152,10 +155,13 @@ class AnnualRequest extends Component {
                                                                 <th data-priority="6">{annual.tglAkhir}</th>
                                                                 <th data-priority="7">{annual.status.status}</th>
                                                                 <th>
-                                                                    <button type="submit" name ="approve" class="btn btn-primary waves-effect waves-light m-l-10 btn-sm" value={index} onClick={this.handleApprove}>
+                                                                    <button type="submit" name ="approve" class="btn btn-primary waves-effect waves-light m-l-10 btn-sm"
+                                                                     value={index} onClick={this.handleApprove}>
                                                                          <b className="font-bold">Setujui</b></button>                                                            
-                                                                    <button type="submit" name="reject" class="btn btn-danger waves-effect waves-light m-l-10 btn-sm" value={index} onClick={this.handleReject}><b className="font-bold" >Tolak</b></button>
-                                                                    {index++}
+                                                                    <button type="submit" name="reject" class="btn btn-danger waves-effect waves-light m-l-10 btn-sm" 
+                                                                    value={index} onClick={this.handleReject}>
+                                                                        <b className="font-bold" >Tolak</b></button>
+                                                                    
                                                                 </th>
                                                             </tr>    
         
@@ -173,6 +179,7 @@ class AnnualRequest extends Component {
                                 </div>
                         </div>
                     </div>
+                </div>
                 </div>
                         
         );

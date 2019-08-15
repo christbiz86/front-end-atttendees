@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import Moment from "moment";
+import Layout from '../../layout/Layout';
 
 let user = JSON.parse(localStorage.getItem('user'));
+
 class FormPengajuan extends Component {
     constructor(props){
         super(props);
@@ -61,6 +63,8 @@ class FormPengajuan extends Component {
     render() {
         
         return (
+            <div>
+            <Layout />
             <div className="content-page">
 
 				<div class="content">
@@ -153,7 +157,7 @@ class FormPengajuan extends Component {
                         </div>
                     </div>
                 </div>
-                        
+                </div>  
         );
         
     }

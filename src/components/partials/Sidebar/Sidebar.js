@@ -6,6 +6,7 @@ import Annual from './Annual';
 import Unit from './Unit';
 import Posisi from './Posisi';
 import Company from './Company';
+import Report from './Report';
 
 class Sidebar extends Component {
     render(){
@@ -22,6 +23,7 @@ class Sidebar extends Component {
                             <Annual />
                             <Unit />
                             <Posisi />
+                            <Report />
                         </ul>
                         <div className="clearfix"></div>
                     </div>
