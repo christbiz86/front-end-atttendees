@@ -1,13 +1,13 @@
 import React from 'react';
-import Aux from '../../hoc/Aux';
 import Header from '../partials/Header/Header';
 import Sidebar from '../partials/Sidebar/Sidebar';
 
-const layout = ( props ) => (
-    <Aux>
+const layout = ( { children } ) => (
+    <div>
         <Header />
         <Sidebar />
-    </Aux>
+        {children}
+    </div>
 );
 
 export default layout;

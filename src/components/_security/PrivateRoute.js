@@ -1,12 +1,12 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
-import LayoutRoute from '../layout/Layout';
+import Layout from '../layout/Layout';
 
 export const PrivateRoute = ({ component: Component, ...rest }) => (
-    <LayoutRoute {...rest} render={props => (
+    <Route {...rest} render={props => (
         localStorage.getItem('token')
-            ? <Component {...props} />
+            ? <Layout> <Component {...props} /> </Layout>
             : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
     )} />
 )
