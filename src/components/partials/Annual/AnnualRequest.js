@@ -156,10 +156,10 @@ class AnnualRequest extends Component {
                                                                 <th data-priority="6">{annual.tglAkhir}</th>
                                                                 <th data-priority="7">{annual.status.status}</th>
                                                                 <th>
-                                                                    <button type="submit" name ="approve" className="btn btn-primary waves-effect waves-light m-l-10 btn-sm"
+                                                                    <button type="submit" name ="approve" id="sa-warning" className="btn btn-primary waves-effect waves-light m-l-10 btn-sm"
                                                                      value={index} onClick={this.handleApprove}>
                                                                          <b className="font-bold">Setujui</b></button>                                                            
-                                                                    <button type="submit" name="reject" className="btn btn-danger waves-effect waves-light m-l-10 btn-sm" value={index} onClick={this.handleReject}><b className="font-bold" >Tolak</b></button>
+                                                                    <button type="submit" name="reject" id="sa-warning" className="btn btn-danger waves-effect waves-light m-l-10 btn-sm" value={index} onClick={this.handleReject}><b className="font-bold" >Tolak</b></button>
                                                                 </th>
                                                             </tr>    
         

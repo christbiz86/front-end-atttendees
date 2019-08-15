@@ -50,6 +50,7 @@ class App extends Component {
                     <PrivateRoute exact path="/annual/list" component={ListAnnual} />
                     <PrivateRoute exact path="/annual/form" component={FormAnnual} />
                     <PrivateRoute exact path="/annual/request" component={AnnualRequest} />
+                    <PrivateRoute exact path="/employee" component={Employee} />
                   </Switch>
                 </div>
               </Router>

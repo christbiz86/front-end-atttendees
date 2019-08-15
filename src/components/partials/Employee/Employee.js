@@ -1,22 +1,31 @@
 import React, { Component } from 'react';
-import { MDBDataTable } from 'mdbreact';
+import { MDBDataTable, MDBBtn } from 'mdbreact';
 import Layout from '../../layout/Layout';
 import axios from 'axios';
 
-const url = 'http://localhost:8080/usercompany';
+const url = 'http://localhost:8181/usercompany';
 
 class Employee extends Component {
     constructor(props) {
         super(props);
+
         this.state= {
             items: [],
             isLoading: true,
             tableRows: [],
+            modalEdit: false
         };
     }
 
+    
     componentWillMount=async() => {
-        await axios.get(url)
+        
+        await axios.request(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            }
+        })
         .then(response => response.data)
         .then(data => {
             this.setState({ items: data })
@@ -27,7 +36,7 @@ class Employee extends Component {
     }
 
     assemblePosts= () => {
-        let items = this.state.items.map((user) => {
+        let items = this.state.items.map((user,index) => {
             return (
                 {
                     name: user.idUser.nama,
@@ -37,7 +46,12 @@ class Employee extends Component {
                     email: user.idUser.email,
                     unit: user.idCompanyUnitPosisi.idUnit==null ? "-" : user.idCompanyUnitPosisi.idUnit.unit,
                     posisi: user.idCompanyUnitPosisi.idPosisi==null ? "-" : user.idCompanyUnitPosisi.idPosisi.posisi,
-                    tipeUser: user.idTipeUser.tipe
+                    tipeUser: user.idTipeUser.tipe,
+                    // action: <MDBBtn color="info">Edit</MDBBtn>
+                    action: <button class="btn btn-primary waves-effect waves-light"  data-toggle="modal" data-target="#myModal">Edit</button>
+                    // action: <a href="#" className="on-default edit-row" onClick="this.toggle(edit)"><i class="md-mode-edit"/></a> 
+                        // delete: <a href="#" className="on-default"><i className="md-mode-edit"/></a> 
+                    // action2: <a href="#" class="on-default edit-row"><i class="md-delete"/></a>   
                 }
                 
             )
@@ -45,6 +59,8 @@ class Employee extends Component {
 
         return items;
     }
+
+    
     render(){
         const data = {
             columns: [
@@ -79,6 +95,11 @@ class Employee extends Component {
                 {
                     label: 'Tipe User',
                     field: 'tipeUser'
+                },
+                {
+                    label: 'Action',
+                    field: 'action',
+                    width: 10
                 }
             ],
 
@@ -186,6 +207,32 @@ class Employee extends Component {
                                     <div className="card-box table-responsive" id="shift-list">
                                         <h4 className="m-t-0 header-title"><b>Employee List</b></h4>
                                         <MDBDataTable striped bordered data={data} />
+                                    </div>
+
+
+                                    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                    <h4 class="modal-title" id="myModalLabel">
+                                                    
+                                                        Modal Heading</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <h4>{this.state.items.name}</h4>
+                                                    <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
+                                                    <hr/>
+                                                    <h4>Overflowing text to show scroll behavior</h4>
+                                                    <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+                                                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-primary waves-effect waves-light">Save changes</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     
                                 </div>
