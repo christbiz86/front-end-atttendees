@@ -17,7 +17,10 @@
     "case-sensitive-paths-webpack-plugin": "2.2.0",
     "config": "^3.2.2",
     "css-loader": "2.1.1",
+<<<<<<< HEAD
     "datatables.net": "^1.10.19",
+=======
+>>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
     "dotenv": "6.2.0",
     "dotenv-expand": "4.2.0",
     "eslint": "^5.16.0",
@@ -37,8 +40,11 @@
     "jest-environment-jsdom-fourteen": "0.1.0",
     "jest-resolve": "24.7.1",
     "jest-watch-typeahead": "0.3.0",
+<<<<<<< HEAD
     "jquery": "^3.4.1",
     "mdbreact": "^4.19.0",
+=======
+>>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
     "mini-css-extract-plugin": "0.5.0",
     "moment": "^2.24.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
@@ -50,11 +56,20 @@
     "postcss-safe-parser": "4.0.1",
     "react": "^16.8.6",
     "react-app-polyfill": "^1.0.1",
+<<<<<<< HEAD
     "react-data-components": "^1.2.0",
     "react-dev-utils": "^9.0.1",
     "react-dom": "^16.8.6",
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
+=======
+    "react-dev-utils": "^9.0.1",
+    "react-dom": "^16.8.6",
+    "react-logger": "^1.1.0",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^5.0.1",
+    "react-router-redux": "^4.0.8",
+>>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",

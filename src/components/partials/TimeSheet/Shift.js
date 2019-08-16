@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+<<<<<<< HEAD
 import Layout from '../../layout/Layout';
 
 class Shift extends Component {
@@ -149,6 +150,19 @@ class Shift extends Component {
                                     </div>
                                     
                                 </div>
+=======
+
+class Shift extends Component {
+    render(){
+        return(
+            <div className="content-page">
+                <div className="content">
+                    <div className="container">
+                        {/* Page Title */}
+                        <div className="row">
+                            <div className="col-sm-12">
+                                <h4 className="page-title">Shift</h4>
+>>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
                             </div>
                         </div>
                     </div>

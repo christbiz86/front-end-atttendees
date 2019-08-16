@@ -1,9 +1,14 @@
 import React, { Component } from "react";
 import Moment from "moment";
+<<<<<<< HEAD
 import Layout from '../../layout/Layout';
 
 let user = JSON.parse(localStorage.getItem('user'));
 
+=======
+
+let user = JSON.parse(localStorage.getItem('user'));
+>>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
 class FormPengajuan extends Component {
     constructor(props){
         super(props);
@@ -36,7 +41,11 @@ class FormPengajuan extends Component {
     }
 
     Request(){
+<<<<<<< HEAD
         fetch('http://localhost:8282/request', {
+=======
+        fetch('http://localhost:8181/request', {
+>>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
                 method: 'POST',
                 body: JSON.stringify({
                     
@@ -60,6 +69,7 @@ class FormPengajuan extends Component {
             ); 
     }
 
+<<<<<<< HEAD
     render() { 
         
         return (
@@ -79,6 +89,25 @@ class FormPengajuan extends Component {
 										<a href="#">Annual</a>
 									</li>
 									<li className="active">
+=======
+    render() {
+        
+        return (
+            <div className="content-page">
+
+				<div class="content">
+                    <div class="container">
+
+						<div class="row">
+							<div class="col-sm-12">
+
+								<h4 class="page-title">Form Annual</h4>
+								<ol class="breadcrumb">
+									<li>
+										<a href="#">Annual</a>
+									</li>
+									<li class="active">
+>>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
 										Form
 									</li>
 								</ol>
@@ -86,6 +115,7 @@ class FormPengajuan extends Component {
 						</div>
 
                         
+<<<<<<< HEAD
                         <div className="row">
                         	<div className="col-md-12">
                         		<div className="card-box">
@@ -97,11 +127,25 @@ class FormPengajuan extends Component {
                                         </div>
                                     </div>
                         			<p className="text-muted m-b-30 font-13">
+=======
+                        <div class="row">
+                        	<div class="col-md-12">
+                        		<div class="card-box">
+
+                                    <div class="form-group clearfix">
+                                        <label class="col-sm-2 control-label" ></label>
+                                        <div class="col-lg-6">
+                                            <h4 class="m-t-0 header-title"><b>PENGAJUAN CUTI</b></h4>    
+                                        </div>
+                                    </div>
+                        			<p class="text-muted m-b-30 font-13">
+>>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
 										{/* Most common form control, text-based input fields. Includes support for all HTML5 types: <code>text</code>, <code>password</code>, <code>datetime</code>, <code>datetime-local</code>, <code>date</code>, <code>month</code>, <code>time</code>, <code>week</code>, <code>number</code>, <code>email</code>, <code>url</code>, <code>search</code>, <code>tel</code>, and <code>color</code>. */}
 									</p>
 
                                         <form id="basic-form"  onSubmit={this.handleRequest} >   
                                             
+<<<<<<< HEAD
                                             <div className="form-group clearfix">
                                                 <label className="col-sm-2 control-label" >NIK</label>
                                                 <div className="col-lg-6">
@@ -127,10 +171,36 @@ class FormPengajuan extends Component {
 
                                                         <input type="text" className="form-control" readOnly name="tglAkhir"onChange={this.handleChange}  placeholder="DD/MM/YYYY" />
                                                     
+=======
+                                            <div class="form-group clearfix">
+                                                <label class="col-sm-2 control-label" >NIK</label>
+                                                <div class="col-lg-6">
+                                                    <input type="text" id="kode" name="kode" class="form-control" disabled value={user.idUser.kode} placeholder="NIK"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-2 control-label" >Nama</label>
+                                                <div class="col-lg-6">
+                                                    <input type="text" id="nama" name="nama" class="form-control"  disabled value={this.state.namauser} placeholder="Nama"/>
+                                                </div>                                    
+                                            </div>
+		                            
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-2 control-label">Tanggal Cuti</label>
+                                                <div class="col-lg-6">
+                                                    <div class="input-daterange input-group" id="date-range">
+                                               
+                                                        <input type="text" class="form-control" name="tglMulai" onChange={this.handleChange} placeholder="DD/MM/YYYY" />
+                                                    
+                                                            <span class="input-group-addon bg-custom b-0 text-white"> sampai </span>
+                                                        <input type="text" class="form-control" name="tglAkhir"onChange={this.handleChange}  placeholder="DD/MM/YYYY" />
+>>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
                                                     </div>
                                                 </div>
                                             </div>
 
+<<<<<<< HEAD
                                             <div className="form-group clearfix">
                                                 <label className="col-md-2 control-label">Keterangan Cuti</label>
                                                 <div className="col-lg-6">
@@ -148,6 +218,25 @@ class FormPengajuan extends Component {
                                                 <label  className="col-sm-6 control-label"></label>
                                                 <div className="col-sm-2 control-label">
                                                     <button type="submit" className="btn btn-default waves-effect waves-light btn-lg" id="sa-warning"> Submit</button>
+=======
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-2 control-label">Keterangan Cuti</label>
+                                                <div class="col-md-6">
+                                                    <textarea class="form-control" name="keterangan" onChange={this.handleChange} rows="6"></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group clearfix">
+                                                <a class="col-md-2 control-label"   />
+                                                <div class="col-sm-2 control-label">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group clearfix">
+                                                <label  class="col-sm-6 control-label"></label>
+                                                <div class="col-sm-2 control-label">
+                                                    <button type="submit" class="btn btn-success waves-effect waves-light m-l-10 btn-md"> Submit</button>
+>>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
                                                 </div>
                                             </div>
                                             
@@ -159,7 +248,11 @@ class FormPengajuan extends Component {
                         </div>
                     </div>
                 </div>
+<<<<<<< HEAD
                 </div>  
+=======
+                        
+>>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
         );
         
     }

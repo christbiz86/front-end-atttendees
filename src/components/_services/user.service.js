@@ -14,7 +14,11 @@ function login(email, password) {
     };
 
     // return fetch("http://149.129.213.242:8080/attendee/signin", requestOptions)
+<<<<<<< HEAD
     return fetch("http://localhost:8282/signin", requestOptions)
+=======
+    return fetch("http://localhost:8080/signin", requestOptions)
+>>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
         // .then(handleResponse)
         .then(res => res.json()).then((response)=>{
             localStorage.setItem('token',response.token.accessToken);
