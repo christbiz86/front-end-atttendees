@@ -5,16 +5,20 @@
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <!-- %PUBLIC_URL% -->
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <link rel="stylesheet" href="%PUBLIC_URL%/plugins/magnific-popup/css/magnific-popup.css" />
-    <link rel="stylesheet" href="%PUBLIC_URL%/plugins/jquery-datatables-editable/datatables.css" />
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/plugins/morris/morris.css">
 
+    <link href="%PUBLIC_URL%/plugins/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">
+		<link href="%PUBLIC_URL%/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+		<link href="%PUBLIC_URL%/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
+		<link href="%PUBLIC_URL%/plugins/clockpicker/css/bootstrap-clockpicker.min.css" rel="stylesheet">
+    <link href="%PUBLIC_URL%/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    
     <link href="%PUBLIC_URL%/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="%PUBLIC_URL%/css/core.css" rel="stylesheet" type="text/css" />
     <link href="%PUBLIC_URL%/css/components.css" rel="stylesheet" type="text/css" />
@@ -22,9 +26,16 @@
     <link href="%PUBLIC_URL%/css/pages.css" rel="stylesheet" type="text/css" />
     <link href="%PUBLIC_URL%/css/responsive.css" rel="stylesheet" type="text/css" />
 
-    <link href="%PUBLIC_URL%/plugins/clockpicker/css/bootstrap-clockpicker.min.css" rel="stylesheet" type="text/css" />
-
-    <script src="%PUBLIC_URL%/js/modernizr.min.js"></script>
+    <!-- datatables -->
+    <link href="%PUBLIC_URL%/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+    <link href="%PUBLIC_URL%/plugins/datatables/buttons.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="%PUBLIC_URL%/plugins/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="%PUBLIC_URL%/plugins/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="%PUBLIC_URL%/plugins/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="%PUBLIC_URL%/plugins/datatables/dataTables.colVis.css" rel="stylesheet" type="text/css"/>
+    <link href="%PUBLIC_URL%/plugins/datatables/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="%PUBLIC_URL%/plugins/datatables/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css"/>
+		<link href="%PUBLIC_URL%/plugins/bootstrap-sweetalert/sweet-alert.css" rel="stylesheet" type="text/css">
 
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -50,50 +61,63 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    <!-- <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script> -->
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+      <script src="%PUBLIC_URL%/js/modernizr.min.js"></script>
 
-    <script>
-      var resizefunc = [];
-    </script>
+      <script>
+        var resizefunc = [];
+      </script>
+  
+      <!-- jQuery  -->
+      <script src="%PUBLIC_URL%/js/jquery.min.js"></script>
+      <script src="%PUBLIC_URL%/js/bootstrap.min.js"></script>
+      <script src="%PUBLIC_URL%/js/detect.js"></script>
+      <script src="%PUBLIC_URL%/js/fastclick.js"></script>
+      <script src="%PUBLIC_URL%/js/jquery.slimscroll.js"></script>
+      <script src="%PUBLIC_URL%/js/jquery.blockUI.js"></script>
+      <script src="%PUBLIC_URL%/js/waves.js"></script>
+      <script src="%PUBLIC_URL%/js/wow.min.js"></script>
+      <script src="%PUBLIC_URL%/js/jquery.nicescroll.js"></script>
+      <script src="%PUBLIC_URL%/js/jquery.scrollTo.min.js"></script>
+      <script src="%PUBLIC_URL%/plugins/peity/jquery.peity.min.js"></script>
+      <script src="%PUBLIC_URL%/plugins/waypoints/lib/jquery.waypoints.js"></script>
+      <script src="%PUBLIC_URL%/plugins/counterup/jquery.counterup.min.js"></script>
+      <script src="%PUBLIC_URL%/plugins/morris/morris.min.js"></script>
+      <script src="%PUBLIC_URL%/plugins/raphael/raphael-min.js"></script>
+      <script src="%PUBLIC_URL%/plugins/jquery-knob/jquery.knob.js"></script>
+      <script src="%PUBLIC_URL%/pages/jquery.dashboard.js"></script>
+      <script src="%PUBLIC_URL%/js/jquery.core.js"></script>
+      <script src="%PUBLIC_URL%/js/jquery.app.js"></script>
+      <script src="%PUBLIC_URL%/js/app.js"></script>
 
-    <!-- jQuery  -->
-    <script src="%PUBLIC_URL%/js/jquery.min.js"></script>
-    <script src="%PUBLIC_URL%/js/bootstrap.min.js"></script>
-    <script src="%PUBLIC_URL%/js/detect.js"></script>
-    <script src="%PUBLIC_URL%/js/fastclick.js"></script>
-    <script src="%PUBLIC_URL%/js/jquery.slimscroll.js"></script>
-    <script src="%PUBLIC_URL%/js/jquery.blockUI.js"></script>
-    <script src="%PUBLIC_URL%/js/waves.js"></script>
-    <script src="%PUBLIC_URL%/js/wow.min.js"></script>
-    <script src="%PUBLIC_URL%/js/jquery.nicescroll.js"></script>
-    <script src="%PUBLIC_URL%/js/jquery.scrollTo.min.js"></script>
+      <script src="%PUBLIC_URL%/js/jquery.core.js"></script>
+      <script src="%PUBLIC_URL%/js/jquery.app.js"></script>
 
-    <script src="%PUBLIC_URL%/plugins/peity/jquery.peity.min.js"></script>
-    <script src="%PUBLIC_URL%/plugins/waypoints/lib/jquery.waypoints.js"></script>
-    <script src="%PUBLIC_URL%/plugins/counterup/jquery.counterup.min.js"></script>
-    <script src="%PUBLIC_URL%/plugins/morris/morris.min.js"></script>
-    <script src="%PUBLIC_URL%/plugins/raphael/raphael-min.js"></script>
-    <script src="%PUBLIC_URL%/plugins/jquery-knob/jquery.knob.js"></script>
-    <script src="%PUBLIC_URL%/pages/jquery.dashboard.js"></script>
-    <script src="%PUBLIC_URL%/js/app.js"></script>
+      <script src="%PUBLIC_URL%/plugins/custombox/js/custombox.min.js"></script>
+      <script src="%PUBLIC_URL%/plugins/custombox/js/legacy.min.js"></script>
 
-    <script src="%PUBLIC_URL%/js/jquery.core.js"></script>
-    <script src="%PUBLIC_URL%/js/jquery.app.js"></script>
+      <script src="%PUBLIC_URL%/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script>
+      <script src="%PUBLIC_URL%/pages/jquery.sweet-alert.init.js"></script>
+        
+      <script src="%PUBLIC_URL%/plugins/moment/moment.js"></script>
+      <script src="%PUBLIC_URL%/plugins/timepicker/bootstrap-timepicker.js"></script>
+      <script src="%PUBLIC_URL%/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+      <script src="%PUBLIC_URL%/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+      <script src="%PUBLIC_URL%/plugins/clockpicker/js/bootstrap-clockpicker.min.js"></script>
+      <script src="%PUBLIC_URL%/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
 
-    <!-- Editable -->
-    <script src="%PUBLIC_URL%/plugins/magnific-popup/js/jquery.magnific-popup.min.js"></script>
-    <script src="%PUBLIC_URL%/plugins/jquery-datatables-editable/jquery.dataTables.js"></script> 
-    <script src="%PUBLIC_URL%/plugins/datatables/dataTables.bootstrap.js"></script>
-    <script src="%PUBLIC_URL%/plugins/tiny-editable/mindmup-editabletable.js"></script>
-    <script src="%PUBLIC_URL%/plugins/tiny-editable/numeric-input-example.js"></script>
-    
-    <script src="%PUBLIC_URL%/pages/datatables.editable.init.js"></script>
-
-    <script src="%PUBLIC_URL%/plugins/moment/moment.js"></script>
-    <script src="%PUBLIC_URL%/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-    <script src="%PUBLIC_URL%/plugins/clockpicker/js/bootstrap-clockpicker.min.js"></script>
-    <script src="%PUBLIC_URL%/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+      <script src="%PUBLIC_URL%/pages/jquery.form-pickers.init.js"></script>
+  
+      <script type="text/javascript">
+        jQuery(document).ready(function($) {
+          $('.counter').counterUp({
+            delay: 100,
+            time: 1200
+          });
+          $(".knob").knob();
+        });
+      </script>
 
   </body>
 </html>

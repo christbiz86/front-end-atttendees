@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import { MDBDataTable } from 'mdbreact';
+import Modal from 'react-responsive-modal';
+import axios from 'axios';
+const url = 'http://localhost:8080/api/shift';
 
 class Shift extends Component {
     constructor(props){
@@ -7,19 +11,126 @@ class Shift extends Component {
             kode: '',
             masuk: '',
             pulang: '',
+            create: true,
 
             isLoading: true,
             shift: [],
-            error: null
+            error: null,
+
+            posts: [],
+            tableRows: [],
+
+            open: false,
+            selectedPost: null // Keep track of the selected post
+        }
+    }
+
+    onOpenModal = i => {
+        this.setState({ 
+            open: true,
+            selectedPost: i // When a post is clicked, mark it as selected
+         });
+    };
+    
+    onCloseModal = () => {
+        this.setState({ open: false });
+    };
+    
+    componentWillMount=async() => {
+        await axios.get(url)
+        .then(response => response.data)
+        .then(data => {
+            // console.log(data);
+            // if (err) throw err;
+            this.setState({ posts: data })
+        })
+        .then(async() => {
+            this.setState({ tableRows:this.assemblePosts(), isLoading:false })
+            console.log(this.state.tableRows);
+        });
+    }
+
+    assemblePosts= () => {
+        let posts =this.state.posts.map((post, i) => {
+            return ({
+                code: post.kode,
+                in: post.masuk,
+                out: post.pulang,
+                status: post.status.status,
+                action: 
+                    <button 
+                        type="button" 
+                        className="btn btn-primary" 
+                        data-toggle="modal" 
+                        data-target="#myModal" 
+                        key={post.id} 
+                        onClick={() => this.onOpenModal(i)}
+                    >
+                       <i className="fa fa-pencil"></i>
+                    </button>
+            })
+        });
+        return posts;
+    }
+
+    renderModal = () => {
+        // Check to see if there's a selected post. If so, render it.
+        if (this.state.selectedPost !== null) {
+            const post = this.state.posts[this.state.selectedPost];
+            return (
+                // <div>
+                //     <h4>{post.id}</h4>
+                //     <h4>{post.kode}</h4>
+                //     <h4>{post.masuk}</h4>
+                //     <h4>{post.pulang}</h4>
+                //     <h4>{post.status.status}</h4>
+                // </div>
+                <div className="modal-dialog modal-dialog-centered">
+                    <div className="modal-body">
+                        <div className="row"> 
+                            <div className="col-md-12"> 
+                                <div className="form-group"> 
+                                    <label for="field-3" className="control-label">Shift Code</label> 
+                                    <input type="text" name="kode" className="form-control" defaultValue={post.kode} onChange={this.handleChange}/>
+                                </div>
+                            </div> 
+                        </div>
+                        <div className="row"> 
+                            <div className="col-md-6"> 
+                                <div className="form-group"> 
+                                    <label for="field-1" className="control-label">Clock In</label> 
+                                    <div className="input-group clockpicker" data-placement="top" data-align="top" data-autoclose="true">
+                                        <input type="text" name="masuk" className="form-control" defaultValue={post.masuk} onChange={this.handleChange} />
+                                        <span className="input-group-addon"> <span className="glyphicon glyphicon-time"></span> </span>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div className="col-md-6"> 
+                                <div className="form-group"> 
+                                    <label for="field-2" className="control-label">Clock Out</label> 
+                                    <div className="input-group clockpicker" data-placement="top" data-align="top" data-autoclose="true">
+                                        <input type="text" name="pulang" className="form-control" defaultValue={post.pulang} onChange={this.handleChange} />
+                                        <span className="input-group-addon"> <span className="glyphicon glyphicon-time"></span> </span>
+                                    </div>
+                                </div> 
+                            </div> 
+                        </div>
+                    </div>
+
+                    <div className="modal-footer">
+                        <button type="submit" className="btn btn-info waves-effect waves-light" value="Submit">Save changes</button>
+                    </div>
+                </div>
+            );
         }
     }
 
     fetchShift() {
         fetch('http://localhost:8080/api/shift')
         .then(response => response.json())
-        .then(dataShift =>
+        .then(data =>
             this.setState({
-                shift: dataShift,
+                shift: data,
                 isLoading: false,
             })
         ).catch(error => this.setState({ error, isLoading: false }));
@@ -57,6 +168,33 @@ class Shift extends Component {
     }
 
     render(){
+        const { open } = this.state;
+        const data = {
+            columns: [
+                {
+                    label:'Shift Code',
+                    field:'code',
+                },
+                {
+                    label:'Check In',
+                    field:'in',
+                },
+                {
+                    label:'Check Out',
+                    field:'out',
+                },
+                {
+                    label:'Status',
+                    field:'status',
+                },
+                {
+                    label:'Action',
+                    field:'action',
+                }
+            ],
+            rows:this.state.tableRows,
+        }
+
         return(
             <div className="content-page">
                 <div className="content">
@@ -70,7 +208,7 @@ class Shift extends Component {
                                         <a href="#">Attendee</a>
                                     </li>
                                     <li>
-                                        <a href="#">TimeSheet</a>
+                                        <a href="#">Time Sheet</a>
                                     </li>
                                     <li className="active">
                                         Shift
@@ -78,7 +216,6 @@ class Shift extends Component {
                                 </ol>
                             </div>
                         </div>
-
                         <div className="row">
                             <div className="col-sm-12">
                                 <ul className="nav nav-tabs tabs">
@@ -88,13 +225,13 @@ class Shift extends Component {
                                             <span className="hidden-xs">Shift List</span> 
                                         </a> 
                                     </li>
-                                    <li className="tab"> 
-                                        <a href="#insert-form" data-toggle="tab" aria-expanded="true"> 
-                                            <span className="visible-xs"><i className="fa fa-envelope-o"></i></span> 
-                                            <span className="hidden-xs">Insert Form</span> 
-                                        </a> 
+                                    <li className="tab">
+                                        <a href="#insert-form" data-toggle="tab" aria-expanded="true">
+                                            <span className="visible-xs"><i className="fa fa-envelope-o"></i></span>
+                                            <span className="hidden-xs">Insert Form</span>
+                                        </a>
                                     </li>
-                                </ul> 
+                                </ul>
                                 
                                 <div className="card-box" id="insert-form">
             			            <h4 className="m-t-0 header-title"><b>Insert Form</b></h4>
@@ -111,32 +248,20 @@ class Shift extends Component {
                                                 <div className="form-group">
                                                     <label className="col-md-2 control-label">Check In</label>
                                                     <div className="col-md-8">
-                                                        {/* <div className="input-group m-b-15"> */}
-                                                            {/* <div className="input-timepicker">
-                                                                <input id="timepicker2" name="masuk" type="text" required className="form-control" onChange={this.handleChange} />
-                                                            </div>
-                                                            <span className="input-group-addon bg-custom b-0 text-white"><i className="glyphicon glyphicon-time"></i></span> */}
-                                                            <div className="input-group clockpicker " data-placement="top" data-align="top" data-autoclose="true">
-                                                                <input type="text" name="masuk" className="form-control" value="13:14" onChange={this.handleChange} />
-                                                                <span className="input-group-addon"> <span className="glyphicon glyphicon-time"></span> </span>
-                                                            </div>
-                                                        {/* </div> */}
+                                                        <div className="input-group clockpicker " data-placement="top" data-align="top" data-autoclose="true">
+                                                            <input type="text" name="masuk" className="form-control" onChange={this.handleChange} />
+                                                            <span className="input-group-addon"> <span className="glyphicon glyphicon-time"></span> </span>
+                                                        </div>
                                                     </div>
                                                 </div>
 
                                                 <div className="form-group">
                                                     <label className="col-md-2 control-label">Check Out</label>
                                                     <div className="col-md-8">
-                                                        {/* <div className="input-group m-b-15"> */}
-                                                            {/* <div className="input-timepicker">
-                                                                <input id="timepicker3" name="pulang" type="text" required className="form-control" onChange={this.handleChange} />
-                                                            </div>
-                                                            <span className="input-group-addon bg-custom b-0 text-white"><i className="glyphicon glyphicon-time"></i></span> */}
-                                                            <div className="input-group clockpicker " data-placement="top" data-align="top" data-autoclose="true">
-                                                                <input type="text" name="pulang" className="form-control" value="13:14" onChange={this.handleChange} />
-                                                                <span className="input-group-addon"> <span className="glyphicon glyphicon-time"></span> </span>
-                                                            </div>
-                                                        {/* </div> */}
+                                                        <div className="input-group clockpicker" data-placement="top" data-align="top" data-autoclose="true">
+                                                            <input type="text" name="pulang" className="form-control" onChange={this.handleChange} />
+                                                            <span className="input-group-addon"> <span className="glyphicon glyphicon-time"></span> </span>
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -155,91 +280,20 @@ class Shift extends Component {
                                     </div>
                                 </div>
 
-                                {/* <div className="card-box" id="shift-list"> */}
-                                <div className="panel" id="shift-list">
-                                    <div className="panel-body">
+                                <div className="card-box table-responsive" id="shift-list">
             			            <h4 className="m-t-0 header-title"><b>Shift List</b></h4>
-                                        <table className="table table-striped" id="datatable-editable">
-                                            <thead>
-                                                <tr>
-                                                    <th>Shift Code</th>
-                                                    <th>Check In</th>
-                                                    <th>Check Out</th>
-                                                    {/* <th>Status</th> */}
-                                                    <th>Action</th>
-                                                    {/* <th>{this.state.shift.map(s => 
-                                                    s.kode
-                                                    )}</th> */}
-                                                </tr>
-                                            </thead>
+                                    <MDBDataTable striped bordered hover data={data} />
+                                </div>
 
-                                            {this.state.error ? <p>{this.state.error.message}</p> : null}
-                                                {/* <tbody>
-                                                    <tr className={this.state.shift}>
-                                                        <td>{this.state.shift.kode}</td>
-                                                        <td>{this.state.shift.masuk}</td>
-                                                        <td>{this.state.shift.pulang}</td>
-                                                        {/* <td>{this.state.shift.status.id}</td> */}
-                                                        {/* <td className="actions">
-                                                            <a href="#" className="hidden on-editing save-row"><i className="fa fa-save"></i></a>
-                                                            <a href="#" className="hidden on-editing remove-row"><i className="fa fa-save"></i></a>
-                                                            <a href="#" className="hidden on-editing cancel-row"><i className="fa fa-times"></i></a>
-                                                            
-                                                            <a href="#" className="on-default edit-row"><i className="fa fa-pencil"></i></a>
-                                                        </td>
-                                                    </tr>
-                                                </tbody> */}
-                                            {!this.state.isLoading ? (
-                                                <tbody>
-                                                    {this.state.shift.map(s => (
-                                                        <tr>
-                                                        <td>{s.kode}</td>
-                                                        <td>Internet
-                                                        Explorer 4.0
-                                                        </td>
-                                                        <td>Win 95+</td>
-                                                        <td className="actions">
-                                                        
-                                                        </td>
-                                                    </tr>
-                                                    ))}
-                                                </tbody>
-                                            ) : (
-                                                <div>Loading...</div>
-                                            )}
-                                        </table>
-                                    </div>
+                                <div>
+                                    <Modal open={open} onClose={this.onCloseModal} center>
+                                        <h3>Edit Shift</h3>
+                                        <div>{this.renderModal()}</div>
+                                    </Modal>
                                 </div>
                                 
                             </div>
-                        </div> {/*  */}
-
-                        {/* Modal */}
-                        <div id="dialog" className="modal-block mfp-hide">
-                            <section className="panel panel-info panel-color">
-                                <header className="panel-heading">
-                                    <h2 className="panel-title">Are you sure?</h2>
-                                </header>
-                                <div className="panel-body">
-                                    <div className="modal-wrapper">
-                                        <div className="modal-text">
-                                            <p>Are you sure that you want to save this row?</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="row m-t-20">
-                                        <div className="col-md-12 text-right">
-                                            <button id="dialogConfirm" className="btn btn-primary waves-effect waves-light" type="submit" value="Submit">
-                                                Confirm
-                                            </button>
-                                            &nbsp;
-                                            <button id="dialogCancel" className="btn btn-default waves-effect">Cancel</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
                         </div>
-
                     </div>
                 </div>
             </div>
