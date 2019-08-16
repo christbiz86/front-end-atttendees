@@ -6,11 +6,7 @@ import Annual from './Annual';
 import Unit from './Unit';
 import Posisi from './Posisi';
 import Company from './Company';
-<<<<<<< HEAD
-import Report from './Report';
-=======
 import Reporting from './Reporting';
->>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
 
 class Sidebar extends Component {
     render(){
@@ -25,15 +21,9 @@ class Sidebar extends Component {
                             <TimeSheet />
                             <Employee />
                             <Annual />
-<<<<<<< HEAD
-                            <Unit />
-                            <Posisi />
-                            <Report />
-=======
                             <Reporting />
                             <Unit />
                             <Posisi />
->>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
                         </ul>
                         <div className="clearfix"></div>
                     </div>

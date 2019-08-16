@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Libur extends Component {
+class Dashboard extends Component {
     render(){
         return(
             <div className="content-page">
@@ -9,7 +9,7 @@ class Libur extends Component {
                         {/* Page Title */}
                         <div className="row">
                             <div className="col-sm-12">
-                                <h4 className="page-title">Libur</h4>
+                                <h4 className="page-title">Dashboard</h4>
                             </div>
                         </div>
                     </div>
@@ -19,4 +19,4 @@ class Libur extends Component {
     }
 }
 
-export default Libur;
+export default Dashboard;

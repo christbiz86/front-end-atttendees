@@ -61,11 +61,7 @@ class EmployeeForm extends React.Component{
     // }
 
     fetchCompany() {
-<<<<<<< HEAD
         fetch(`http://localhost:8282/companies`)
-=======
-        fetch(`http://localhost:8080/companies`)
->>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
         .then(response => response.json())
         .then(data =>
             this.setState({
@@ -77,11 +73,7 @@ class EmployeeForm extends React.Component{
     }
 
     fetchUnit() {
-<<<<<<< HEAD
         fetch(`http://localhost:8282/unit`)
-=======
-        fetch(`http://localhost:8080/unit`)
->>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
         .then(response => response.json())
         .then(data =>
             this.setState({
@@ -93,11 +85,7 @@ class EmployeeForm extends React.Component{
     }
 
     fetchPosisi() {
-<<<<<<< HEAD
         fetch(`http://localhost:8282/posisi`)
-=======
-        fetch(`http://localhost:8080/posisi`)
->>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
         .then(response => response.json())
         .then(data =>
             this.setState({
@@ -109,11 +97,7 @@ class EmployeeForm extends React.Component{
     }
 
     fetchTipeUser() {
-<<<<<<< HEAD
         fetch(`http://localhost:8282/tipeuser`)
-=======
-        fetch(`http://localhost:8080/tipeuser`)
->>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
         .then(response => response.json())
         .then(data =>
             this.setState({
@@ -170,11 +154,7 @@ class EmployeeForm extends React.Component{
             }
         }
 
-<<<<<<< HEAD
         fetch('http://localhost:8282/upload', {
-=======
-        fetch('http://localhost:8080/upload', {
->>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
                 method: 'POST',
                 body:formData
                 ,
@@ -190,11 +170,7 @@ class EmployeeForm extends React.Component{
         }
 
         postData(data){
-<<<<<<< HEAD
         fetch('http://localhost:8282/users', { 
-=======
-        fetch('http://localhost:8080/users', { 
->>>>>>> 246e098cc521fdc2b4972af15f4f49ce51df1f1d
             method: 'POST', // or 'PUT'
             body: JSON.stringify(data),
             headers:{
@@ -216,8 +192,6 @@ class EmployeeForm extends React.Component{
     
     render() {
         return (
-            <div>
-            <Layout />
             <div className="content-page">
                 <div className="container">
                     <div className="row">
@@ -399,8 +373,7 @@ class EmployeeForm extends React.Component{
                     </div>
                 </div>
             </div>
-            </div>
-        )
+        );
     }
 }
 
