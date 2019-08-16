@@ -3,7 +3,7 @@ import { MDBDataTable } from 'mdbreact';
 import Layout from '../../layout/Layout';
 import axios from 'axios';
 
-const url = 'http://localhost:8181/request/Approved';
+const url = 'http://localhost:8282/request/Approved';
 
 class ListPengajuan extends Component {
     constructor(props){
@@ -17,7 +17,7 @@ class ListPengajuan extends Component {
 
     
     componentWillMount=async() => {
-        await axios.request('http://localhost:8181/request/Approved', {
+        await axios.request('http://localhost:8282/request/Approved', {
                 method: 'GET',
                 
                 headers:{
@@ -88,7 +88,7 @@ class ListPengajuan extends Component {
             ],
 
             rows:this.state.tableRows,
-        }
+        }   
             return (
                 <div>
                 <Layout />
