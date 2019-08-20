@@ -21,17 +21,18 @@ class AnnualRequest extends Component {
     }
     
     handleApprove = event => {
-        event.preventDefault();   
+        // event.preventDefault();   
         this.Approve(event);
     };
 
     handleReject = event => {
-        event.preventDefault();   
+        // event.preventDefault();   
         this.Reject(event);
     };
 
     Approve(event){
-        const { value } = event.target;
+        const  value  = event.target.value;
+
         fetch('http://localhost:8282/request/Approved', {
                 method: 'PATCH',
                 body: 
@@ -51,7 +52,7 @@ class AnnualRequest extends Component {
     }
 
     Reject(event){
-        const { value } = event.target;
+        const  value = event.target.value;
         fetch('http://localhost:8282/request/Rejected', {
                 method: 'PATCH',
                 body: 
@@ -139,7 +140,8 @@ class AnnualRequest extends Component {
                                                     <th data-priority="2">Nama</th>
                                                     <th data-priority="5">Tanggal Mulai</th>
                                                     <th data-priority="6">Tanggal Selesai</th>
-                                                    <th data-priority="7">Status</th>
+                                                    <th data-priority="7">Keterangan</th>
+                                                    <th data-priority="8">Status</th>
                                                     <th></th>
                                                     
                                                 </tr>
@@ -154,7 +156,8 @@ class AnnualRequest extends Component {
                                                                 <th data-priority="2">{annual.user.nama}</th>
                                                                 <th data-priority="5">{annual.tglMulai}</th>
                                                                 <th data-priority="6">{annual.tglAkhir}</th>
-                                                                <th data-priority="7">{annual.status.status}</th>
+                                                                <th data-priority="7">{annual.keterangan}</th>
+                                                                <th data-priority="8">{annual.status.status}</th>
                                                                 <th>
                                                                     <button type="submit" name ="approve" id="sa-warning" className="btn btn-primary waves-effect waves-light m-l-10 btn-sm"
                                                                      value={index} onClick={this.handleApprove}>

@@ -44,7 +44,7 @@ class FormPengajuan extends Component {
                     user:user.idUser,
                     tglMulai:this.state.tglMulai,
                     tglAkhir:this.state.tglAkhir,
-                    
+                    keterangan:this.state.keterangan
                 
                 }),
                 headers:{

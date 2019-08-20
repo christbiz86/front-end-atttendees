@@ -53,7 +53,8 @@ class ListPengajuan extends Component {
                     nama:annual.user.nama,
                     tglMulai:annual.tglMulai,
                     tglAkhir:annual.tglAkhir,
-                    status:annual.status.status,
+                    keterangan:annual.keterangan,
+                    status:annual.status.status
                 }
                 
             )
@@ -80,6 +81,10 @@ class ListPengajuan extends Component {
                 {
                     label: 'Tanggal Selesai',
                     field: 'tglAkhir'
+                },
+                {
+                    label: 'Keterangan',
+                    field: 'keterangan'
                 },
                 {
                     label: 'Status',

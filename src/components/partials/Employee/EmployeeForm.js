@@ -3,7 +3,7 @@ import moment from 'moment';
 import Layout from '../../layout/Layout';
 
 let token = localStorage.getItem('token');
-let usertemp = localStorage.getItem('user');
+let usertemp = JSON.parse(localStorage.getItem('user'));
 class EmployeeForm extends React.Component{
     constructor(props){
         super(props);
@@ -24,13 +24,13 @@ class EmployeeForm extends React.Component{
 
             idStatus: '1ead5a90-5005-4566-bad3-2ab977acec8f'
             ,
-            idCompany: '' // usertemp.idCompanyUnitPosisi
+            idCompany: usertemp.idCompanyUnitPosisi.idCompany.id
             ,
             idUnit:''
             ,
-            idPosisi:'bc0f3150-e1ee-4200-8cca-805b4b6b8e2e'
+            idPosisi:''
             ,
-            idTipeUser:''
+            idTipeUser: ''
             ,
             getCompany:[],
             getUnit:[],
@@ -78,6 +78,7 @@ class EmployeeForm extends React.Component{
         .then(data =>
             this.setState({
                 getUnit: data,
+                idUnit:data[0].id,
                 isLoading: false,
             })
         )
@@ -90,6 +91,7 @@ class EmployeeForm extends React.Component{
         .then(data =>
             this.setState({
                 getPosisi: data,
+                idPosisi:data[0].id,
                 isLoading: false,
             })
         )
@@ -102,6 +104,7 @@ class EmployeeForm extends React.Component{
         .then(data =>
             this.setState({
                 getTipeUser: data,
+                idTipeUser:data[0].id,
                 isLoading: false,
             })
         )
@@ -126,35 +129,38 @@ class EmployeeForm extends React.Component{
     event.preventDefault();
     const formData = new FormData();
     formData.append('file',this.state.file);
-        const data = {
-            user: {
-                kode: this.state.kode, 
-                nama: this.state.nama, 
-                alamat: this.state.alamat, 
-                tglLahir: this.state.tglLahir, 
-                telp: this.state.telp,
-                email: this.state.email,
-                password: this.state.password,
-                foto: formData.get("file").name,
-                idStatus: {
-                    id:this.state.idStatus
-                }
-            },
-            company: {
-                id:this.state.idCompany
-            },
-            unit: {
-                id: this.state.idUnit
-            },
-            posisi: {
-                id: this.state.idPosisi
-            },
-            tipeUser: {
-                id: this.state.idTipeUser
-            }
-        }
 
-        fetch('http://localhost:8282/upload', {
+    const data = {
+        user: {
+            kode: this.state.kode, 
+            nama: this.state.nama, 
+            alamat: this.state.alamat, 
+            tglLahir: this.state.tglLahir, 
+            telp: this.state.telp,
+            email: this.state.email,
+            password: this.state.password,
+            foto: formData.get("file").name,
+            idStatus: {
+                id:this.state.idStatus
+            }
+        },
+        company: {
+            id:this.state.idCompany
+        },
+        unit: {
+            id: this.state.idUnit
+        },
+        posisi: {
+            id: this.state.idPosisi
+        },
+        tipeUser: {
+            id: this.state.idTipeUser
+        }
+    }
+
+    formData.append('user',JSON.stringify(data));
+
+        fetch('http://localhost:8282/coba', {
                 method: 'POST',
                 body:formData
                 ,
@@ -165,7 +171,7 @@ class EmployeeForm extends React.Component{
             .then(res => res.json())
             .catch(error => console.error('Error:', error))
             .then(response => console.log('Success:', response)  
-            ,this.postData(data)      
+            // ,this.postData(data)      
             ); 
         }
 
@@ -179,7 +185,7 @@ class EmployeeForm extends React.Component{
             }
         })
         .then(res => res.json())
-        .catch(error => console.error('Error:', error))
+        .catch(error => console.erroyr('Error:', error))
         .then(response => console.log('Success:', response)); 
     }
 
@@ -283,7 +289,7 @@ class EmployeeForm extends React.Component{
                                             <div className="form-group clearfix">
                                                 <label className="col-lg-2 control-label " htmlFor="email2">Unit *</label>
                                                 <div className="col-lg-10">
-                                                    <select className="selectpicker" data-style="btn-white" defaultValue={this.state.getUnit[0]} name="idUnit" onChange={this.handleChange}>
+                                                    <select className="selectpicker" data-style="btn-white" name="idUnit" onChange={this.handleChange}>
                                                     {this.state.error ? <p>{this.state.error.message}</p> : null}
                                                     {!this.state.isLoading ? (
                                                         this.state.getUnit.map(u => {
@@ -301,7 +307,7 @@ class EmployeeForm extends React.Component{
                                             <div className="form-group clearfix">
                                                 <label className="col-lg-2 control-label " htmlFor="address2">Posisi *</label>
                                                 <div className="col-lg-10">
-                                                    <select className="selectpicker" data-style="btn-white" value={this.state.getPosisi.indexOf(0)} name="idPosisi" onChange={this.handleChange}>
+                                                    <select className="selectpicker" data-style="btn-white" name="idPosisi" onChange={this.handleChange}>
                                                     {this.state.error ? <p>{this.state.error.message}</p> : null}
                                                     {!this.state.isLoading ? (
                                                         this.state.getPosisi.map(p => {
@@ -317,9 +323,9 @@ class EmployeeForm extends React.Component{
                                             </div>
 
                                             <div className="form-group clearfix">
-                                                <label className="col-lg-2 control-label " htmlFor="address2">Tipe User *{this.state.getTipeUser.indexOf(0)}</label>
+                                                <label className="col-lg-2 control-label " htmlFor="address2">Tipe User *</label>
                                                 <div className="col-lg-10">
-                                                    <select className="selectpicker" data-style="btn-white" value={this.state.getTipeUser.indexOf(0)} name="idTipeUser" onChange={this.handleChange}>
+                                                    <select className="selectpicker" data-style="btn-white"  name="idTipeUser" onChange={this.handleChange}>
                                                     {this.state.error ? <p>{this.state.error.message}</p> : null}
                                                     {!this.state.isLoading ? (
                                                         this.state.getTipeUser.map(t => {
