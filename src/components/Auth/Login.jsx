@@ -11,7 +11,8 @@ class Login extends Component {
         this.state = {
             email: '',
             password: '',
-            submitted: false
+            submitted: false,
+            isLoading: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -26,7 +27,7 @@ class Login extends Component {
     handleSubmit(e) {
         e.preventDefault();
 
-        this.setState({ submitted: true });
+        this.setState({ submitted: true, isLoading: true });
         const { email, password } = this.state;
 
         if(email && password) {
@@ -36,7 +37,7 @@ class Login extends Component {
 
     render(){
         const { loggingIn } = this.props;
-        const { email, password, submitted } = this.state;
+        const { email, password, submitted, isLoading } = this.state;
         return(
             <div className="wrapper-page">
         	<div className=" card-box">
@@ -68,7 +69,11 @@ class Login extends Component {
                 
                 <div className="form-group text-center m-t-40">
                     <div className="col-xs-12">
-                        <button className="btn btn-pink btn-block text-uppercase waves-effect waves-light" type="submit">Log In</button>
+                        <button className="btn btn-pink btn-block text-uppercase waves-effect waves-light" type="submit" onClick={this.handleSubmit} disabled={isLoading}>
+                        { isLoading &&  <i className="fa fa-refresh fa-spin"> </i> }
+                        { isLoading &&  <span> Loading </span> }
+                        { !isLoading &&  <span> Log In </span> }
+                        </button>
                     </div>
                 </div>
 
