@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-let user = JSON.parse(localStorage.getItem('user'));
 class Profile extends Component {
 
     constructor(props){
@@ -15,7 +14,7 @@ class Profile extends Component {
     componentDidMount(){
         axios
         .get(
-            'http://localhost:8080/image/'+user.idUser.foto,
+            'http://localhost:8080/image/'+ JSON.parse(localStorage.getItem('user')).idUser.foto,
             {   responseType: 'arraybuffer',
                 headers:{
                             'Authorization': 'Bearer ' + localStorage.getItem('token')
