@@ -30,6 +30,69 @@ export async function getFullFaceDescription(blob, inputSize = 512) {
       return fullDesc;
 };
 
+// export async function getFullFaceDescription(blob) {
+  
+//   const blobs = await Promise.all(
+//     ['sheldon.png', 'raj.png', 'leonard.png', 'howard.png'].map(
+//       uri => (await fetch(uri)).blob()
+//     )
+//   )
+
+//   const images = await Promise.all(blobs.map(
+//     blob => await faceapi.bufferToImage(blob)
+//   ))
+
+//   const minConfidence = 0.8  
+//   const fullFaceDescriptions = await faceapi.allFaces(blob, minConfidence)
+//   const resized = fullFaceDescriptions.map(fd => fd.forSize(width, height))
+
+//   fullFaceDescription.forEach((fd, i) => {
+//     faceapi.drawDetection(canvas, fd.detection, { withScore: true })
+//   })
+//   fullFaceDescription.forEach((fd, i) => {
+//     faceapi.drawLandmarks(canvas, fd.landmarks, { drawLines: true })
+//   })
+
+//   const refDescriptions = await Promsie.all(images.map(
+//     img => (await faceapi.allFaces(img))[0]
+//   ))
+  
+//   const refDescriptors = refDescriptions.map(fd => fd.descriptor)
+
+//   const sortAsc = (a, b) => a - b
+//   const labels = ['sheldon', 'raj', 'leonard', 'howard']
+
+//   const results = fullFaceDescription.map((fd, i) => {
+//     const bestMatch = refDescriptors.map(
+//       refDesc => ({
+//         label: labels[i],
+//         distance: faceapi.euclideanDistance(fd.descriptor, refDesc)
+//       })
+//     ).sort(sortAsc)[0]
+        
+//     return {
+//       detection: fd.detection,
+//       label: bestMatch.label,
+//       distance: bestMatch.distance
+//     }
+//   })
+
+//   const maxDistance = 0.6
+
+//   results.forEach(result => {
+//     faceapi.drawDetection(canvas, result.detection, { withScore: false })
+    
+//     const text = `${result.distance < maxDistance ? result.className : 'unkown'} (${result.distance})`
+//     const { x, y, height: boxHeight } = detection.getBox()
+//     faceapi.drawText(
+//       canvas.getContext('2d'),
+//       x,
+//       y + boxHeight,
+//       text
+//     )
+//   })
+// };
+
 export async function createMatcher(faceProfile) {
     // Create labeled descriptors of member from profile
     let members = Object.keys(faceProfile);

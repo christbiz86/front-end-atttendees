@@ -14,6 +14,7 @@ import ReportAttendee from './components/partials/Reporting/ReportAttendee';
 import Libur from './components/partials/TimeSheet/Libur';
 import Project from './components/partials/TimeSheet/Project';
 import Shift from './components/partials/TimeSheet/Shift';
+import Attendee from './components/partials/Attendee/Attendee';
 
 import { PrivateRoute } from './components/_security/PrivateRoute';
 import { LoginPage } from './components/auth/LoginPage';
@@ -53,6 +54,7 @@ class App extends React.Component {
                     <PrivateRoute exact path="/timesheet/Libur" component={Libur} />
                     <PrivateRoute exact path="/timesheet/Project" component={Project} />
                     <PrivateRoute exact path="/timesheet/Shift" component={Shift} />
+                    <PrivateRoute exact path="/attendee" component={Attendee} />
                   </Switch>
                 </div>
               </Router>

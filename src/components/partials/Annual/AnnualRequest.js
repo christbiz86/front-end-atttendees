@@ -45,10 +45,8 @@ class AnnualRequest extends Component {
             })
             .then(res => res.json())
             .catch(error => console.error('Error:', error))
-            .then(response => console.log('Success:', response),
-            
-             
-            ); 
+            .then(response => console.log('Success:', response), 
+        ); 
     }
 
     Reject(event){
@@ -66,9 +64,7 @@ class AnnualRequest extends Component {
             .then(res => res.json())
             .catch(error => console.error('Error:', error))
             .then(response => console.log('Success:', response),
-            
-             
-            ); 
+        ); 
     }
 
     componentDidMount() {
@@ -84,9 +80,8 @@ class AnnualRequest extends Component {
             .then(listRequest => this.setState({
                 listRequest
             }))
-            .catch(error => console.log('parsing failed', error))
-            
-            
+            .catch(error => console.log('parsing failed', error)
+        )       
     }
 
     render() {

@@ -36,12 +36,18 @@ class FormPengajuan extends Component {
     }
 
     Request(){
+        console.log(this.state.tglMulai);
         fetch('http://localhost:8282/request', {
                 method: 'POST',
                 body: JSON.stringify({
                     
                     kode:"",
-                    user:user.idUser,
+                    userCompany:{
+                        id:user.id,
+                        idUser:{
+                            id:user.idUser.id
+                        }
+                    },
                     tglMulai:this.state.tglMulai,
                     tglAkhir:this.state.tglAkhir,
                     keterangan:this.state.keterangan

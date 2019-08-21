@@ -49,8 +49,8 @@ class ListPengajuan extends Component {
         let items = this.state.items.map((annual) => {
             return (
                 {
-                    nik:annual.user.kode,
-                    nama:annual.user.nama,
+                    nik:annual.userCompany.idUser.kode,
+                    nama:annual.userCompany.idUser.nama,
                     tglMulai:annual.tglMulai,
                     tglAkhir:annual.tglAkhir,
                     keterangan:annual.keterangan,
