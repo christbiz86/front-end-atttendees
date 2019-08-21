@@ -18,13 +18,21 @@ class Attendee extends Component {
             fullDesc: null,
             faceMatcher: null,
             facingMode: null,
+            time: new Date()
         };
+    }
+
+    currentTime(){
+        this.setState({
+            time: new Date()
+        })
     }
 
     componentWillMount() {
         loadModels();
         this.setInputDevice();
         this.matcher();
+        setInterval(() => this.currentTime(), 500)
     }
 
     setInputDevice = () => {
@@ -127,7 +135,6 @@ class Attendee extends Component {
                                 </div>
                             </div>
                             <div className="card-box table-responsive" id="shift-list">
-                                <h4 className="m-t-0 header-title"><b>Attendee In</b></h4>
                                 <div
                                     className="Camera" style={{
                                         display: 'flex',
@@ -136,6 +143,8 @@ class Attendee extends Component {
                                     }}
                                 >
                                     {/* <p>Camera: {camera}</p> */}
+                                    <h4 className="m-t-0 header-title"><b>Attendee In</b></h4>
+                                    <h5 className="m-t-0 header-title">{this.state.time.toLocaleTimeString()}</h5>
                                     <div 
                                         style={{
                                             width: WIDTH,

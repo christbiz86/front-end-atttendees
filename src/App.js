@@ -55,6 +55,7 @@ class App extends React.Component {
                     <PrivateRoute exact path="/timesheet/Project" component={Project} />
                     <PrivateRoute exact path="/timesheet/Shift" component={Shift} />
                     <PrivateRoute exact path="/attendee" component={Attendee} />
+                    <Route path="/logout" component={LoginPage} />
                   </Switch>
                 </div>
               </Router>
