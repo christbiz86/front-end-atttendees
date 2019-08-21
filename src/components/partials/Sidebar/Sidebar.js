@@ -6,6 +6,7 @@ import Annual from './Annual';
 import Unit from './Unit';
 import Posisi from './Posisi';
 import Company from './Company';
+import Reporting from './Reporting';
 
 class Sidebar extends Component {
     render(){
@@ -20,6 +21,7 @@ class Sidebar extends Component {
                             <TimeSheet />
                             <Employee />
                             <Annual />
+                            <Reporting />
                             <Unit />
                             <Posisi />
                         </ul>

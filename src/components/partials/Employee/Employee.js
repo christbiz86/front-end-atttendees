@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-export default class Employee extends Component {
+export default class User extends Component {
     constructor(props){
         super(props);
         this.state = { 
@@ -46,27 +46,16 @@ export default class Employee extends Component {
         event.preventDefault();
     }
 
-    // fetchUserByFilter() {
-    //     const userCom = this.state.userCom;
-    //     fetch(`http://localhost:8080/usercompany/filter`, {
-    //         method: 'POST',
-    //         body: JSON.stringify(userCom),
-    //         headers:{
-    //             'Content-Type': 'application/json'
-    //         }
-    //     })
-    //     .then(response => response.json())
-    //     .then(data =>
-    //         this.setState({
-    //             userCompany: data,
-    //             isLoading: false,
-    //         })
-    //     )
-    //     .catch(error => this.setState({ error, isLoading: false }));
-    // }
-
-    fetchUser() {
-        fetch(`http://localhost:8080/usercompany`)
+    fetchUserByFilter() {
+        const userCom = this.state.userCom;
+        fetch(`http://localhost:8080/usercompany/filter`, {
+            method: 'POST',
+            body: JSON.stringify(userCom),
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
         .then(response => response.json())
         .then(data =>
             this.setState({
@@ -74,17 +63,30 @@ export default class Employee extends Component {
                 isLoading: false,
             })
         )
-        .catch(error => this.setState({ error, isLoading: false }));         /* fetch Method GET */
+        .catch(error => this.setState({ error, isLoading: false }));
     }
+
+    // fetchUser() {
+    //     fetch(`http://localhost:8080/usercompany`)
+    //     .then(response => response.json())
+    //     .then(data =>
+    //         this.setState({
+    //             userCompany: data,
+    //             isLoading: false,
+    //         })
+    //     )
+    //     .catch(error => this.setState({ error, isLoading: false }));         /* fetch Method GET */
+    // }
   
     componentDidMount() {
-        // this.fetchUserByFilter();
-        this.fetchUser();
+        this.fetchUserByFilter();
+        // this.fetchUser();
     }
 
     render() {
         return(
-            <div className="container">
+            <div className="content-page">
+                <div className="container">
                 <div className="row">
                     <div className="col-sm-12">
 
@@ -106,15 +108,13 @@ export default class Employee extends Component {
                 <div className="row">
                     <div className="col-sm-12">
                         <div className="card-box table-responsive">
-                            <h4 className="m-t-0 header-title"><b>Employee</b></h4>
-                            <p className="text-muted font-13 m-b-30">
-                                Daftar Employee<code>$().DataTable();</code>.
-                            </p>
+                            <h4 className="m-t-0 header-title"><b>User</b></h4>
+                            <p className="text-muted font-13 m-b-30"/>
 
                             <table id="datatable" className="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <td>Nama Employee</td>
+                                    <td>Nama User</td>
                                     <td>Alamat</td>
                                     <td>Tanggal Lahir</td>
                                     <td>Telp</td>
@@ -158,6 +158,7 @@ export default class Employee extends Component {
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         );
     }

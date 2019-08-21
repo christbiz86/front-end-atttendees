@@ -1,36 +1,26 @@
 import React from 'react';
 import moment from 'moment';
 
+let token = localStorage.getItem('token');
 class EmployeeForm extends React.Component{
     constructor(props){
         super(props);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit=this.handleSubmit.bind(this);
         this.state = {
             isLoading: true,
-            user: {
-                kode:'USER010',
-                nama:'BASTIAN',
-                alamat:'Cikarang',
-                tglLahir: moment('1995-08-15', moment.ISO_8601), 
-                telp:'080989999',
-                email:'admin@admin.com',
-                password:'',
-                foto:'',
-                idStatus: {
-                    id: '1ead5a90-5005-4566-bad3-2ab977acec8f'
-                }
-            },
-            company:{
-                id:'b50fc31e-92fb-4cd9-ac2d-059def26d222'
-            },
-            unit:{
-                id:'5c441313-3ea0-443b-9d53-be80107a5203'
-            },
-            posisi:{
-                id:'bc0f3150-e1ee-4200-8cca-805b4b6b8e2e'
-            },
-            tipeUser:{
-                id:'6059356d-3a69-49a0-a152-d6598c53c280'
-            },
+            kode:'',
+            nama:'',
+            alamat:'',
+            tglLahir: moment('', moment.ISO_8601), 
+            telp:'',
+            email:'',
+            password:'',
+            foto:'null',
+            idStatus: '1ead5a90-5005-4566-bad3-2ab977acec8f',
+            unit: '',
+            posisi: '',
+            tipeUser: '',
             getCompany:[],
             getUnit:[],
             getPosisi:[],
@@ -39,44 +29,13 @@ class EmployeeForm extends React.Component{
         }
     }
 
-    // constructor(props){
-    //     super(props);
-    //     this.state = { 
-    //         isLoading: true,
-    //         userCompany: [],
-    //         userCom: {
-    //             idUser:{
-    //                 nama: 'Sule',
-    //             },
-    //             idCompanyUnitPosisi:{
-    //                 id: null
-    //             },
-    //             idTipeUser:{
-    //                 id: null
-    //             }
-    //         },
-    //         error: null
-    //     }
-    // }
-
-    fetchCompany() {
-        fetch(`http://localhost:8080/companies`)
-        .then(response => response.json())
-        .then(data =>
-            this.setState({
-                getCompany: data,
-                isLoading: false,
-            })
-        )
-        .catch(error => this.setState({ error, isLoading: false }));         /* fetch Method GET */
-    }
-
     fetchUnit() {
         fetch(`http://localhost:8080/unit`)
         .then(response => response.json())
         .then(data =>
             this.setState({
                 getUnit: data,
+                unit: data[0].id,
                 isLoading: false,
             })
         )
@@ -89,6 +48,7 @@ class EmployeeForm extends React.Component{
         .then(data =>
             this.setState({
                 getPosisi: data,
+                posisi: data[0].id,
                 isLoading: false,
             })
         )
@@ -101,6 +61,7 @@ class EmployeeForm extends React.Component{
         .then(data =>
             this.setState({
                 getTipeUser: data,
+                tipeUser: data[0].id,
                 isLoading: false,
             })
         )
@@ -109,7 +70,7 @@ class EmployeeForm extends React.Component{
     
     handleChange = event =>{
         this.setState({ 
-            [event.target.name]:event.target.value
+            [event.target.name]: event.target.value
          })
     }
 
@@ -118,29 +79,26 @@ class EmployeeForm extends React.Component{
 
         const data = {
             user: {
-                kode: this.state.user.kode, 
-                nama: this.state.user.nama, 
-                alamat: this.state.user.alamat, 
-                tglLahir: this.state.user.tglLahir, 
-                telp: this.state.user.telp,
-                email: this.state.user.email,
-                password: this.state.user.password,
-                foto: this.state.user.foto,
+                kode: this.state.kode, 
+                nama: this.state.nama, 
+                alamat: this.state.alamat, 
+                tglLahir: this.state.tglLahir, 
+                telp: this.state.telp,
+                email: this.state.email,
+                password: this.state.password,
+                foto: this.state.foto,
                 idStatus: {
-                    id: this.state.user.idStatus.id
+                    id: this.state.idStatus
                 }
             },
-            // company: {
-            //     id:this.state.company.id
-            // },
             unit: {
-                id: this.state.unit.id
+                id: this.state.unit
             },
             posisi: {
-                id: this.state.posisi.id
+                id: this.state.posisi
             },
             tipeUser: {
-                id: this.state.tipeUser.id
+                id: this.state.tipeUser
             }
         }
 
@@ -149,7 +107,7 @@ class EmployeeForm extends React.Component{
             body: JSON.stringify(data),
             headers:{
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + token
             }
         })
         .then(res => res.json())
@@ -158,7 +116,6 @@ class EmployeeForm extends React.Component{
     }
 
     componentDidMount() {
-        this.fetchCompany();
         this.fetchUnit();
         this.fetchPosisi();
         this.fetchTipeUser();
@@ -183,7 +140,7 @@ class EmployeeForm extends React.Component{
                                             <div className="form-group clearfix">
                                                 <label className="col-lg-2 control-label" htmlFor="name2">Kode Employee *</label>
                                                 <div className="col-lg-10">
-                                                    <input id="name2" name="kode" type="text" className="required form-control" onChange={this.handleChange}/>
+                                                    <input id="kode" name="kode" type="text" className="required form-control" onChange={this.handleChange}/>
                                                 </div>
                                             </div>
                                             
@@ -229,29 +186,10 @@ class EmployeeForm extends React.Component{
                                         <h3>Step 2</h3>
                                         <section>
 
-                                            {/* <div className="form-group clearfix">
-                                                <label className="col-lg-2 control-label " htmlFor="surname2">Company *</label>
-                                                <div className="col-lg-10">
-                                                    <select className="selectpicker" data-style="btn-white" name="company" onChange={this.handleChange}>
-                                                    {this.state.error ? <p>{this.state.error.message}</p> : null}
-                                                    {!this.state.isLoading ? (
-                                                        this.state.getCompany.map(c => {
-                                                            return (
-                                                                <option key={c.id} value={c.id}>{c.nama}</option>
-                                                            );
-                                                        
-                                                        })
-                                                    ) : (
-                                                        <h3>Loading...</h3>
-                                                    )}
-                                                    </select>
-                                                </div>
-                                            </div> */}
-
                                             <div className="form-group clearfix">
                                                 <label className="col-lg-2 control-label " htmlFor="email2">Unit *</label>
                                                 <div className="col-lg-10">
-                                                    <select className="selectpicker" data-style="btn-white" name="unit" onChange={this.handleChange}>
+                                                    <select className="selectpicker" data-style="btn-white" value={this.state.getUnit.indexOf(0)} name="unit" onChange={this.handleChange}>
                                                     {this.state.error ? <p>{this.state.error.message}</p> : null}
                                                     {!this.state.isLoading ? (
                                                         this.state.getUnit.map(u => {
@@ -269,7 +207,7 @@ class EmployeeForm extends React.Component{
                                             <div className="form-group clearfix">
                                                 <label className="col-lg-2 control-label " htmlFor="address2">Posisi *</label>
                                                 <div className="col-lg-10">
-                                                    <select className="selectpicker" data-style="btn-white" name="posisi" onChange={this.handleChange}>
+                                                    <select className="selectpicker" data-style="btn-white" defaultValue={this.state.getPosisi.indexOf(0)} name="posisi" onChange={this.handleChange}>
                                                     {this.state.error ? <p>{this.state.error.message}</p> : null}
                                                     {!this.state.isLoading ? (
                                                         this.state.getPosisi.map(p => {
@@ -287,7 +225,7 @@ class EmployeeForm extends React.Component{
                                             <div className="form-group clearfix">
                                                 <label className="col-lg-2 control-label " htmlFor="address2">Tipe User *</label>
                                                 <div className="col-lg-10">
-                                                    <select className="selectpicker" data-style="btn-white" name="tipeUser" onChange={this.handleChange}>
+                                                    <select className="selectpicker" data-style="btn-white" name="tipeUser" value={this.state.getTipeUser.indexOf(0)} onChange={this.handleChange}>
                                                     {this.state.error ? <p>{this.state.error.message}</p> : null}
                                                     {!this.state.isLoading ? (
                                                         this.state.getTipeUser.map(t => {

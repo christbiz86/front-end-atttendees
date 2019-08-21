@@ -10,7 +10,7 @@ class ListPengajuan extends Component {
     }
 
     componentDidMount() {
-        fetch("http://localhost:8181/request/Approved",{
+        fetch("http://localhost:8080/request/Approved",{
             method: 'GET',
             headers:{
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
