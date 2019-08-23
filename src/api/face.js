@@ -30,6 +30,7 @@ export async function getFullFaceDescription(blob, inputSize = 512) {
       return fullDesc;
 };
 
+<<<<<<< HEAD
 // export async function getFullFaceDescription(blob) {
   
 //   const blobs = await Promise.all(
@@ -93,6 +94,8 @@ export async function getFullFaceDescription(blob, inputSize = 512) {
 //   })
 // };
 
+=======
+>>>>>>> 5f5d8b28e32c316a00935d886381e48733b07a91
 export async function createMatcher(faceProfile) {
     // Create labeled descriptors of member from profile
     let members = Object.keys(faceProfile);

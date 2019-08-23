@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import Webcam from 'react-webcam';
 import { loadModels, getFullFaceDescription, createMatcher } from '../../../api/face';
-import DrawBox from './DrawBox';
+import DrawBox from './Drawbox';
 import { JSON_PROFILE } from '../../../common/profile';
-import * as faceapi from 'face-api.js';
 
 const WIDTH = 420;
 const HEIGHT = 420;
@@ -19,14 +18,12 @@ class Attendee extends Component {
             fullDesc: null,
             faceMatcher: null,
             facingMode: null,
-        };
+        }
     }
-
     componentWillMount() {
         loadModels();
-
         this.setInputDevice();
-        // this.matcher();
+        this.matcher();
     }
 
     setInputDevice = () => {
@@ -34,7 +31,6 @@ class Attendee extends Component {
           let inputDevice = await devices.filter(
             device => device.kind === 'videoinput'
           );
-
           if (inputDevice.length < 2) {
             await this.setState({
               facingMode: 'user'
@@ -49,7 +45,23 @@ class Attendee extends Component {
     };
 
     matcher = async () => {
-        const faceMatcher = await createMatcher(JSON_PROFILE);
+        fetch('http://localhost:8080/coba', { 
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        .then(response => response.json())
+        .then(data =>
+            this.setState({
+                descriptors: data
+            })
+        )
+        .catch(error => console.error('Error:', error))
+        .then(response => console.log('Success:', response));
+
+        const faceMatcher = await createMatcher(this.state.descriptors);
         this.setState({ faceMatcher });
     };
 
@@ -68,7 +80,6 @@ class Attendee extends Component {
             await getFullFaceDescription(
               this.webcam.current.getScreenshot(),
               inputSize
-
             ).then(fullDesc => this.setState({ fullDesc }));
         }
     };
@@ -132,20 +143,9 @@ class Attendee extends Component {
                             </div>
                             <div className="card-box table-responsive" id="shift-list">
                                 <h4 className="m-t-0 header-title"><b>Attendee In</b></h4>
-                                <div
-                                    className="Camera" style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center'
-                                    }}
-                                >
+                                <div className="Camera" style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                     {/* <p>Camera: {camera}</p> */}
-                                    <div 
-                                        style={{
-                                            width: WIDTH,
-                                            height: HEIGHT
-                                        }}
-                                    >
+                                    <div style={{width: WIDTH, height: HEIGHT}}>
                                         <div style={{ position: 'relative', width: WIDTH }}>
                                             {!!videoConstraints ? (
                                             <div style={{ position: 'absolute' }}>
