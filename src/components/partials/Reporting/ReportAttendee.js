@@ -1,36 +1,45 @@
 import React, { Component } from 'react';
-import moment from 'moment';
+import DateRangePicker from 'react-daterange-picker';
+import "react-daterange-picker/dist/css/react-calendar.css";
+import originalMoment from "moment";
+import { extendMoment } from "moment-range";
 import { MDBDataTable } from 'mdbreact';
 import axios from 'axios';
+const moment = extendMoment(originalMoment);
 
 class ReportAttendee extends Component {
     constructor(props) {
         super(props);
 
+        const today = moment();
+        
         this.state = {
             items: [],
             isLoading: false,
-            startDate: moment('08/01/2019').format('YYYY-MM-DD'),
-            endDate: moment('08/31/2019').format('YYYY-MM-DD'),
+            submitted: false,
+            value: moment.range(today.clone().subtract(7, "days"), today.clone())
         }
-
-        this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange(e) {
-        this.setState({
-            [e.target.name]:e.target.value
-        })
-    }
+    onSelect = (value, states) => {
+        this.setState({ value, states, isOpen: false });
+    };
+
+    onToggle = () => {
+        this.setState({ isOpen: !this.state.isOpen });
+    };
 
     handleSubmit = event => {
         event.preventDefault();
         this.requestAttendee();
+        this.setState({ 
+            submitted:true, isLoading: true
+        });
     }
 
     requestAttendee = async() => {
-        await axios.request('http://localhost:8080/api/attendee-recap/start-date/' + this.state.startDate + '/end-date/' + this.state.endDate, {
+        await axios.request('http://localhost:8080/api/attendee-recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD'), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -51,6 +60,8 @@ class ReportAttendee extends Component {
             return (
                 {
                     namaUser:attendee.name,
+                    unit:attendee.unit,
+                    posisi:attendee.posisi,
                     jmlMasuk:attendee.masuk,
                     jmlTerlambat:attendee.terlambat
                 }
@@ -60,12 +71,39 @@ class ReportAttendee extends Component {
         return items;
     }
 
+    downloadReportData = () => {
+        fetch('http://localhost:8080/api/attendee-recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD') + '/report', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        .then(response => {
+            response.blob().then(blob => {
+                let url = window.URL.createObjectURL(blob);
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = 'AttendeeReport.pdf';
+                a.click();
+            })
+        })
+    }
+
     render(){
         const data = {
             columns: [
                 {
                     label: 'Nama User',
                     field: 'namaUser'
+                },
+                
+                {
+                    label: 'Posisi',
+                    field: 'posisi'
+                },
+                {
+                    label: 'Unit',
+                    field: 'unit'
                 },
                 {
                     label: 'Jumlah Masuk',
@@ -79,6 +117,7 @@ class ReportAttendee extends Component {
 
             rows:this.state.tableRows,
         }
+        const { submitted, isLoading } = this.state;
         return(
             <div>
                 <div className="content-page">
@@ -89,9 +128,9 @@ class ReportAttendee extends Component {
                                     <div className="btn-group pull-right m-t-15">
                                         <button type="button" className="btn btn-default dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Export <span className="m-l-5"><i className="fa fa-cog"></i></span></button>
                                         <ul className="dropdown-menu drop-menu-right" role="menu">
+                                            <li><a href="#" onClick={this.downloadReportData}>PDF</a></li>
                                             <li><a href="#">CSV</a></li>
                                             <li><a href="#">Excel</a></li>
-                                            <li><a href="#">PDF</a></li>
                                         </ul>
                                     </div>
 
@@ -118,15 +157,27 @@ class ReportAttendee extends Component {
                                                 <div className="form-group clearfix">
                                                     <div className="col-sm-6">
                                                     <label className="control-label">Date Range</label>
-                                                        <div className="input-daterange input-group" id="date-range">
-                                                            <input type="text" className="form-control" readOnly name="startDate" onChange={this.handleChange} placeholder="DD/MM/YYYY" />
+                                                        <div className="input-group" >
+                                                            <input type="text" className="form-control" onClick={this.onToggle} readOnly placeholder={this.state.value.start.format('YYYY-MM-DD')}/>
                                                                 <span className="input-group-addon bg-custom b-0 text-white">to</span>
-                                                            <input type="text" className="form-control" readOnly name="endDate" onChange={this.handleChange} placeholder="DD/MM/YYYY" />
+                                                            <input type="text" className="form-control" onClick={this.onToggle} readOnly placeholder={this.state.value.end.format('YYYY-MM-DD')} />
                                                         </div>
+
+                                                        {this.state.isOpen && (
+                                                            <DateRangePicker
+                                                                value={this.state.value}
+                                                                onSelect={this.onSelect}
+                                                                singleDateRange={true}
+                                                            />
+                                                        )}
                                                     </div>
                                                 </div>
                                                 <div className="form-group">
-                                                    <button type="submit" className="btn btn-primary">Search</button>
+                                                    <button type="submit" className="btn btn-primary">
+                                                        { isLoading &&  <i className="fa fa-refresh fa-spin"> </i> }
+                                                        { isLoading &&  <span> Loading </span> }
+                                                        { !isLoading &&  <span> Search </span> }
+                                                    </button>
                                                 </div>
                                             </div>
                                         </form>
