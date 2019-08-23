@@ -1,42 +1,64 @@
 import React, { Component } from "react";
-import Moment from "moment";
+// import Moment from "moment";
 import Layout from '../../layout/Layout';
+import { format } from "path";
+// import { DateRangePicker   } from 'react-date-range';
+import DateRangePicker from "react-daterange-picker";
+import "react-daterange-picker/dist/css/react-calendar.css";
+import originalMoment from "moment";
+import { extendMoment } from "moment-range";
+const moment = extendMoment(originalMoment);
 
 let user = JSON.parse(localStorage.getItem('user'));
 
 class FormPengajuan extends Component {
-    constructor(props){
-        super(props);
-
+    constructor(props,context){
+        super(props,context);
+        const today = moment(); 
         this.handleRequest = this.handleRequest.bind(this);
         this.handleChange = this.handleChange.bind(this);
 
         this.state = {
             
             namauser:user.idUser.nama,
-            tglMulai:Moment().format('YYYY-MM-DD'),
-            tglAkhir:Moment().format('YYYY-MM-DD'),
-            keterangan:''
+            tglMulai:'',
+            tglAkhir:'',
+            keterangan:'',
+            value: moment.range(today.clone().add(1,"day"), today.clone().add(1,"day"))
         }    
     }
     
     handleChange = event => {
         this.setState({
-            [event.target.name]:event.target.value
+            [event.target.name]:event.target.value,
         })
     }
     
     handleRequest = event => {
-        event.preventDefault();   
+        event.preventDefault(); 
         this.Request();
-    };
+    }
+
+    onSelect = (value, states) => {
+        this.setState({ value, states });
+    }
+    renderSelectionValue = () => {
+        return (
+          <div className="input-group">
+            <input type="text" className="form-control" disabled placeholder={this.state.value.start.format("YYYY-MM-DD")} />
+            <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
+            <input type="text" className="form-control"disabled  placeholder= {this.state.value.end.format("YYYY-MM-DD")} />
+          </div>
+        );
+      }
 
     user(){
 
     }
 
     Request(){
-        console.log(this.state.tglMulai);
+        console.log('Success:', this.state.value.start.format("YYYY-MM-DD"))
+        console.log('Success:', this.state.value.end.format("YYYY-MM-DD"))
         fetch('http://localhost:8282/request', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -48,8 +70,8 @@ class FormPengajuan extends Component {
                             id:user.idUser.id
                         }
                     },
-                    tglMulai:this.state.tglMulai,
-                    tglAkhir:this.state.tglAkhir,
+                    tglMulai:this.state.value.start.format("YYYY-MM-DD"),
+                    tglAkhir:this.state.value.end.format("YYYY-MM-DD"),
                     keterangan:this.state.keterangan
                 
                 }),
@@ -67,7 +89,6 @@ class FormPengajuan extends Component {
     }
 
     render() { 
-        
         return (
             <div className="content-page">
 
@@ -123,15 +144,31 @@ class FormPengajuan extends Component {
                                             <div className="form-group clearfix">
                                                 <label className="col-md-2 control-label">Tanggal Cuti</label>
                                                 <div className="col-lg-6">
-                                                    <div className="input-daterange input-group" id="date-range">
-                                               
-                                                        <input type="text" className="form-control" readOnly name="tglMulai" onChange={this.handleChange} placeholder="DD/MM/YYYY" />
+                                                <div>
+                                                    {/* {this.renderSelectionValue()} */}
+                                                    <div className="input-group">
+                                                        <input type="text" className="form-control" disabled placeholder={this.state.value.start.format("YYYY-MM-DD")} />
+                                                        <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
+                                                        <input type="text" className="form-control"disabled  placeholder= {this.state.value.end.format("YYYY-MM-DD")} />
+                                                    </div>
+                                                    
+                                                    <DateRangePicker
+                                                        value={this.state.value}
+                                                        onSelect={this.onSelect}
+                                                        singleDateRange={true}
+                                                        minimumDate={moment().add(1,"days")}
+                                                    />
+                                                </div>
+
+                                                    {/* <div class="input-daterange input-group" id="date-range">
+
+                                                        <input type="date" name="tglMulai" className="form-control" onChange={this.handleChange} placeholder="YYYY-MM-DD" />
                                                     
                                                             <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
 
-                                                        <input type="text" className="form-control" readOnly name="tglAkhir"onChange={this.handleChange}  placeholder="DD/MM/YYYY" />
+                                                        <input type="date" className="form-control"  name="tglAkhir" onChange={this.handleChange}  placeholder="DD/MM/YYYY" />
                                                     
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             </div>
 
