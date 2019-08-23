@@ -18,6 +18,7 @@ class Attendee extends Component {
             fullDesc: null,
             faceMatcher: null,
             facingMode: null,
+            descriptors: null
         };
     }
 
@@ -46,7 +47,23 @@ class Attendee extends Component {
     };
 
     matcher = async () => {
-        const faceMatcher = await createMatcher(JSON_PROFILE);
+        fetch('http://localhost:8080/coba', { 
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        .then(response => response.json())
+        .then(data =>
+            this.setState({
+                descriptors: data
+            })
+        )
+        .catch(error => console.error('Error:', error))
+        .then(response => console.log('Success:', response));
+
+        const faceMatcher = await createMatcher(this.state.descriptors);
         this.setState({ faceMatcher });
     };
 
@@ -128,20 +145,9 @@ class Attendee extends Component {
                             </div>
                             <div className="card-box table-responsive" id="shift-list">
                                 <h4 className="m-t-0 header-title"><b>Attendee In</b></h4>
-                                <div
-                                    className="Camera" style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center'
-                                    }}
-                                >
+                                <div className="Camera" style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                     {/* <p>Camera: {camera}</p> */}
-                                    <div 
-                                        style={{
-                                            width: WIDTH,
-                                            height: HEIGHT
-                                        }}
-                                    >
+                                    <div style={{width: WIDTH, height: HEIGHT}}>
                                         <div style={{ position: 'relative', width: WIDTH }}>
                                             {!!videoConstraints ? (
                                             <div style={{ position: 'absolute' }}>
