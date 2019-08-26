@@ -14,29 +14,38 @@ class AnnualRequest extends Component {
         };
     }
     
-    handleChange = event => {
-        this.setState({
-            [event.target.name]:event.target.value
+    update() {
+        fetch('http://localhost:8282/request/company/Request', {
+            method: 'GET',
+            
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
         })
+        .then(res => res.json())
+        .then(listRequest => this.setState({
+            listRequest
+        }))
+        .catch(error => console.log('parsing failed', error)
+        )       
     }
-    
-    handleApprove = event => {
-        // event.preventDefault();   
-        this.Approve(event);
+
+    handleApprove (annual) {
+        console.log(annual);  
+        this.Approve(annual);
     };
 
-    handleReject = event => {
+    handleReject(annual){
         // event.preventDefault();   
-        this.Reject(event);
+        this.Reject(annual);
     };
 
-    Approve(event){
-        const  value  = event.target.value;
-
+    Approve(annual){
         fetch('http://localhost:8282/request/Approved', {
                 method: 'PATCH',
                 body: 
-                    JSON.stringify(this.state.listRequest[value])
+                    JSON.stringify(annual)
                 ,
                 headers:{
                     'Content-Type': 'application/json',
@@ -45,16 +54,15 @@ class AnnualRequest extends Component {
             })
             .then(res => res.json())
             .catch(error => console.error('Error:', error))
-            .then(response => console.log('Success:', response), 
+            .then(response => console.log('Success:', response),this.update 
         ); 
     }
 
-    Reject(event){
-        const  value = event.target.value;
+    Reject(annual){
         fetch('http://localhost:8282/request/Rejected', {
                 method: 'PATCH',
                 body: 
-                    JSON.stringify(this.state.listRequest[value])
+                    JSON.stringify(annual)
                 ,
                 headers:{
                     'Content-Type': 'application/json',
@@ -68,19 +76,20 @@ class AnnualRequest extends Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:8282/request/Request', {
-                method: 'GET',
-                
-                headers:{
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
-            })
-            .then(res => res.json())
-            .then(listRequest => this.setState({
-                listRequest
-            }))
-            .catch(error => console.log('parsing failed', error)
+        // fetch('http://localhost:8282/request/Request', {
+        fetch('http://localhost:8282/request/company/Request', {
+            method: 'GET',
+            
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        .then(res => res.json())
+        .then(listRequest => this.setState({
+            listRequest
+        }))
+        .catch(error => console.log('parsing failed', error)
         )       
     }
 
@@ -147,17 +156,19 @@ class AnnualRequest extends Component {
                                                     listRequest.length >0 ? listRequest.map((annual,index)=> {
                                                         return (
                                                             <tr>
-                                                                <th data-priority="1">{annual.user.kode}</th>
-                                                                <th data-priority="2">{annual.user.nama}</th>
+                                                                <th data-priority="1">{annual.userCompany.idUser.kode}</th>
+                                                                <th data-priority="2">{annual.userCompany.idUser.nama}</th>
                                                                 <th data-priority="5">{annual.tglMulai}</th>
                                                                 <th data-priority="6">{annual.tglAkhir}</th>
                                                                 <th data-priority="7">{annual.keterangan}</th>
                                                                 <th data-priority="8">{annual.status.status}</th>
                                                                 <th>
-                                                                    <button type="submit" name ="approve" id="sa-warning" className="btn btn-primary waves-effect waves-light m-l-10 btn-sm"
-                                                                     value={index} onClick={this.handleApprove}>
+                                                                    <button type="submit" name ="approve" className="btn btn-primary waves-effect waves-light m-l-10 btn-sm"
+                                                                     value={annual} onClick={() => this.handleApprove(annual)}>
                                                                          <b className="font-bold">Setujui</b></button>                                                            
-                                                                    <button type="submit" name="reject" id="sa-warning" className="btn btn-danger waves-effect waves-light m-l-10 btn-sm" value={index} onClick={this.handleReject}><b className="font-bold" >Tolak</b></button>
+                                                                    <button type="submit" name="reject" className="btn btn-danger waves-effect waves-light m-l-10 btn-sm" 
+                                                                    value={index} onClick={() => this.handleReject(annual)}>
+                                                                        <b className="font-bold" >Tolak</b></button>
                                                                 </th>
                                                             </tr>    
         

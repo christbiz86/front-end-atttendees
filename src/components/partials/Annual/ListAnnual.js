@@ -17,7 +17,8 @@ class ListPengajuan extends Component {
 
     
     componentWillMount=async() => {
-        await axios.request('http://localhost:8282/request/Approved', {
+        // await axios.request('http://localhost:8282/request/Approved', {
+        await axios.request('http://localhost:8282/request/company/Approved', {
                 method: 'GET',
                 
                 headers:{
