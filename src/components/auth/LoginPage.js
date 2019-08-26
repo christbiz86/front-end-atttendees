@@ -10,7 +10,7 @@ class LoginPage extends React.Component{
         this.props.logout();
 
         this.state = {
-            email: '',
+            email: '', 
             password: '',
             submitted: false
         };

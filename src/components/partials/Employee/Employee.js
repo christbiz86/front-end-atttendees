@@ -1,14 +1,18 @@
 import React, {Component} from 'react';
+import { MDBDataTable } from 'mdbreact';
+import axios from 'axios';
 
-export default class User extends Component {
+export default class Employee extends Component {
     constructor(props){
         super(props);
-        this.state = { 
-            isLoading: true,
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.state = {
+            isLoading: false,
+            submitted: false,
             userCompany: [],
             userCom: {
                 idUser:{
-                    nama: 'Sule',
+                    nama: null,
                     alamat: null,
                     email: null,
                     tglLahir: null,
@@ -33,132 +37,150 @@ export default class User extends Component {
         }
     }
 
-    // constructor(props){
-    //     super(props);
-    //     this.state = {  
-    //         isLoading: true,             /* Constructor getAll() */
-    //         userCompany: [],
-    //         error: null
-    //     }
-    // }
-
     handleSubmit = event =>{
         event.preventDefault();
+        this.fetchUserByFilter();
+        this.setState({ submitted:true, isLoading:true })
     }
 
-    fetchUserByFilter() {
-        const userCom = this.state.userCom;
-        fetch(`http://localhost:8080/usercompany/filter`, {
-            method: 'POST',
-            body: JSON.stringify(userCom),
+    fetchUserByFilter = async() => {
+        // const userCom = this.state.userCom;
+        await axios.post(`http://localhost:8080/usercompany/filter`, {
+            body: JSON.stringify(this.state.userCom),
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
-        .then(response => response.json())
-        .then(data =>
+        .then(response => response.data)
+        .then(data => {
             this.setState({
-                userCompany: data,
-                isLoading: false,
+                userCompany: data
             })
-        )
-        .catch(error => this.setState({ error, isLoading: false }));
+        })
+        .then(async() => {
+            this.setState({ tableRows:this.assemblePosts(), isLoading:false })
+        })
     }
 
-    // fetchUser() {
-    //     fetch(`http://localhost:8080/usercompany`)
-    //     .then(response => response.json())
-    //     .then(data =>
-    //         this.setState({
-    //             userCompany: data,
-    //             isLoading: false,
-    //         })
-    //     )
-    //     .catch(error => this.setState({ error, isLoading: false }));         /* fetch Method GET */
-    // }
-  
-    componentDidMount() {
-        this.fetchUserByFilter();
-        // this.fetchUser();
+    assemblePosts= () => {
+        let userCompany = this.state.userCompany.map((user) => {
+            return (
+                {
+                    namaUser: user.idUser.nama,
+                    alamat: user.idUser.alamat,
+                    tglLahir: user.idUser.tglLahir,
+                    telp: user.idUser.telp,
+                    email: user.idUser.email,
+                    unit: user.idCompanyUnitPosisi.idUnit == null ? "-" : user.idCompanyUnitPosisi.idUnit.unit,
+                    posisi: user.idCompanyUnitPosisi.idPosisi == null ? "-" : user.idCompanyUnitPosisi.idPosisi.posisi,
+                    tipeUser: user.idTipeUser.tipe
+                }
+            )
+        });
+
+        return userCompany;
     }
 
     render() {
+        const data = {
+            columns: [
+                {
+                    label: 'Nama User',
+                    field: 'namaUser'
+                },
+                
+                {
+                    label: 'Alamat',
+                    field: 'alamat'
+                },
+                {
+                    label: 'Tanggal Lahir',
+                    field: 'tglLahir'
+                },
+                {
+                    label: 'Telepon',
+                    field: 'telp'
+                },
+                {
+                    label: 'Email',
+                    field: 'email'
+                },
+                {
+                    label: 'Unit',
+                    field: 'unit'
+                },
+                {
+                    label: 'Posisi',
+                    field: 'posisi'
+                },
+                {
+                    label: 'Tipe User',
+                    field: 'tipeUser'
+                },
+            ],
+
+            rows:this.state.tableRows,
+        }
+        const { submitted, isLoading } = this.state;
         return(
-            <div className="content-page">
-                <div className="container">
-                <div className="row">
-                    <div className="col-sm-12">
+            <div>
+                <div className="content-page">
+                    <div className="content">
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    <div className="btn-group pull-right m-t-15">
+                                        <button type="button" className="btn btn-default dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Export <span className="m-l-5"><i className="fa fa-cog"></i></span></button>
+                                        <ul className="dropdown-menu drop-menu-right" role="menu">
+                                            <li><a href="#">CSV</a></li>
+                                            <li><a href="#">Excel</a></li>
+                                            <li><a href="#">PDF</a></li>
+                                        </ul>
+                                    </div>
 
-                        <h4 className="page-title">Datatable</h4>
-                        <ol className="breadcrumb">
-                            <li>
-                                <a href="#">Ubold</a>
-                            </li>
-                            <li>
-                                <a href="#">Tables</a>
-                            </li>
-                            <li className="active">
-                                Datatable
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-
-                <div className="row">
-                    <div className="col-sm-12">
-                        <div className="card-box table-responsive">
-                            <h4 className="m-t-0 header-title"><b>User</b></h4>
-                            <p className="text-muted font-13 m-b-30"/>
-
-                            <table id="datatable" className="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <td>Nama User</td>
-                                    <td>Alamat</td>
-                                    <td>Tanggal Lahir</td>
-                                    <td>Telp</td>
-                                    <td>Email</td>
-                                    <td>Company</td>
-                                    <td>Unit</td>
-                                    <td>Posisi</td>
-                                    <td>Tipe User</td>
-                                </tr>
-                            </thead>
-
-                            {this.state.error ? <p>{this.state.error.message}</p> : null}
-                            {!this.state.isLoading ? (
-                                this.state.userCompany.map(uc => {
-                                    return (
-                                        <tbody>
-                                            <tr id={uc.id}>
-                                                <td>{uc.idUser.nama}</td>
-                                                <td>{uc.idUser.alamat}</td>
-                                                <td>{uc.idUser.tglLahir}</td>
-                                                <td>{uc.idUser.telp}</td>
-                                                <td>{uc.idUser.email}</td>
-                                                <td>{uc.idCompanyUnitPosisi.idCompany.nama}</td>
-                                                <td>
-                                                { uc.idCompanyUnitPosisi.idUnit==null ? "-" : uc.idCompanyUnitPosisi.idUnit.unit }
-                                                </td>
-                                                <td>
-                                                { uc.idCompanyUnitPosisi.idPosisi==null ? "-" : uc.idCompanyUnitPosisi.idPosisi.posisi }
-                                                </td>
-                                                <td>{uc.idTipeUser.tipe}</td>
-                                            </tr>
-                                        </tbody>
-                                    );
-                                
-                                })
-                            ) : (
-                                <h3>Loading...</h3>
-                            )}
-
-                            </table>
+                                    <h4 className="page-title">Report Attendee</h4>
+                                    <ol className="breadcrumb">
+                                        <li>
+                                            <a href="#">Attendee</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Report</a>
+                                        </li>
+                                        <li className="active">
+                                            Report Attendee
+                                        </li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    <div className="card-box table-responsive">
+                                        <h4 className="m-t-0 header-title"><b>Employee List</b></h4>
+                                        <form className="form-horizontal" id="basic-form" onSubmit={this.handleSubmit}>
+                                            <div className="form-row">
+                                                <div className="form-group">
+                                                    <button type="submit" className="btn btn-primary">
+                                                        { isLoading &&  <i className="fa fa-refresh fa-spin"> </i> }
+                                                        { isLoading &&  <span> Loading </span> }
+                                                        { !isLoading &&  <span> Search </span> }
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <hr />
+                                        <MDBDataTable striped bordered data={data} />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <footer className="footer">
+                        © 2016. All rights reserved.
+                    </footer>
+
                 </div>
-            </div>
             </div>
         );
     }

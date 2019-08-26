@@ -13,7 +13,7 @@ export default class Registrasi extends React.Component{
             tglLahir: Moment().format('YYYY-MM-DD'),
             telp:'',
             email:'',
-            foto:'foto'
+            foto:''
         };
     }
 
@@ -21,10 +21,6 @@ export default class Registrasi extends React.Component{
         this.setState({ 
             [event.target.name]:event.target.value
          })
-    }
-
-    handleClick = event =>{
-        
     }
 
     handleSubmit = event => {
@@ -45,7 +41,7 @@ export default class Registrasi extends React.Component{
                 method: 'POST',
                 body: (JSON.stringify(data)),
                 headers:{
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json' 
                 }
             })
             .then(res => res.json())
@@ -105,7 +101,7 @@ export default class Registrasi extends React.Component{
                                 <label className="col-sm-3 control-label">Tanggal Lahir</label>
                                 <div className="col-sm-6">
                                     <div className="input-group">
-                                        <input type="text" className="form-control" name="tglLahir" placeholder="mm/dd/yyyy" id="datepicker-autoclose" onChange={this.handleDateChange}/>
+                                        <input type="text" className="form-control" readOnly name="tglLahir" placeholder="mm/dd/yyyy" id="datepicker-autoclose" onChange={this.handleChange}/>
                                         <span className="input-group-addon bg-custom b-0 text-white"><i className="icon-calender"></i></span>
                                     </div>
                                 </div>
@@ -125,12 +121,12 @@ export default class Registrasi extends React.Component{
                                 </div>
                             </div>
     
-                            {/* <div className="form-group">
+                            <div className="form-group">
                                 <label className="col-sm-3 control-label">Foto</label>
                                 <div className="col-sm-6">
                                     <input type="file" className="filestyle" data-buttonname="btn-primary"/>
                                 </div>
-                            </div> */}
+                            </div>
                             
                             <div class="form-group m-b-0">
 								<div class="col-sm-offset-3 col-sm-9 m-t-15">

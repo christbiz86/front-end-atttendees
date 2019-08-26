@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-class ListPengajuan extends Component {
+class ListAnnual extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -10,7 +10,7 @@ class ListPengajuan extends Component {
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080/request/Approved",{
+        fetch("http://localhost:8080/request",{
             method: 'GET',
             headers:{
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -73,23 +73,24 @@ class ListPengajuan extends Component {
                                                     <th data-priority="5">Tanggal Mulai</th>
                                                     <th data-priority="6">Tanggal Selesai</th>
                                                     <th data-priority="7">Status</th>
+                                                    <th data-priority="8">Keterangan</th>
                                                 </tr>
                                             </thead>
                                             <tbody>                                                     
 
                                                 {
-                                                    listAnnual.length >0 ? listAnnual.map((annual,index)=> {
+                                                    listAnnual.length > 0 ? listAnnual.map(annual=> {
                                                         return (
-                                                            <tr>
-                                                                <th data-priority="1">{annual.user.kode}</th>
-                                                                <th data-priority="2">{annual.user.nama}</th>
+                                                            <tr key={annual.id}>
+                                                                <th data-priority="1">{annual.userCompany.idUser.kode}</th>
+                                                                <th data-priority="2">{annual.userCompany.idUser.nama}</th>
                                                                 <th data-priority="3">Posisi</th>
                                                                 <th data-priority="4">Unit</th>
                                                                 <th data-priority="5">{annual.tglMulai}</th>
                                                                 <th data-priority="6">{annual.tglAkhir}</th>
                                                                 <th data-priority="7">{annual.status.status}</th>
-                                                            </tr>    
-        
+                                                                <th data-priority="8">{annual.keterangan}</th>
+                                                            </tr>
                                                         )
                                                     }):null
                                                 }
@@ -109,4 +110,4 @@ class ListPengajuan extends Component {
 
 
     }
-export default ListPengajuan;
+export default ListAnnual;
