@@ -7,8 +7,9 @@ import DateRangePicker from "react-daterange-picker";
 import "react-daterange-picker/dist/css/react-calendar.css";
 import originalMoment from "moment";
 import { extendMoment } from "moment-range";
-const moment = extendMoment(originalMoment);
+import { Redirect } from 'react-router-dom'
 
+const moment = extendMoment(originalMoment);
 let user = JSON.parse(localStorage.getItem('user'));
 
 class FormPengajuan extends Component {
@@ -19,7 +20,6 @@ class FormPengajuan extends Component {
         this.handleChange = this.handleChange.bind(this);
 
         this.state = {
-            
             namauser:user.idUser.nama,
             tglMulai:'',
             tglAkhir:'',
@@ -36,6 +36,7 @@ class FormPengajuan extends Component {
     
     handleRequest = event => {
         event.preventDefault(); 
+        this.setState({isActive:true});
         this.Request();
     }
 
@@ -80,11 +81,15 @@ class FormPengajuan extends Component {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             })
-            .then(res => res.json())
+            .then(res => {res.json()
+                if (res.ok){
+                    console.log(res.ok) 
+                }else{
+                    console.log(res.status)
+                }}
+                )
             .catch(error => console.error('Error:', error))
-            .then(response => console.log('Success:', response),
-            
-             
+            .then(response => console.log('Success:', response)     
             ); 
     }
 
@@ -188,7 +193,7 @@ class FormPengajuan extends Component {
                                             <div className="form-group clearfix">
                                                 <label  className="col-sm-6 control-label"></label>
                                                 <div className="col-sm-2 control-label">
-                                                    <button type="submit" className="btn btn-default waves-effect waves-light btn-lg" id="sa-warning"> Submit</button>
+                                                    <button type="submit" className="btn btn-default waves-effect waves-light btn-lg" data-style="contract" id="sa-warning"> Submit</button>
                                                 </div>
                                             </div>
                                             

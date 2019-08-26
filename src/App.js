@@ -21,6 +21,7 @@ import { PrivateRoute } from './components/_security/PrivateRoute';
 import { LoginPage } from './components/auth/LoginPage';
 import { history } from './components/_helpers';
 import { alertActions } from './components/_actions';
+import AnnualLeave from './components/partials/Annual/AnnualLeave';
 
 class App extends React.Component {
   constructor(props) {
@@ -57,6 +58,7 @@ class App extends React.Component {
                     <PrivateRoute exact path="/timesheet/Shift" component={Shift} />
                     <PrivateRoute exact path="/attendee/absen" component={Attendee} />
                     <PrivateRoute exact path="/attendee/register" component={FaceRegister} />
+                    <PrivateRoute exact path="/annual/leave" component={AnnualLeave} />
                   </Switch>
                 </div>
               </Router>

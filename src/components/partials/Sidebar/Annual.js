@@ -11,10 +11,13 @@ class Annual extends Component {
                         <a href={"/annual/form"}  className="waves-effect">Annual Form</a>
                     </li>
                     <li>
+                        <a href={"/annual/request"} className="waves-effect">Annual Request</a>
+                    </li>
+                    <li>
                         <a href={"/annual/list"} className="waves-effect">Annual List</a>
                     </li>
                     <li>
-                        <a href={"/annual/request"} className="waves-effect">Annual Request</a>
+                        <a href={"/annual/leave"} className="waves-effect">Annual Leave</a>
                     </li>
                 </ul>
             </li>

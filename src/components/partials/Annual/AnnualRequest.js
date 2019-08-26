@@ -52,9 +52,15 @@ class AnnualRequest extends Component {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             })
-            .then(res => res.json())
+            .then(res => {res.json()
+                
+                    if (res.ok){
+                        this.update();
+                    }else{
+                        console.log(res.status)
+                    }})
             .catch(error => console.error('Error:', error))
-            .then(response => console.log('Success:', response),this.update 
+            .then(response => console.log('Success:', response)
         ); 
     }
 
@@ -69,7 +75,13 @@ class AnnualRequest extends Component {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             })
-            .then(res => res.json())
+            .then(res => {res.json()
+                
+                if (res.ok){
+                    this.update();
+                }else{
+                    console.log(res.status)
+                }})
             .catch(error => console.error('Error:', error))
             .then(response => console.log('Success:', response),
         ); 
