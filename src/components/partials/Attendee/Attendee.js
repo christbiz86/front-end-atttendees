@@ -18,6 +18,9 @@ class Attendee extends Component {
             fullDesc: null,
             faceMatcher: null,
             facingMode: null,
+            users: {
+                user: null
+            }
         };
     }
 
@@ -46,8 +49,28 @@ class Attendee extends Component {
     };
 
     matcher = async () => {
-        const faceMatcher = await createMatcher(JSON_PROFILE);
+        const getter = {
+            name: JSON.parse(localStorage.getItem('user')).idUser.nama
+        }
+        await fetch('http://localhost:8080/coba/coba', { 
+            method: 'POST',
+            body: JSON.stringify(getter),
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        .then(async response => await response.json())
+        .then(async data =>
+            await this.setState({
+                users: {
+                    user:data
+                }
+            })
+        );
+        const faceMatcher = await createMatcher(this.state.users);
         this.setState({ faceMatcher });
+        console.log(this.state.faceMatcher);
     };
 
     startCapture = () => {
@@ -67,6 +90,7 @@ class Attendee extends Component {
               inputSize
             ).then(fullDesc => this.setState({ fullDesc }));
         }
+        console.log(this.state.fullDesc);
     };
 
     render(){
@@ -128,20 +152,9 @@ class Attendee extends Component {
                             </div>
                             <div className="card-box table-responsive" id="shift-list">
                                 <h4 className="m-t-0 header-title"><b>Attendee In</b></h4>
-                                <div
-                                    className="Camera" style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center'
-                                    }}
-                                >
+                                <div className="Camera" style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                     {/* <p>Camera: {camera}</p> */}
-                                    <div 
-                                        style={{
-                                            width: WIDTH,
-                                            height: HEIGHT
-                                        }}
-                                    >
+                                    <div style={{width: WIDTH, height: HEIGHT}}>
                                         <div style={{ position: 'relative', width: WIDTH }}>
                                             {!!videoConstraints ? (
                                             <div style={{ position: 'absolute' }}>

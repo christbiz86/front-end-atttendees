@@ -15,6 +15,7 @@ import Libur from './components/partials/TimeSheet/Libur';
 import Project from './components/partials/TimeSheet/Project';
 import Shift from './components/partials/TimeSheet/Shift';
 import Attendee from './components/partials/Attendee/Attendee';
+import FaceRegister from './components/partials/Attendee/FaceRegister';
 
 import { PrivateRoute } from './components/_security/PrivateRoute';
 import { LoginPage } from './components/auth/LoginPage';
@@ -54,7 +55,8 @@ class App extends React.Component {
                     <PrivateRoute exact path="/timesheet/Libur" component={Libur} />
                     <PrivateRoute exact path="/timesheet/Project" component={Project} />
                     <PrivateRoute exact path="/timesheet/Shift" component={Shift} />
-                    <PrivateRoute exact path="/attendee" component={Attendee} />
+                    <PrivateRoute exact path="/attendee/absen" component={Attendee} />
+                    <PrivateRoute exact path="/attendee/register" component={FaceRegister} />
                   </Switch>
                 </div>
               </Router>
