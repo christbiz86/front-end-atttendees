@@ -7,36 +7,35 @@ class Profile extends Component {
         super(props);
 
         this.state = {
-        source:null
+           source:null
         }    
     }
 
     componentDidMount(){
-        axios
-        .get(
-            'http://localhost:8080/image/'+ JSON.parse(localStorage.getItem('user')).idUser.foto,
-            {   responseType: 'arraybuffer',
-                headers:{
-                            'Authorization': 'Bearer ' + localStorage.getItem('token')
-                        }
+        axios.get('http://api.attendees.today/image/'+JSON.parse(localStorage.getItem('user')).idUser.foto,{
+            responseType: 'arraybuffer',
+            headers:{
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
             },
         )
         .then(response => {
-        const base64 = btoa(
-          new Uint8Array(response.data).reduce(
-            (data, byte) => data + String.fromCharCode(byte),
-            '',
-          ),
-        );
-        this.setState({ source: "data:;base64," + base64 });
-      });
+            const base64 = btoa(
+            new Uint8Array(response.data).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              '',
+            ),
+          );
+          this.setState({ source: "data:;base64," + base64 });
+        });
+        
     }
 
     render(){
         return(
                 <li className="dropdown top-menu-item-xs">
-                    <a href={'/login'} className="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true">
-                        <img src={this.state.source} alt="user-img" className="img-circle"/> </a>
+                    <a href="" className="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true">
+                        <img src={this.state.source} alt="user-img" className="img-circle"></img> </a>
                     <ul className="dropdown-menu">
                         <li><a href="#"><i className="ti-user m-r-10 text-custom"></i> Profile</a></li>
                         <li><a href="#"><i className="ti-settings m-r-10 text-custom"></i> Settings</a></li>

@@ -16,7 +16,11 @@ import Project from './components/partials/TimeSheet/Project';
 import Shift from './components/partials/TimeSheet/Shift';
 import Attendee from './components/partials/Attendee/Attendee';
 import FaceRegister from './components/partials/Attendee/FaceRegister';
+<<<<<<< HEAD
 import DetailAnnual from './components/partials/Annual/DetailAnnual';
+=======
+
+>>>>>>> 54686353824092025289bb168de4a0f9ff352c0b
 import { PrivateRoute } from './components/_security/PrivateRoute';
 import { LoginPage } from './components/auth/LoginPage';
 import { history } from './components/_helpers';
@@ -58,8 +62,11 @@ class App extends React.Component {
                     <PrivateRoute exact path="/timesheet/Shift" component={Shift} />
                     <PrivateRoute exact path="/attendee/absen" component={Attendee} />
                     <PrivateRoute exact path="/attendee/register" component={FaceRegister} />
+<<<<<<< HEAD
                     <PrivateRoute exact path="/attendee" component={Attendee} />
                     <Route path="/logout" component={LoginPage} />
+=======
+>>>>>>> 54686353824092025289bb168de4a0f9ff352c0b
                   </Switch>
                 </div>
               </Router>

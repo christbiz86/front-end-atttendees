@@ -1,112 +1,136 @@
 import React, { Component } from "react";
+import { MDBDataTable } from 'mdbreact';
+import Layout from '../../layout/Layout';
+import axios from 'axios';
+
+const url = 'http://api.attendees.today/request/Approved';
 
 class ListPengajuan extends Component {
     constructor(props){
         super(props);
         this.state = {
-            listAnnual: [],
-
+            items: [],
+            isLoading: true,
+            tableRows: [],
         };
     }
 
-    componentDidMount() {
-        fetch("http://localhost:8080/request/Approved",{
+
+    componentWillMount=async() => {
+        // await axios.request('http://localhost:8282/request/Approved', {
+        await axios.request('http://api.attendees.today/request/company/Approved', {
             method: 'GET',
+
             headers:{
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
-            .then(res => res.json())
-            .then(listAnnual => this.setState({
-                listAnnual
-            }))
-            .catch(error => console.log('parsing failed', error))
+            .then(response => response.data)
+            .then(data => {
+                this.setState({ items: data })
+            })
+            .then(async() => {
+                this.setState({ tableRows:this.assemblePosts(), isLoading:false });
+            })
+
     }
-        render() {
-        const {listAnnual } = this.state;
+    // componentWillMount=async() => {
+    //     await axios.get(url)
+    //     .then(response => response.data)
+    //     .then(data => {
+    //         this.setState({ items: data })
+    //     })
+    //     .then(async() => {
+    //         this.setState({ tableRows:this.assemblePosts(), isLoading:false });
+    //     })
+    // }
+
+    assemblePosts= () => {
+        let items = this.state.items.map((annual) => {
             return (
+                {
+                    nik:annual.userCompany.idUser.kode,
+                    nama:annual.userCompany.idUser.nama,
+                    tglMulai:annual.tglMulai,
+                    tglAkhir:annual.tglAkhir,
+                    keterangan:annual.keterangan,
+                    status:annual.status.status
+                }
+
+            )
+        });
+
+        return items;
+    }
+
+    render() {
+        const data = {
+            columns: [
+                {
+                    label: 'Nik',
+                    field: 'nik'
+                },
+                {
+                    label: 'Nama',
+                    field: 'nama'
+                },
+                {
+                    label: 'Tanggal Mulai',
+                    field: 'tglAwal'
+                },
+                {
+                    label: 'Tanggal Selesai',
+                    field: 'tglAkhir'
+                },
+                {
+                    label: 'Keterangan',
+                    field: 'keterangan'
+                },
+                {
+                    label: 'Status',
+                    field: 'status'
+                }
+            ],
+
+            rows:this.state.tableRows,
+        }
+        return (
+            <div>
+                <Layout />
                 <div className="content-page">
+                    <div className="content">
+                        <div className="container">
 
-                <div className="content">
+                            <div className="row">
+                                <div className="col-sm-12">
 
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-12">
-
-                                <h4 class="page-title">Annual List</h4>
-                                <ol class="breadcrumb">
-                                    <li>
-                                        <a>Annual</a>
-                                    </li>
-                                    <li class="active">
-                                        List
-                                    </li>
-                                </ol>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                        <div class="col-sm-12">
-                            <div class="card-box">
-
-                                <div class="form-group clearfix">
-                                    <label class="col-sm-4 control-label" ></label>
-                                    <div class="col-lg-4">
-                                        <h4 class="m-t-0 header-title"><b>DAFTAR CUTI SEMUA KARYAWAN </b></h4>    
-                                    </div>
-                                </div>
-                        			<p class="text-muted m-b-30 font-13">
-										{/* Most common form control, text-based input fields. Includes support for all HTML5 types: <code>text</code>, <code>password</code>, <code>datetime</code>, <code>datetime-local</code>, <code>date</code>, <code>month</code>, <code>time</code>, <code>week</code>, <code>number</code>, <code>email</code>, <code>url</code>, <code>search</code>, <code>tel</code>, and <code>color</code>. */}
-									</p>
-
-                                
-                                <div class="table-rep-plugin">
-                                    <div class="table-responsive" data-pattern="priority-columns">
-                                        <table id="tech-companies-1" class="table  table-striped">
-                                            <thead>
-                                                
-                                                <tr>
-                                                    <th data-priority="1">NIK</th>
-                                                    <th data-priority="2">Nama</th>
-                                                    <th data-priority="3">Posisi</th>
-                                                    <th data-priority="4">Unit</th>
-                                                    <th data-priority="5">Tanggal Mulai</th>
-                                                    <th data-priority="6">Tanggal Selesai</th>
-                                                    <th data-priority="7">Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>                                                     
-
-                                                {
-                                                    listAnnual.length >0 ? listAnnual.map((annual,index)=> {
-                                                        return (
-                                                            <tr>
-                                                                <th data-priority="1">{annual.user.kode}</th>
-                                                                <th data-priority="2">{annual.user.nama}</th>
-                                                                <th data-priority="3">Posisi</th>
-                                                                <th data-priority="4">Unit</th>
-                                                                <th data-priority="5">{annual.tglMulai}</th>
-                                                                <th data-priority="6">{annual.tglAkhir}</th>
-                                                                <th data-priority="7">{annual.status.status}</th>
-                                                            </tr>    
-        
-                                                        )
-                                                    }):null
-                                                }
-                                            </tbody>
-                                        </table>
-                                        </div>
-
-                                    </div>
+                                    <h4 className="page-title">Annual List</h4>
+                                    <ol className="breadcrumb">
+                                        <li>
+                                            <a href="#">Annual</a>
+                                        </li>
+                                        <li className="active">
+                                            List
+                                        </li>
+                                    </ol>
                                 </div>
                             </div>
+
+
+                            <div className="card-box table-responsive" id="shift-list">
+                                <h4 className="m-t-0 header-title"><b>Daftar Cuti Karyawan </b></h4>
+                                <MDBDataTable striped bordered data={data} />
+                            </div>
+
                         </div>
                     </div>
                 </div>
-                </div>
-            );
-        }
+            </div>
 
-
+        );
     }
+
+
+}
 export default ListPengajuan;

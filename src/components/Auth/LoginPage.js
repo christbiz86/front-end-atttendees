@@ -10,10 +10,16 @@ class LoginPage extends React.Component{
         this.props.logout();
 
         this.state = {
+<<<<<<< HEAD
             email: '', 
             password: '',
             submitted: false,
             isLoading: false
+=======
+            email: null,
+            password: null,
+            submitted: false
+>>>>>>> 54686353824092025289bb168de4a0f9ff352c0b
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -28,7 +34,11 @@ class LoginPage extends React.Component{
     handleSubmit(e) {
         e.preventDefault();
 
+<<<<<<< HEAD
         this.setState({ submitted: true, isLoading: true });
+=======
+        this.setState({ submitted: true });
+>>>>>>> 54686353824092025289bb168de4a0f9ff352c0b
         const { email, password } = this.state;
         if (email && password) {
             this.props.login(email, password);
@@ -37,7 +47,11 @@ class LoginPage extends React.Component{
 
     render(){
         const { loggingIn } = this.props;
+<<<<<<< HEAD
         const { email, password, submitted, isLoading } = this.state;
+=======
+        const { email, password, submitted } = this.state;
+>>>>>>> 54686353824092025289bb168de4a0f9ff352c0b
         return(
             <div>
                 <div className="account-pages"/>
@@ -75,11 +89,15 @@ class LoginPage extends React.Component{
     
                                 <div className="form-group text-center m-t-40">
                                     <div className="col-xs-12">
+<<<<<<< HEAD
                                     <button className="btn btn-pink btn-block text-uppercase waves-effect waves-light" type="submit" onClick={this.handleSubmit} disabled={isLoading}>
                                         { isLoading &&  <i className="fa fa-refresh fa-spin"> </i> }
                                         { isLoading &&  <span> Loading </span> }
                                         { !isLoading &&  <span> Log In </span> }
                                     </button>  
+=======
+                                        <button className="btn btn-pink btn-block text-uppercase waves-effect waves-light" type="submit">Log In</button>
+>>>>>>> 54686353824092025289bb168de4a0f9ff352c0b
                                     </div>
                                 </div>
     
@@ -106,16 +124,25 @@ class LoginPage extends React.Component{
         );
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 54686353824092025289bb168de4a0f9ff352c0b
 function mapState(state) {
     const { loggingIn } = state.authentication;
     return { loggingIn };
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 54686353824092025289bb168de4a0f9ff352c0b
 const actionCreators = {
     login: userActions.login,
     logout: userActions.logout
 };
+<<<<<<< HEAD
 
+=======
+>>>>>>> 54686353824092025289bb168de4a0f9ff352c0b
 const connectedLoginPage = connect(mapState, actionCreators)(LoginPage);
 export { connectedLoginPage as LoginPage };

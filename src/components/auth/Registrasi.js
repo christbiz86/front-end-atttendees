@@ -37,7 +37,7 @@ export default class Registrasi extends React.Component{
             foto:this.state.foto
         }
 
-        fetch('http://localhost:8080/company', {
+        fetch('http://api.attendees.today/company', {
                 method: 'POST',
                 body: (JSON.stringify(data)),
                 headers:{

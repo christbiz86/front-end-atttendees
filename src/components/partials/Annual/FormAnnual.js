@@ -1,163 +1,208 @@
 import React, { Component } from "react";
-import Moment from "moment";
+// import Moment from "moment";
+import Layout from '../../layout/Layout';
+import { format } from "path";
+// import { DateRangePicker   } from 'react-date-range';
+import DateRangePicker from "react-daterange-picker";
+import "react-daterange-picker/dist/css/react-calendar.css";
+import originalMoment from "moment";
+import { extendMoment } from "moment-range";
+const moment = extendMoment(originalMoment);
 
 let user = JSON.parse(localStorage.getItem('user'));
-class FormPengajuan extends Component {
-    constructor(props){
-        super(props);
 
+class FormPengajuan extends Component {
+    constructor(props,context){
+        super(props,context);
+        const today = moment();
         this.handleRequest = this.handleRequest.bind(this);
         this.handleChange = this.handleChange.bind(this);
 
         this.state = {
-            
+
             namauser:user.idUser.nama,
-            tglMulai:Moment().format('YYYY-MM-DD'),
-            tglAkhir:Moment().format('YYYY-MM-DD'),
-            keterangan:''
-        }    
+            tglMulai:'',
+            tglAkhir:'',
+            keterangan:'',
+            value: moment.range(today.clone().add(1,"day"), today.clone().add(1,"day"))
+        }
     }
-    
+
     handleChange = event => {
         this.setState({
-            [event.target.name]:event.target.value
+            [event.target.name]:event.target.value,
         })
     }
-    
+
     handleRequest = event => {
-        event.preventDefault();   
+        event.preventDefault();
         this.Request();
-    };
+    }
+
+    onSelect = (value, states) => {
+        this.setState({ value, states });
+    }
+    renderSelectionValue = () => {
+        return (
+            <div className="input-group">
+                <input type="text" className="form-control" disabled placeholder={this.state.value.start.format("YYYY-MM-DD")} />
+                <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
+                <input type="text" className="form-control"disabled  placeholder= {this.state.value.end.format("YYYY-MM-DD")} />
+            </div>
+        );
+    }
 
     user(){
 
     }
 
     Request(){
-        fetch('http://localhost:8181/request', {
-                method: 'POST',
-                body: JSON.stringify({
-                    
-                    kode:"",
-                    user:user.idUser,
-                    tglMulai:this.state.tglMulai,
-                    tglAkhir:this.state.tglAkhir,
-                    
-                
-                }),
-                headers:{
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
-            })
+        console.log('Success:', this.state.value.start.format("YYYY-MM-DD"))
+        console.log('Success:', this.state.value.end.format("YYYY-MM-DD"))
+        fetch('http://http://api.attendees.today/request', {
+            method: 'POST',
+            body: JSON.stringify({
+
+                kode:"",
+                userCompany:{
+                    id:user.id,
+                    idUser:{
+                        id:user.idUser.id
+                    }
+                },
+                tglMulai:this.state.value.start.format("YYYY-MM-DD"),
+                tglAkhir:this.state.value.end.format("YYYY-MM-DD"),
+                keterangan:this.state.keterangan
+
+            }),
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
             .then(res => res.json())
             .catch(error => console.error('Error:', error))
             .then(response => console.log('Success:', response),
-            
-             
-            ); 
+
+
+            );
     }
 
     render() {
-        
         return (
             <div className="content-page">
 
-				<div class="content">
-                    <div class="container">
+                <div className="content">
+                    <div className="container">
 
-						<div class="row">
-							<div class="col-sm-12">
+                        <div className="row">
+                            <div className="col-sm-12">
 
-								<h4 class="page-title">Form Annual</h4>
-								<ol class="breadcrumb">
-									<li>
-										<a href="#">Annual</a>
-									</li>
-									<li class="active">
-										Form
-									</li>
-								</ol>
-							</div>
-						</div>
+                                <h4 className="page-title">Form Annual</h4>
+                                <ol className="breadcrumb">
+                                    <li>
+                                        <a href="#">Annual</a>
+                                    </li>
+                                    <li className="active">
+                                        Form
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
 
-                        
-                        <div class="row">
-                        	<div class="col-md-12">
-                        		<div class="card-box">
 
-                                    <div class="form-group clearfix">
-                                        <label class="col-sm-2 control-label" ></label>
-                                        <div class="col-lg-6">
-                                            <h4 class="m-t-0 header-title"><b>PENGAJUAN CUTI</b></h4>    
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="card-box">
+
+                                    <div className="form-group clearfix">
+                                        <label className="col-sm-2 control-label" ></label>
+                                        <div className="col-lg-6">
+                                            <h4 className="m-t-0 header-title"><b>PENGAJUAN CUTI</b></h4>
                                         </div>
                                     </div>
-                        			<p class="text-muted m-b-30 font-13">
-										{/* Most common form control, text-based input fields. Includes support for all HTML5 types: <code>text</code>, <code>password</code>, <code>datetime</code>, <code>datetime-local</code>, <code>date</code>, <code>month</code>, <code>time</code>, <code>week</code>, <code>number</code>, <code>email</code>, <code>url</code>, <code>search</code>, <code>tel</code>, and <code>color</code>. */}
-									</p>
+                                    <p className="text-muted m-b-30 font-13">
+                                        {/* Most common form control, text-based input fields. Includes support for all HTML5 types: <code>text</code>, <code>password</code>, <code>datetime</code>, <code>datetime-local</code>, <code>date</code>, <code>month</code>, <code>time</code>, <code>week</code>, <code>number</code>, <code>email</code>, <code>url</code>, <code>search</code>, <code>tel</code>, and <code>color</code>. */}
+                                    </p>
 
-                                        <form id="basic-form"  onSubmit={this.handleRequest} >   
-                                            
-                                            <div class="form-group clearfix">
-                                                <label class="col-sm-2 control-label" >NIK</label>
-                                                <div class="col-lg-6">
-                                                    <input type="text" id="kode" name="kode" class="form-control" disabled value={user.idUser.kode} placeholder="NIK"/>
-                                                </div>
-                                            </div>
+                                    <form id="basic-form"  onSubmit={this.handleRequest} >
 
-                                            <div class="form-group clearfix">
-                                                <label class="col-md-2 control-label" >Nama</label>
-                                                <div class="col-lg-6">
-                                                    <input type="text" id="nama" name="nama" class="form-control"  disabled value={this.state.namauser} placeholder="Nama"/>
-                                                </div>                                    
+                                        <div className="form-group clearfix">
+                                            <label className="col-sm-2 control-label" >NIK</label>
+                                            <div className="col-lg-6">
+                                                <input type="text" id="kode" name="kode" className="form-control" disabled value={user.idUser.kode} placeholder="NIK"/>
                                             </div>
-		                            
-                                            <div class="form-group clearfix">
-                                                <label class="col-md-2 control-label">Tanggal Cuti</label>
-                                                <div class="col-lg-6">
-                                                    <div class="input-daterange input-group" id="date-range">
-                                               
-                                                        <input type="text" class="form-control" name="tglMulai" onChange={this.handleChange} placeholder="DD/MM/YYYY" />
-                                                    
-                                                            <span class="input-group-addon bg-custom b-0 text-white"> sampai </span>
-                                                        <input type="text" class="form-control" name="tglAkhir"onChange={this.handleChange}  placeholder="DD/MM/YYYY" />
+                                        </div>
+
+                                        <div className="form-group clearfix">
+                                            <label className="col-md-2 control-label" >Nama</label>
+                                            <div className="col-lg-6">
+                                                <input type="text" id="nama" name="nama" className="form-control"  disabled value={this.state.namauser} placeholder="Nama"/>
+                                            </div>
+                                        </div>
+
+                                        <div className="form-group clearfix">
+                                            <label className="col-md-2 control-label">Tanggal Cuti</label>
+                                            <div className="col-lg-6">
+                                                <div>
+                                                    {/* {this.renderSelectionValue()} */}
+                                                    <div className="input-group">
+                                                        <input type="text" className="form-control" disabled placeholder={this.state.value.start.format("YYYY-MM-DD")} />
+                                                        <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
+                                                        <input type="text" className="form-control"disabled  placeholder= {this.state.value.end.format("YYYY-MM-DD")} />
                                                     </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="form-group clearfix">
-                                                <label class="col-md-2 control-label">Keterangan Cuti</label>
-                                                <div class="col-md-6">
-                                                    <textarea class="form-control" name="keterangan" onChange={this.handleChange} rows="6"></textarea>
+                                                    <DateRangePicker
+                                                        value={this.state.value}
+                                                        onSelect={this.onSelect}
+                                                        singleDateRange={true}
+                                                        minimumDate={moment().add(1,"days")}
+                                                    />
                                                 </div>
-                                            </div>
 
-                                            <div class="form-group clearfix">
-                                                <a class="col-md-2 control-label"   />
-                                                <div class="col-sm-2 control-label">
-                                                </div>
+                                                {/* <div class="input-daterange input-group" id="date-range">
+
+                                                        <input type="date" name="tglMulai" className="form-control" onChange={this.handleChange} placeholder="YYYY-MM-DD" />
+
+                                                            <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
+
+                                                        <input type="date" className="form-control"  name="tglAkhir" onChange={this.handleChange}  placeholder="DD/MM/YYYY" />
+
+                                                    </div> */}
                                             </div>
-                                            
-                                            <div class="form-group clearfix">
-                                                <label  class="col-sm-6 control-label"></label>
-                                                <div class="col-sm-2 control-label">
-                                                    <button type="submit" class="btn btn-success waves-effect waves-light m-l-10 btn-md"> Submit</button>
-                                                </div>
+                                        </div>
+
+                                        <div className="form-group clearfix">
+                                            <label className="col-md-2 control-label">Keterangan Cuti</label>
+                                            <div className="col-lg-6">
+                                                <textarea className="form-control" name="keterangan" onChange={this.handleChange} rows="6"></textarea>
                                             </div>
-                                            
-                                        </form>
-	                                        
-                        				</div>                        				
-                                    </div>
+                                        </div>
+
+                                        <div className="form-group clearfix">
+                                            <a className="col-md-2 control-label"   />
+                                            <div className="col-sm-2 control-label">
+                                            </div>
+                                        </div>
+
+                                        <div className="form-group clearfix">
+                                            <label  className="col-sm-6 control-label"></label>
+                                            <div className="col-sm-2 control-label">
+                                                <button type="submit" className="btn btn-default waves-effect waves-light btn-lg" id="sa-warning"> Submit</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+
                                 </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                        
+            </div>
         );
-        
+
     }
 }
 
-  
-  export default FormPengajuan;
+export default FormPengajuan;

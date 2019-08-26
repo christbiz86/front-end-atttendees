@@ -18,6 +18,7 @@ class Attendee extends Component {
             fullDesc: null,
             faceMatcher: null,
             facingMode: null,
+<<<<<<< HEAD
             time: new Date()
         };
     }
@@ -28,6 +29,10 @@ class Attendee extends Component {
         })
     }
 
+=======
+        }
+    }
+>>>>>>> 54686353824092025289bb168de4a0f9ff352c0b
     componentWillMount() {
         loadModels();
         this.setInputDevice();

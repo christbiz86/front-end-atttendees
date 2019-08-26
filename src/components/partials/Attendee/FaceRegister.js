@@ -84,7 +84,7 @@ class FaceRegister extends Component {
         descriptors: temp
     }
     console.log(data);
-    fetch('http://localhost:8080/coba', { 
+    fetch('http://attendees.today:8080/coba', {
             method: 'POST',
             body: JSON.stringify(data),
             headers:{

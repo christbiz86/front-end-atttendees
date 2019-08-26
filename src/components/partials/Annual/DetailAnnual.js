@@ -29,7 +29,7 @@ class DetailAnnual extends Component {
     }
 
     approve(annual){
-        fetch('http://localhost:8080/request/Approved', {
+        fetch('http://api.attendees.today/request/Approved', {
             method: 'PATCH',
             body: JSON.stringify(annual),
             headers:{
@@ -44,7 +44,7 @@ class DetailAnnual extends Component {
     }
 
     reject(annual) {
-        fetch('http://localhost:8080/request/Rejected', {
+        fetch('http://api.attendees.today/request/Rejected', {
             method: 'PATCH',
             body: 
             JSON.stringify(annual),
