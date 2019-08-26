@@ -18,7 +18,9 @@ class Attendee extends Component {
             fullDesc: null,
             faceMatcher: null,
             facingMode: null,
-            descriptors: null
+            users: {
+                user: null
+            }
         };
     }
 
@@ -47,24 +49,28 @@ class Attendee extends Component {
     };
 
     matcher = async () => {
-        fetch('http://localhost:8080/coba', { 
-            method: 'GET',
+        const getter = {
+            name: JSON.parse(localStorage.getItem('user')).idUser.nama
+        }
+        await fetch('http://localhost:8080/coba/coba', { 
+            method: 'POST',
+            body: JSON.stringify(getter),
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
-        .then(response => response.json())
-        .then(data =>
-            this.setState({
-                descriptors: data
+        .then(async response => await response.json())
+        .then(async data =>
+            await this.setState({
+                users: {
+                    user:data
+                }
             })
-        )
-        .catch(error => console.error('Error:', error))
-        .then(response => console.log('Success:', response));
-
-        const faceMatcher = await createMatcher(this.state.descriptors);
+        );
+        const faceMatcher = await createMatcher(this.state.users);
         this.setState({ faceMatcher });
+        console.log(this.state.faceMatcher);
     };
 
     startCapture = () => {
@@ -84,6 +90,7 @@ class Attendee extends Component {
               inputSize
             ).then(fullDesc => this.setState({ fullDesc }));
         }
+        console.log(this.state.fullDesc);
     };
 
     render(){
