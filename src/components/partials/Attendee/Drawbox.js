@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 
 class DrawBox extends Component {
     constructor(props) {
@@ -6,7 +7,11 @@ class DrawBox extends Component {
         this.state = {
             descriptors: null,
             detections: null,
-            match: null
+            match: null,
+            redirect: false,
+            absen: {
+                jam: moment('', moment.ISO_8601)
+            }
         }
     }
 
@@ -30,14 +35,43 @@ class DrawBox extends Component {
                     faceMatcher.findBestMatch(descriptor)
                 );
                 this.setState({ match });
+                if(this.state.match!=null){
+                    this.absen();
+                }
             }
         }
     };
+
+    absen(){
+        if(this.state.match[0]._label===JSON.parse(localStorage.getItem('user')).idUser.nama){
+            // this.setState({redirect: true});
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(displayLocationInfo);
+              }
+              
+              function displayLocationInfo(position) {
+                const lng = position.coords.longitude;
+                const lat = position.coords.latitude;
+              
+                console.log(`longitude: ${ lng } | latitude: ${ lat }`);
+              }
+
+            console.log("masuk");
+        }
+        else{
+            console.log("coba lagi");
+        }
+    }
 
     render(){
         const { imageWidth, boxColor } = this.props;
         const { detections, match } = this.state;
         let box = null;
+
+        if(this.state.redirect){
+            return <a href="/" />
+        }
 
         if (!!detections) {
         box = detections.map((detection, i) => {

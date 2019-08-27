@@ -7,7 +7,6 @@ import {
   isFaceDetectionModelLoaded
 } from '../../../api/face';
 import { JSON_PROFILE } from '../../../common/profile';
-import { async } from 'q';
 
 const MaxWidth = 600;
 

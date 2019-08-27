@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
 import Webcam from 'react-webcam';
 import { loadModels, getFullFaceDescription, createMatcher } from '../../../api/face';
 import DrawBox from './Drawbox';
-import { JSON_PROFILE } from '../../../common/profile';
 
 const WIDTH = 420;
 const HEIGHT = 420;
@@ -15,6 +13,7 @@ class Attendee extends Component {
         this.webcam = React.createRef();
         this.state = {
             user: localStorage.getItem('user'),
+            match: null,
             fullDesc: null,
             faceMatcher: null,
             facingMode: null,
@@ -70,6 +69,7 @@ class Attendee extends Component {
         );
         const faceMatcher = await createMatcher(this.state.users);
         this.setState({ faceMatcher });
+        console.log(this.state.users);
         console.log(this.state.faceMatcher);
     };
 
@@ -130,56 +130,56 @@ class Attendee extends Component {
                         </div>
                         <div className="row">
                             <div className="col-sm-12">
-                            <ul class="nav nav-tabs tabs">
-                                <li class="active tab">
-                                    <a href="#shift-list" data-toggle="tab" aria-expanded="false"> 
-                                        <span class="visible-xs"><i class="fa fa-home"></i></span> 
-                                        <span class="hidden-xs">Attendee In</span> 
-                                    </a> 
-                                </li>
-                                <li class="tab"> 
-                                    <a href="#insert-form" data-toggle="tab" aria-expanded="true"> 
-                                        <span class="visible-xs"><i class="fa fa-envelope-o"></i></span> 
-                                        <span class="hidden-xs">Attendee Out</span> 
-                                    </a> 
-                                </li>
-                            </ul> 
+                                <ul class="nav nav-tabs tabs">
+                                    <li class="active tab">
+                                        <a href="#clock-in" data-toggle="tab" aria-expanded="false"> 
+                                            <span class="visible-xs"><i class="fa fa-home"></i></span> 
+                                            <span class="hidden-xs">Attendee In</span> 
+                                        </a> 
+                                    </li>
+                                    <li class="tab"> 
+                                        <a href="#clock-out" data-toggle="tab" aria-expanded="true"> 
+                                            <span class="visible-xs"><i class="fa fa-envelope-o"></i></span> 
+                                            <span class="hidden-xs">Attendee Out</span> 
+                                        </a> 
+                                    </li>
+                                </ul> 
                                 
-                            <div className="card-box" id="insert-form">
-                                <h4 className="m-t-0 header-title"><b>Insert Form</b></h4>
-                                <div class="row">
+                                <div className="card-box" id="clock-out">
+                                    <h4 className="m-t-0 header-title"><b>Insert Form</b></h4>
+                                    <div class="row">
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="card-box table-responsive" id="shift-list">
-                                <h4 className="m-t-0 header-title"><b>Attendee In</b></h4>
-                                <div className="Camera" style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                    {/* <p>Camera: {camera}</p> */}
-                                    <div style={{width: WIDTH, height: HEIGHT}}>
-                                        <div style={{ position: 'relative', width: WIDTH }}>
-                                            {!!videoConstraints ? (
-                                            <div style={{ position: 'absolute' }}>
-                                                <Webcam 
-                                                    audio={false}
-                                                    width={WIDTH}
-                                                    height={HEIGHT}
-                                                    ref={this.webcam}
-                                                    screenshotFormat="image/jpeg"
-                                                    videoConstraints={videoConstraints}
-                                                />
+                                <div className="card-box table-responsive" id="clock-in">
+                                    <h4 className="m-t-0 header-title"><b>Attendee In</b></h4>
+                                    <div className="Camera" style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                        {/* <p>Camera: {camera}</p> */}
+                                        <div style={{width: WIDTH, height: HEIGHT}}>
+                                            <div style={{ position: 'relative', width: WIDTH }}>
+                                                {!!videoConstraints ? (
+                                                <div style={{ position: 'absolute' }}>
+                                                    <Webcam 
+                                                        audio={false}
+                                                        width={WIDTH}
+                                                        height={HEIGHT}
+                                                        ref={this.webcam}
+                                                        screenshotFormat="image/jpeg"
+                                                        videoConstraints={videoConstraints}
+                                                    />
+                                                </div>
+                                                ) : null }
+                                                {!!fullDesc ? (
+                                                    <DrawBox 
+                                                        fullDesc={fullDesc}
+                                                        faceMatcher={faceMatcher}
+                                                        imageWidth={WIDTH}
+                                                        boxColor={'blue'}
+                                                    />
+                                                ) : null }
                                             </div>
-                                        ) : null }
-                                        {!!fullDesc ? (
-                                            <DrawBox 
-                                                fullDesc={fullDesc}
-                                                faceMatcher={faceMatcher}
-                                                imageWidth={WIDTH}
-                                                boxColor={'blue'}
-                                            />
-                                        ) : null }
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             </div>
                         </div>
                     </div>
@@ -189,4 +189,4 @@ class Attendee extends Component {
     }
 }
 
-export default withRouter(Attendee);
+export default Attendee;
