@@ -69,6 +69,9 @@ class DetailAnnual extends Component {
                         <div className="container">
                             <div className="row">
                                 <div className="col-sm-12">
+                                    <div className="btn-group pull-right m-t-15">
+                                        <button type="button" className="btn btn-default dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false"><span className="m-l-5"><i className="fa fa-chevron-circle-left"></i></span> Back To List Request</button>
+                                    </div>
                                     <h4 className="page-title">Detail Annual</h4>
                                     <ol className="breadcrumb">
                                         <li>
@@ -88,8 +91,6 @@ class DetailAnnual extends Component {
                                     <div className="card-box table-responsive">
                                         <h4 className="m-t-0 header-title"><b>Detail Annual Employee  </b><small  className="font-600">{ data.request.userCompany.idUser.nama }</small></h4>
                                         <hr />
-                                        {/* <form id="basic-form">    */}
-                                            
                                             <div className="form-group clearfix">
                                                 <label className="col-sm-2 control-label" >NIK</label>
                                                 <div className="col-lg-6">

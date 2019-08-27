@@ -76,7 +76,7 @@ class LoginPage extends React.Component{
                                 <div className="form-group text-center m-t-40">
                                     <div className="col-xs-12">
                                     <button className="btn btn-pink btn-block text-uppercase waves-effect waves-light" type="submit" onClick={this.handleSubmit} disabled={isLoading}>
-                                        { isLoading &&  <i className="fa fa-refresh fa-spin"> </i> }
+                                        { isLoading &&  <i className="spinner-border"> </i> }
                                         { isLoading &&  <span> Loading </span> }
                                         { !isLoading &&  <span> Log In </span> }
                                     </button>  

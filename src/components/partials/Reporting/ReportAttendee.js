@@ -54,9 +54,10 @@ class ReportAttendee extends Component {
             this.setState({ tableRows:this.assemblePosts(), isLoading:false })
         })
     }
-
+    
     assemblePosts= () => {
         let items = this.state.items.map((attendee) => {
+        // console.log(items);
             return (
                 {
                     namaUser:attendee.name,
@@ -174,7 +175,7 @@ class ReportAttendee extends Component {
                                                 </div>
                                                 <div className="form-group">
                                                     <button type="submit" className="btn btn-primary">
-                                                        { isLoading &&  <i className="fa fa-refresh fa-spin"> </i> }
+                                                        { isLoading &&  <i className="spinner-border"> </i> }
                                                         { isLoading &&  <span> Loading </span> }
                                                         { !isLoading &&  <span> Search </span> }
                                                     </button>

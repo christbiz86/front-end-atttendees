@@ -16,6 +16,7 @@ import Project from './components/partials/TimeSheet/Project';
 import Shift from './components/partials/TimeSheet/Shift';
 import Attendee from './components/partials/Attendee/Attendee';
 import DetailAnnual from './components/partials/Annual/DetailAnnual';
+import Coba from './components/partials/Header/Coba';
 
 import { PrivateRoute } from './components/_security/PrivateRoute';
 import { LoginPage } from './components/auth/LoginPage';
@@ -44,6 +45,7 @@ class App extends React.Component {
                   <Switch>
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/registrasi" component={Registrasi} />
+                    <Route exact path="/coba" component={Coba} />
                     <PrivateRoute exact path="/" component={Dashboard} />
                     <PrivateRoute exact path="/annual/list" component={ListAnnual} />
                     <PrivateRoute exact path="/annual/form" component={FormAnnual} />
