@@ -9,16 +9,13 @@ let user = JSON.parse(localStorage.getItem('user'));
 class Notifications extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             items: []
         }
-        
-        
     }
 
     componentDidMount() {
-        axios.request('http://localhost:8080/notification', {
+        axios.request('http://api.attendees.today/notification', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -49,33 +46,32 @@ class Notifications extends Component {
                     <li className="notifi-title">Notification</li>
                     <li className="list-group slimscroll-noti notification-list">
                         <div className="scrollbar mx-auto" style={scrolleContainerStyle}>
-                            {
-                                items.length > 0 ? items.map((notif, index) => {
-                                    // console.log(notif.request.id);
-                                    return(
-                                        <Link to={{
-                                            pathname: "/annual/detail-annual",
-                                            data: notif
-                                        }} className="list-group-item" key={notif.id} >
-                                            <div className="media">
-                                                <div className="pull-left p-r-10">
-                                                    <em className="fa fa-check-square-o noti-primary"></em>
-                                                </div>
-                                                <div className="media-body">
-                                                    <h5 className="media-heading">Annual Request</h5>
-                                                    <p className="m-0">
-                                                        <small>From: { notif.request.createdBy.nama }</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    );
-                                }) : 
-                                <div className="list-group-item text-right">
-                                    <small className="font-1000">You don't have new notification</small>
-                                </div>
-                            }
+                    {
+                        items.length > 0 ? items.map((notif, index) => {
+                            // console.log(notif.request.id);
+                            return(
+                                <Link to={{
+                                    pathname: "/annual/detail-annual",
+                                    data: notif
+                                }} className="list-group-item">
+                                    <div className="media">
+                                        <div className="pull-left p-r-10">
+                                            <em className="fa fa-check-square-o noti-primary"></em>
+                                        </div>
+                                        <div className="media-body">
+                                            <h5 className="media-heading">Annual Request</h5>
+                                            <p className="m-0">
+                                                <small>From: { notif.request.createdBy.nama }</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            );
+                        }) : 
+                        <div classname="list-group-item text-right">
+                            <small className="font-1000">You don't have new notification</small>
                         </div>
+                    }
                     </li>
                     <li>
                         <a href="#" className="list-group-item text-right">

@@ -16,12 +16,12 @@ import Project from './components/partials/TimeSheet/Project';
 import Shift from './components/partials/TimeSheet/Shift';
 import Attendee from './components/partials/Attendee/Attendee';
 import DetailAnnual from './components/partials/Annual/DetailAnnual';
-import Coba from './components/partials/Header/Coba';
-
+import FaceRegister from './components/partials/Attendee/FaceRegister';
 import { PrivateRoute } from './components/_security/PrivateRoute';
 import { LoginPage } from './components/auth/LoginPage';
 import { history } from './components/_helpers';
 import { alertActions } from './components/_actions';
+import AnnualLeave from './components/partials/Annual/AnnualLeave';
 
 class App extends React.Component {
   constructor(props) {
@@ -45,7 +45,6 @@ class App extends React.Component {
                   <Switch>
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/registrasi" component={Registrasi} />
-                    <Route exact path="/coba" component={Coba} />
                     <PrivateRoute exact path="/" component={Dashboard} />
                     <PrivateRoute exact path="/annual/list" component={ListAnnual} />
                     <PrivateRoute exact path="/annual/form" component={FormAnnual} />
@@ -58,6 +57,9 @@ class App extends React.Component {
                     <PrivateRoute exact path="/timesheet/Libur" component={Libur} />
                     <PrivateRoute exact path="/timesheet/Project" component={Project} />
                     <PrivateRoute exact path="/timesheet/Shift" component={Shift} />
+                    <PrivateRoute exact path="/attendee/absen" component={Attendee} />
+                    <PrivateRoute exact path="/attendee/register" component={FaceRegister} />
+                    <PrivateRoute exact path="/annual/leave" component={AnnualLeave} />
                     <PrivateRoute exact path="/attendee" component={Attendee} />
                     <Route path="/logout" component={LoginPage} />
                   </Switch>
