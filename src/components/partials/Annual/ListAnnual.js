@@ -3,7 +3,7 @@ import { MDBDataTable } from 'mdbreact';
 import Layout from '../../layout/Layout';
 import axios from 'axios';
 
-const url = 'http://localhost:8282/request/Approved';
+const url = 'http://api.attendees.today/request/Approved';
 
 class ListPengajuan extends Component {
     constructor(props){
@@ -15,17 +15,17 @@ class ListPengajuan extends Component {
         };
     }
 
-    
+
     componentWillMount=async() => {
         // await axios.request('http://localhost:8282/request/Approved', {
-        await axios.request('http://localhost:8282/request/company/Approved', {
-                method: 'GET',
-                
-                headers:{
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
-            })
+        await axios.request('http://api.attendees.today/request/company/Approved', {
+            method: 'GET',
+
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
             .then(response => response.data)
             .then(data => {
                 this.setState({ items: data })
@@ -33,7 +33,7 @@ class ListPengajuan extends Component {
             .then(async() => {
                 this.setState({ tableRows:this.assemblePosts(), isLoading:false });
             })
-            
+
     }
     // componentWillMount=async() => {
     //     await axios.get(url)
@@ -57,7 +57,7 @@ class ListPengajuan extends Component {
                     keterangan:annual.keterangan,
                     status:annual.status.status
                 }
-                
+
             )
         });
 
@@ -94,14 +94,14 @@ class ListPengajuan extends Component {
             ],
 
             rows:this.state.tableRows,
-        }   
-            return (
-                <div>
+        }
+        return (
+            <div>
                 <Layout />
                 <div className="content-page">
                     <div className="content">
                         <div className="container">
-                            
+
                             <div className="row">
                                 <div className="col-sm-12">
 
@@ -115,22 +115,22 @@ class ListPengajuan extends Component {
                                         </li>
                                     </ol>
                                 </div>
-						    </div>
-                            
+                            </div>
 
-                                    <div className="card-box table-responsive" id="shift-list">
-                                        <h4 className="m-t-0 header-title"><b>Daftar Cuti Karyawan </b></h4>
-                                        <MDBDataTable striped bordered data={data} />
-                                    </div>
-                                      
+
+                            <div className="card-box table-responsive" id="shift-list">
+                                <h4 className="m-t-0 header-title"><b>Daftar Cuti Karyawan </b></h4>
+                                <MDBDataTable striped bordered data={data} />
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
 
-            );
-        }
-
-
+        );
     }
+
+
+}
 export default ListPengajuan;

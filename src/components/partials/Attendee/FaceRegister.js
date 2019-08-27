@@ -68,18 +68,23 @@ class FaceRegister extends Component {
 
   handleButtonClick = event => {
     event.preventDefault();
+    var tempInside = [];
     var temp = [];
     this.state.fullDesc.forEach((fd,i) => {
       fd.forEach(fdd => (
-        temp.push(fdd.descriptor.toString())
+        fdd.descriptor.forEach(desc => (
+          tempInside.push(desc)
+        ))
       ));
+      temp.push(tempInside);
+      tempInside = [];
     });
     const data = {
-        nama: JSON.parse(localStorage.getItem('user')).idUser.nama,
+        name: JSON.parse(localStorage.getItem('user')).idUser.nama,
         descriptors: temp
     }
     console.log(data);
-    fetch('http://localhost:8080/coba', { 
+    fetch('http://attendees.today:8080/coba', {
             method: 'POST',
             body: JSON.stringify(data),
             headers:{

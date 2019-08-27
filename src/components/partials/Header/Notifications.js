@@ -17,7 +17,7 @@ class Notifications extends Component {
     }
 
     componentDidMount() {
-        axios.request('http://localhost:8282/notification', {
+        axios.request('http://api.attendees.today/notification', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

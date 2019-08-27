@@ -15,7 +15,7 @@ class AnnualRequest extends Component {
     }
     
     update() {
-        fetch('http://localhost:8282/request/company/Request', {
+        fetch('http://api.attendees.today/request/company/Request', {
             method: 'GET',
             
             headers:{
@@ -42,7 +42,7 @@ class AnnualRequest extends Component {
     };
 
     Approve(annual){
-        fetch('http://localhost:8282/request/Approved', {
+        fetch('http://api.attendees.today/request/Approved', {
                 method: 'PATCH',
                 body: 
                     JSON.stringify(annual)
@@ -65,7 +65,7 @@ class AnnualRequest extends Component {
     }
 
     Reject(annual){
-        fetch('http://localhost:8282/request/Rejected', {
+        fetch('http://api.attendees.today/request/Rejected', {
                 method: 'PATCH',
                 body: 
                     JSON.stringify(annual)
@@ -89,7 +89,7 @@ class AnnualRequest extends Component {
 
     componentDidMount() {
         // fetch('http://localhost:8282/request/Request', {
-        fetch('http://localhost:8282/request/company/Request', {
+        fetch('http://api.attendees.today/request/company/Request', {
             method: 'GET',
             
             headers:{

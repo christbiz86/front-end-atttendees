@@ -48,7 +48,7 @@ export default class User extends Component {
 
     fetchUserByFilter() {
         const userCom = this.state.userCom;
-        fetch(`http://localhost:8282/usercompany/filter`, {
+        fetch('http://api.attendees.today/usercompany/filter', {
             method: 'POST',
             body: JSON.stringify(userCom),
             headers:{

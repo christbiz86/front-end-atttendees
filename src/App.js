@@ -17,7 +17,6 @@ import Shift from './components/partials/TimeSheet/Shift';
 import Attendee from './components/partials/Attendee/Attendee';
 import FaceRegister from './components/partials/Attendee/FaceRegister';
 import DetailAnnual from './components/partials/Annual/DetailAnnual';
-
 import { PrivateRoute } from './components/_security/PrivateRoute';
 import { LoginPage } from './components/auth/LoginPage';
 import { history } from './components/_helpers';

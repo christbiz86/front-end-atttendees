@@ -26,13 +26,13 @@ class FormPengajuan extends Component {
             redirect: false
         }    
     }
-    
+
     handleChange = event => {
         this.setState({
             [event.target.name]:event.target.value,
         })
     }
-    
+
     handleRequest = event => {
         event.preventDefault(); 
         this.setState({ submitted: true, isLoading: true });
@@ -44,11 +44,11 @@ class FormPengajuan extends Component {
     }
     renderSelectionValue = () => {
         return (
-          <div className="input-group">
-            <input type="text" className="form-control" disabled placeholder={this.state.value.start.format("YYYY-MM-DD")} />
-            <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
-            <input type="text" className="form-control"disabled  placeholder= {this.state.value.end.format("YYYY-MM-DD")} />
-          </div>
+            <div className="input-group">
+                <input type="text" className="form-control" disabled placeholder={this.state.value.start.format("YYYY-MM-DD")} />
+                <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
+                <input type="text" className="form-control"disabled  placeholder= {this.state.value.end.format("YYYY-MM-DD")} />
+            </div>
         );
       }
 
@@ -59,7 +59,7 @@ class FormPengajuan extends Component {
     Request(){
         console.log('Success:', this.state.value.start.format("YYYY-MM-DD"))
         console.log('Success:', this.state.value.end.format("YYYY-MM-DD"))
-        fetch('http://localhost:8282/request', {
+        fetch('http://http://api.attendees.today/request', {
                 method: 'POST',
                 body: JSON.stringify({
                     
@@ -90,7 +90,11 @@ class FormPengajuan extends Component {
                     this.setState({isLoading:false})
                 }}
                 )
-            .catch(error => console.error('Error:', error))
+            .catch(error => {console.error('Error:', error)
+                window.alert('Request gagal')
+                this.setState({isLoading:false})
+            }
+            )
             .then(response => console.log('Success:', response)     
             ); 
     }
@@ -106,11 +110,23 @@ class FormPengajuan extends Component {
         return (
             <div className="content-page">
 
-				<div className="content">
+                <div className="content">
                     <div className="container">
 
-						<div className="row">
-							<div className="col-sm-12">
+                        <div className="row">
+                            <div className="col-sm-12">
+
+                                <h4 className="page-title">Form Annual</h4>
+                                <ol className="breadcrumb">
+                                    <li>
+                                        <a href="#">Annual</a>
+                                    </li>
+                                    <li className="active">
+                                        Form
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
 
 								<h4 className="page-title">Form Annual</h4>
 								<ol className="breadcrumb">
@@ -126,8 +142,8 @@ class FormPengajuan extends Component {
 
                         
                         <div className="row">
-                        	<div className="col-md-12">
-                        		<div className="card-box">
+                            <div className="col-md-12">
+                                <div className="card-box">
 
                                     <div className="form-group clearfix">
                                         <label className="col-sm-2 control-label" ></label>
@@ -147,17 +163,18 @@ class FormPengajuan extends Component {
                                                     <input type="text" id="kode" name="kode" className="form-control" disabled value={user.idUser.kode} placeholder="NIK"/>
                                                 </div>
                                             </div>
+                                        
 
-                                            <div className="form-group clearfix">
-                                                <label className="col-md-2 control-label" >Nama</label>
-                                                <div className="col-lg-6">
-                                                    <input type="text" id="nama" name="nama" className="form-control"  disabled value={this.state.namauser} placeholder="Nama"/>
-                                                </div>                                    
+                                        <div className="form-group clearfix">
+                                            <label className="col-md-2 control-label" >Nama</label>
+                                            <div className="col-lg-6">
+                                                <input type="text" id="nama" name="nama" className="form-control"  disabled value={this.state.namauser} placeholder="Nama"/>
                                             </div>
-		                            
-                                            <div className="form-group clearfix">
-                                                <label className="col-md-2 control-label">Tanggal Cuti</label>
-                                                <div className="col-lg-6">
+                                        </div>
+
+                                        <div className="form-group clearfix">
+                                            <label className="col-md-2 control-label">Tanggal Cuti</label>
+                                            <div className="col-lg-6">
                                                 <div>
                                                     {/* {this.renderSelectionValue()} */}
                                                     <div className="input-group">
@@ -165,7 +182,7 @@ class FormPengajuan extends Component {
                                                         <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
                                                         <input type="text" className="form-control"disabled  placeholder= {this.state.value.end.format("YYYY-MM-DD")} />
                                                     </div>
-                                                    
+
                                                     <DateRangePicker
                                                         value={this.state.value}
                                                         onSelect={this.onSelect}
@@ -174,24 +191,24 @@ class FormPengajuan extends Component {
                                                     />
                                                 </div>
 
-                                                    {/* <div class="input-daterange input-group" id="date-range">
+                                                {/* <div class="input-daterange input-group" id="date-range">
 
                                                         <input type="date" name="tglMulai" className="form-control" onChange={this.handleChange} placeholder="YYYY-MM-DD" />
-                                                    
+
                                                             <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
 
                                                         <input type="date" className="form-control"  name="tglAkhir" onChange={this.handleChange}  placeholder="DD/MM/YYYY" />
-                                                    
-                                                    </div> */}
-                                                </div>
-                                            </div>
 
-                                            <div className="form-group clearfix">
-                                                <label className="col-md-2 control-label">Keterangan Cuti</label>
-                                                <div className="col-lg-6">
-                                                    <textarea className="form-control" name="keterangan" onChange={this.handleChange} rows="6"></textarea>
-                                                </div>
+                                                    </div> */}
                                             </div>
+                                        </div>
+
+                                        <div className="form-group clearfix">
+                                            <label className="col-md-2 control-label">Keterangan Cuti</label>
+                                            <div className="col-lg-6">
+                                                <textarea className="form-control" name="keterangan" onChange={this.handleChange} rows="6"></textarea>
+                                            </div>
+                                        </div>
 
                                             <div className="form-group clearfix">
                                                 <a className="col-md-2 control-label"   />
@@ -215,11 +232,10 @@ class FormPengajuan extends Component {
                         				</div>                        				
                                     </div>
                                 </div>
-                        </div>
-                    </div>
-                </div>
+                            </div>
+                        
         );
-        
+
     }
 }
 

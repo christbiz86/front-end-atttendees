@@ -31,7 +31,7 @@ class Upload extends Component {
     
     Request(formData){
 
-        fetch('http://localhost:8282/upload', {
+        fetch('http://api.attendees.today/upload', {
                 method: 'POST',
                 body:formData
                 ,

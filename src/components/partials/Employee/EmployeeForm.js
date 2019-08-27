@@ -16,7 +16,7 @@ class EmployeeForm extends React.Component{
             kode:'',
             nama:'',
             alamat:'',
-            tglLahir: moment('', moment.ISO_8601), 
+            tglLahir: moment('', moment.ISO_8601),
             telp:'',
             email:'',
             password:'',
@@ -42,7 +42,7 @@ class EmployeeForm extends React.Component{
 
     // constructor(props){
     //     super(props);
-    //     this.state = { 
+    //     this.state = {
     //         isLoading: true,
     //         userCompany: [],
     //         userCom: {
@@ -61,61 +61,61 @@ class EmployeeForm extends React.Component{
     // }
 
     fetchCompany() {
-        fetch(`http://localhost:8282/companies`)
-        .then(response => response.json())
-        .then(data =>
-            this.setState({
-                getCompany: data,
-                isLoading: false,
-            })
-        )
-        .catch(error => this.setState({ error, isLoading: false }));         /* fetch Method GET */
+        fetch('http://api.attendees.today/companies')
+            .then(response => response.json())
+            .then(data =>
+                this.setState({
+                    getCompany: data,
+                    isLoading: false,
+                })
+            )
+            .catch(error => this.setState({ error, isLoading: false }));         /* fetch Method GET */
     }
 
     fetchUnit() {
-        fetch(`http://localhost:8282/unit`)
-        .then(response => response.json())
-        .then(data =>
-            this.setState({
-                getUnit: data,
-                idUnit:data[0].id,
-                isLoading: false,
-            })
-        )
-        .catch(error => this.setState({ error, isLoading: false }));         /* fetch Method GET */
+        fetch('http://api.attendees.today/unit')
+            .then(response => response.json())
+            .then(data =>
+                this.setState({
+                    getUnit: data,
+                    idUnit:data[0].id,
+                    isLoading: false,
+                })
+            )
+            .catch(error => this.setState({ error, isLoading: false }));         /* fetch Method GET */
     }
 
     fetchPosisi() {
-        fetch(`http://localhost:8282/posisi`)
-        .then(response => response.json())
-        .then(data =>
-            this.setState({
-                getPosisi: data,
-                idPosisi:data[0].id,
-                isLoading: false,
-            })
-        )
-        .catch(error => this.setState({ error, isLoading: false }));         /* fetch Method GET */
+        fetch('http://api.attendees.today/posisi')
+            .then(response => response.json())
+            .then(data =>
+                this.setState({
+                    getPosisi: data,
+                    idPosisi:data[0].id,
+                    isLoading: false,
+                })
+            )
+            .catch(error => this.setState({ error, isLoading: false }));         /* fetch Method GET */
     }
 
     fetchTipeUser() {
-        fetch(`http://localhost:8282/tipeuser`)
-        .then(response => response.json())
-        .then(data =>
-            this.setState({
-                getTipeUser: data,
-                idTipeUser:data[0].id,
-                isLoading: false,
-            })
-        )
-        .catch(error => this.setState({ error, isLoading: false }));         /* fetch Method GET */
+        fetch(`http://api.attendees.today/tipeuser`)
+            .then(response => response.json())
+            .then(data =>
+                this.setState({
+                    getTipeUser: data,
+                    idTipeUser:data[0].id,
+                    isLoading: false,
+                })
+            )
+            .catch(error => this.setState({ error, isLoading: false }));         /* fetch Method GET */
     }
-    
+
     handleChange = event =>{
-        this.setState({ 
+        this.setState({
             [event.target.name]:event.target.value,
-            
-         });
+
+        });
         //  file: event.target.files[0]==null ? "-" : event.target.files[0];
         //  this.setState({file:event.target.files==null ?"null" :event.target.files[0]});
         // this.setState({file:event.target.files});
@@ -126,57 +126,57 @@ class EmployeeForm extends React.Component{
     }
 
     handleSubmit = event =>{
-    event.preventDefault();
-    const formData = new FormData();
-    formData.append('file',this.state.file);
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append('file',this.state.file);
 
-    const data = {
-        user: {
-            kode: this.state.kode, 
-            nama: this.state.nama, 
-            alamat: this.state.alamat, 
-            tglLahir: this.state.tglLahir, 
-            telp: this.state.telp,
-            email: this.state.email,
-            password: this.state.password,
-            foto: formData.get("file").name,
-            idStatus: {
-                id:this.state.idStatus
-            }
-        },
-        company: {
-            id:this.state.idCompany
-        },
-        unit: {
-            id: this.state.idUnit
-        },
-        posisi: {
-            id: this.state.idPosisi
-        },
-        tipeUser: {
-            id: this.state.idTipeUser
-        }
-    }
-
-    formData.append('user',JSON.stringify(data));
-
-        fetch('http://localhost:8282/coba', {
-                method: 'POST',
-                body:formData
-                ,
-                headers:{
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+        const data = {
+            user: {
+                kode: this.state.kode,
+                nama: this.state.nama,
+                alamat: this.state.alamat,
+                tglLahir: this.state.tglLahir,
+                telp: this.state.telp,
+                email: this.state.email,
+                password: this.state.password,
+                foto: formData.get("file").name,
+                idStatus: {
+                    id:this.state.idStatus
                 }
-            })
+            },
+            company: {
+                id:this.state.idCompany
+            },
+            unit: {
+                id: this.state.idUnit
+            },
+            posisi: {
+                id: this.state.idPosisi
+            },
+            tipeUser: {
+                id: this.state.idTipeUser
+            }
+        }
+
+        formData.append('user',JSON.stringify(data));
+
+        fetch('http://api.attendees.today/coba', {
+            method: 'POST',
+            body:formData
+            ,
+            headers:{
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
             .then(res => res.json())
             .catch(error => console.error('Error:', error))
-            .then(response => console.log('Success:', response)  
-            // ,this.postData(data)      
-            ); 
-        }
+            .then(response => console.log('Success:', response)
+                // ,this.postData(data)
+            );
+    }
 
-        postData(data){
-        fetch('http://localhost:8282/users', { 
+    postData(data){
+        fetch('http://api.attendees.today/users', {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(data),
             headers:{
@@ -184,9 +184,9 @@ class EmployeeForm extends React.Component{
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
-        .then(res => res.json())
-        .catch(error => console.erroyr('Error:', error))
-        .then(response => console.log('Success:', response)); 
+            .then(res => res.json())
+            .catch(error => console.erroyr('Error:', error))
+            .then(response => console.log('Success:', response));
     }
 
     componentDidMount() {
@@ -195,7 +195,7 @@ class EmployeeForm extends React.Component{
         this.fetchPosisi();
         this.fetchTipeUser();
     }
-    
+
     render() {
         return (
             <div className="content-page">
@@ -207,7 +207,7 @@ class EmployeeForm extends React.Component{
                                 <p className="text-muted m-b-30 font-13">
                                     Use the button classes on an <code>&lt;a&gt;</code>, <code>&lt;button&gt;</code>, or <code>&lt;input&gt;</code> element.
                                 </p>
-                                
+
                                 <form id="wizard-validation-form" enctype="multipart/form-data" onSubmit={this.handleSubmit}>
                                     <div>
                                         <h3>Step 1</h3>
@@ -218,7 +218,7 @@ class EmployeeForm extends React.Component{
                                                     <input id="kode" name="kode" type="text" className="required form-control" onChange={this.handleChange}/>
                                                 </div>
                                             </div>
-                                            
+
                                             <div className="form-group clearfix">
                                                 <label className="col-lg-2 control-label" htmlFor="name2">Nama Employee *</label>
                                                 <div className="col-lg-10">
@@ -257,7 +257,7 @@ class EmployeeForm extends React.Component{
                                             <div className="form-group clearfix">
                                                 <label className="col-sm-2 control-label" >Foto</label>
                                                 <div className="col-lg-6">
-                                                <input type="file" data-buttonname="btn-primary" name="myImage" onChange= {this.handleImage}  placeholder="foto"/>                                        </div>
+                                                    <input type="file" data-buttonname="btn-primary" name="myImage" onChange= {this.handleImage}  placeholder="foto"/>                                        </div>
                                             </div>
 
                                             <div className="form-group clearfix">
@@ -277,7 +277,7 @@ class EmployeeForm extends React.Component{
                                                             return (
                                                                 <option key={c.id} value={c.id}>{c.nama}</option>
                                                             );
-                                                        
+
                                                         })
                                                     ) : (
                                                         <h3>Loading...</h3>
@@ -290,16 +290,16 @@ class EmployeeForm extends React.Component{
                                                 <label className="col-lg-2 control-label " htmlFor="email2">Unit *</label>
                                                 <div className="col-lg-10">
                                                     <select className="selectpicker" data-style="btn-white" name="idUnit" onChange={this.handleChange}>
-                                                    {this.state.error ? <p>{this.state.error.message}</p> : null}
-                                                    {!this.state.isLoading ? (
-                                                        this.state.getUnit.map(u => {
-                                                            return (
-                                                                <option key={u.id} value={u.id}>{u.unit}</option>
-                                                            );
-                                                        })
-                                                    ) : (
-                                                        <h3>Loading...</h3>
-                                                    )}
+                                                        {this.state.error ? <p>{this.state.error.message}</p> : null}
+                                                        {!this.state.isLoading ? (
+                                                            this.state.getUnit.map(u => {
+                                                                return (
+                                                                    <option key={u.id} value={u.id}>{u.unit}</option>
+                                                                );
+                                                            })
+                                                        ) : (
+                                                            <h3>Loading...</h3>
+                                                        )}
                                                     </select>
                                                 </div>
                                             </div>
@@ -308,16 +308,16 @@ class EmployeeForm extends React.Component{
                                                 <label className="col-lg-2 control-label " htmlFor="address2">Posisi *</label>
                                                 <div className="col-lg-10">
                                                     <select className="selectpicker" data-style="btn-white" name="idPosisi" onChange={this.handleChange}>
-                                                    {this.state.error ? <p>{this.state.error.message}</p> : null}
-                                                    {!this.state.isLoading ? (
-                                                        this.state.getPosisi.map(p => {
-                                                            return (
-                                                                <option key={p.id} value={p.id}>{p.posisi}</option>
-                                                            );
-                                                        })
-                                                    ) : (
-                                                        <h3>Loading...</h3>
-                                                    )}
+                                                        {this.state.error ? <p>{this.state.error.message}</p> : null}
+                                                        {!this.state.isLoading ? (
+                                                            this.state.getPosisi.map(p => {
+                                                                return (
+                                                                    <option key={p.id} value={p.id}>{p.posisi}</option>
+                                                                );
+                                                            })
+                                                        ) : (
+                                                            <h3>Loading...</h3>
+                                                        )}
                                                     </select>
                                                 </div>
                                             </div>
@@ -326,17 +326,17 @@ class EmployeeForm extends React.Component{
                                                 <label className="col-lg-2 control-label " htmlFor="address2">Tipe User *</label>
                                                 <div className="col-lg-10">
                                                     <select className="selectpicker" data-style="btn-white"  name="idTipeUser" onChange={this.handleChange}>
-                                                    {this.state.error ? <p>{this.state.error.message}</p> : null}
-                                                    {!this.state.isLoading ? (
-                                                        this.state.getTipeUser.map(t => {
-                                                            return (
-                                                                <option key={t.id} value={t.id}>{t.tipe}</option>
-                                                            );
-                                                        
-                                                        })
-                                                    ) : (
-                                                        <h3>Loading...</h3>
-                                                    )}
+                                                        {this.state.error ? <p>{this.state.error.message}</p> : null}
+                                                        {!this.state.isLoading ? (
+                                                            this.state.getTipeUser.map(t => {
+                                                                return (
+                                                                    <option key={t.id} value={t.id}>{t.tipe}</option>
+                                                                );
+
+                                                            })
+                                                        ) : (
+                                                            <h3>Loading...</h3>
+                                                        )}
                                                     </select>
                                                 </div>
                                             </div>

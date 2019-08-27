@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import Webcam from 'react-webcam';
 import { loadModels, getFullFaceDescription, createMatcher } from '../../../api/face';
-import DrawBox from './DrawBox';
+import DrawBox from './Drawbox';
 import { JSON_PROFILE } from '../../../common/profile';
 
 const WIDTH = 420;
@@ -18,12 +18,21 @@ class Attendee extends Component {
             fullDesc: null,
             faceMatcher: null,
             facingMode: null,
+            time: new Date()
         }
     }
+
+    currentTime(){
+        this.setState({
+            time: new Date()
+        })
+    }
+
     componentWillMount() {
         loadModels();
         this.setInputDevice();
         this.matcher();
+        setInterval(() => this.currentTime(), 500)
     }
 
     setInputDevice = () => {
@@ -45,23 +54,7 @@ class Attendee extends Component {
     };
 
     matcher = async () => {
-        fetch('http://localhost:8080/coba', { 
-            method: 'GET',
-            headers:{
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            }
-        })
-        .then(response => response.json())
-        .then(data =>
-            this.setState({
-                descriptors: data
-            })
-        )
-        .catch(error => console.error('Error:', error))
-        .then(response => console.log('Success:', response));
-
-        const faceMatcher = await createMatcher(this.state.descriptors);
+        const faceMatcher = await createMatcher(JSON_PROFILE);
         this.setState({ faceMatcher });
     };
 
@@ -142,10 +135,22 @@ class Attendee extends Component {
                                 </div>
                             </div>
                             <div className="card-box table-responsive" id="shift-list">
-                                <h4 className="m-t-0 header-title"><b>Attendee In</b></h4>
-                                <div className="Camera" style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                <div
+                                    className="Camera" style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center'
+                                    }}
+                                >
                                     {/* <p>Camera: {camera}</p> */}
-                                    <div style={{width: WIDTH, height: HEIGHT}}>
+                                    <h4 className="m-t-0 header-title"><b>Attendee In</b></h4>
+                                    <h5 className="m-t-0 header-title">{this.state.time.toLocaleTimeString()}</h5>
+                                    <div 
+                                        style={{
+                                            width: WIDTH,
+                                            height: HEIGHT
+                                        }}
+                                    >
                                         <div style={{ position: 'relative', width: WIDTH }}>
                                             {!!videoConstraints ? (
                                             <div style={{ position: 'absolute' }}>

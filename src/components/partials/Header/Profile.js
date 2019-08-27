@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from "axios";
+import axios from 'axios';
 
 class Profile extends Component {
 
@@ -12,7 +12,7 @@ class Profile extends Component {
     }
 
     componentDidMount(){
-        axios.get('http://localhost:8282/image/'+JSON.parse(localStorage.getItem('user')).idUser.foto,{ 
+        axios.get('http://api.attendees.today/image/'+JSON.parse(localStorage.getItem('user')).idUser.foto,{
             responseType: 'arraybuffer',
             headers:{
                 'Authorization': 'Bearer ' + localStorage.getItem('token')

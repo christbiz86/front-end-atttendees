@@ -40,7 +40,7 @@ class ReportAnnual extends Component {
     requestAnnual = async() => {
         console.log(this.state.value.start.format('YYYY-MM-DD'));
         console.log(this.state.value.end.format('YYYY-MM-DD'));
-        await axios.request('http://localhost:8282/annual/company/'+user.idCompanyUnitPosisi.idCompany.nama+'/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD'), {
+        await axios.request('http://api.attendees.today/annual/company/'+user.idCompanyUnitPosisi.idCompany.nama+'/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD'), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ class ReportAnnual extends Component {
     }
 
     downloadReportData = () => {
-		fetch('http://localhost:8282/annual/company/'+user.idCompanyUnitPosisi.idCompany.nama+'/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD')+'/report',{
+		fetch('http://api.attendees.today/annual/company/'+user.idCompanyUnitPosisi.idCompany.nama+'/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD')+'/report',{
             
                 headers:{
                     'Content-Type': 'application/json',
