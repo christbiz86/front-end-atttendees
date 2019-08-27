@@ -15,59 +15,54 @@ import Libur from './components/partials/TimeSheet/Libur';
 import Project from './components/partials/TimeSheet/Project';
 import Shift from './components/partials/TimeSheet/Shift';
 import Attendee from './components/partials/Attendee/Attendee';
-import DetailAnnual from './components/partials/Annual/DetailAnnual';
 import FaceRegister from './components/partials/Attendee/FaceRegister';
+
 import { PrivateRoute } from './components/_security/PrivateRoute';
 import { LoginPage } from './components/auth/LoginPage';
 import { history } from './components/_helpers';
 import { alertActions } from './components/_actions';
-import AnnualLeave from './components/partials/Annual/AnnualLeave';
 
 class App extends React.Component {
   constructor(props) {
-      super(props);
+    super(props);
 
-      history.listen((location, action) => {
-          // clear alert on location change
-          this.props.clearAlerts();
-      });
+    history.listen((location, action) => {
+      // clear alert on location change
+      this.props.clearAlerts();
+    });
   }
 
   render(){
     return (
-      <div>
-            <div className="App">
-              {alert.message &&
-                <div className={`alert ${alert.type}`}>{alert.message}</div>
-              }
-              <Router history={history}>
-                <div className="route">
-                  <Switch>
-                    <Route exact path="/login" component={LoginPage} />
-                    <Route exact path="/registrasi" component={Registrasi} />
-                    <PrivateRoute exact path="/" component={Dashboard} />
-                    <PrivateRoute exact path="/annual/list" component={ListAnnual} />
-                    <PrivateRoute exact path="/annual/form" component={FormAnnual} />
-                    <PrivateRoute exact path="/annual/request" component={AnnualRequest} />
-                    <PrivateRoute exact path="/annual/detail-annual" component={DetailAnnual} />
-                    <PrivateRoute exact path="/employee" component={Employee} />
-                    <PrivateRoute exact path="/employee/form" component={EmployeeForm} />
-                    <PrivateRoute exact path="/report/annual" component={ReportAnnual} />
-                    <PrivateRoute exact path="/report/attendee" component={ReportAttendee} />
-                    <PrivateRoute exact path="/timesheet/Libur" component={Libur} />
-                    <PrivateRoute exact path="/timesheet/Project" component={Project} />
-                    <PrivateRoute exact path="/timesheet/Shift" component={Shift} />
-                    <PrivateRoute exact path="/attendee/absen" component={Attendee} />
-                    <PrivateRoute exact path="/attendee/register" component={FaceRegister} />
-                    <PrivateRoute exact path="/annual/leave" component={AnnualLeave} />
-                    <PrivateRoute exact path="/attendee" component={Attendee} />
-                    <Route path="/logout" component={LoginPage} />
-                  </Switch>
-                </div>
-              </Router>
-            </div>
-      </div>
-  );
+        <div>
+          <div className="App">
+            {alert.message &&
+            <div className={`alert ${alert.type}`}>{alert.message}</div>
+            }
+            <Router history={history}>
+              <div className="route">
+                <Switch>
+                  <Route exact path="/login" component={LoginPage} />
+                  <Route exact path="/registrasi" component={Registrasi} />
+                  <PrivateRoute exact path="/" component={Dashboard} />
+                  <PrivateRoute exact path="/annual/list" component={ListAnnual} />
+                  <PrivateRoute exact path="/annual/form" component={FormAnnual} />
+                  <PrivateRoute exact path="/annual/request" component={AnnualRequest} />
+                  <PrivateRoute exact path="/employee" component={Employee} />
+                  <PrivateRoute exact path="/employee/form" component={EmployeeForm} />
+                  <PrivateRoute exact path="/report/annual" component={ReportAnnual} />
+                  <PrivateRoute exact path="/report/attendee" component={ReportAttendee} />
+                  <PrivateRoute exact path="/timesheet/Libur" component={Libur} />
+                  <PrivateRoute exact path="/timesheet/Project" component={Project} />
+                  <PrivateRoute exact path="/timesheet/Shift" component={Shift} />
+                  <PrivateRoute exact path="/attendee/absen" component={Attendee} />
+                  <PrivateRoute exact path="/attendee/register" component={FaceRegister} />
+                </Switch>
+              </div>
+            </Router>
+          </div>
+        </div>
+    );
   }
 }
 

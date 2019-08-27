@@ -6,7 +6,6 @@ import {
   createMatcher,
   isFaceDetectionModelLoaded
 } from '../../../api/face';
-import { JSON_PROFILE } from '../../../common/profile';
 
 const MaxWidth = 600;
 
@@ -37,18 +36,7 @@ class FaceRegister extends Component {
     let _W = document.documentElement.clientWidth;
     if (_W > MaxWidth) _W = MaxWidth;
     this.setState({ WIDTH: _W });
-    this.mounting();
   }
-
-  mounting = async () => {
-    await loadModels();
-    await this.matcher();
-  };
-
-  matcher = async () => {
-    const faceMatcher = await createMatcher(JSON_PROFILE);
-    this.setState({ faceMatcher });
-  };
 
   handleFileChange = async event => {
     this.resetState();
