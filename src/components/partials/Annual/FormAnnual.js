@@ -1,13 +1,9 @@
 import React, { Component } from "react";
-// import Moment from "moment";
-import Layout from '../../layout/Layout';
-import { format } from "path";
-// import { DateRangePicker   } from 'react-date-range';
 import DateRangePicker from "react-daterange-picker";
 import "react-daterange-picker/dist/css/react-calendar.css";
 import originalMoment from "moment";
 import { extendMoment } from "moment-range";
-import { Redirect } from 'react-router-dom'
+import {Redirect} from "react-router-dom";
 
 const moment = extendMoment(originalMoment);
 let user = JSON.parse(localStorage.getItem('user'));
@@ -24,7 +20,10 @@ class FormPengajuan extends Component {
             tglMulai:'',
             tglAkhir:'',
             keterangan:'',
-            value: moment.range(today.clone().add(1,"day"), today.clone().add(1,"day"))
+            value: moment.range(today.clone().add(1,"day"), today.clone().add(1,"day")),
+            submitted: false,
+            isLoading: false,
+            redirect: false
         }    
     }
     
@@ -36,7 +35,7 @@ class FormPengajuan extends Component {
     
     handleRequest = event => {
         event.preventDefault(); 
-        this.setState({isActive:true});
+        this.setState({ submitted: true, isLoading: true });
         this.Request();
     }
 
@@ -84,8 +83,11 @@ class FormPengajuan extends Component {
             .then(res => {res.json()
                 if (res.ok){
                     console.log(res.ok) 
+                    this.setState({redirect:true})
                 }else{
                     console.log(res.status)
+                    window.alert('Request gagal')
+                    this.setState({isLoading:false})
                 }}
                 )
             .catch(error => console.error('Error:', error))
@@ -94,6 +96,13 @@ class FormPengajuan extends Component {
     }
 
     render() { 
+        const {redirect,submitted, isLoading } = this.state;
+        if(redirect){
+            // return <Redirect to='/annual/list'/>
+            window.location.reload();
+            window.alert('Request berhasil dikirim')
+            
+        }
         return (
             <div className="content-page">
 
@@ -193,7 +202,11 @@ class FormPengajuan extends Component {
                                             <div className="form-group clearfix">
                                                 <label  className="col-sm-6 control-label"></label>
                                                 <div className="col-sm-2 control-label">
-                                                    <button type="submit" className="btn btn-default waves-effect waves-light btn-lg" data-style="contract" id="sa-warning"> Submit</button>
+                                                    <button type="submit" className="btn btn-default waves-effect waves-light btn-lg" data-style="contract" id="sa-warning" disabled={isLoading}>
+                                                    { isLoading &&  <i className="fa fa-refresh fa-spin"> </i> }
+                                                    { isLoading &&  <span> Loading </span> }
+                                                    { !isLoading &&  <span> Submit </span> }
+                                                    </button>
                                                 </div>
                                             </div>
                                             

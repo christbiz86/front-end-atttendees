@@ -16,6 +16,7 @@ import Project from './components/partials/TimeSheet/Project';
 import Shift from './components/partials/TimeSheet/Shift';
 import Attendee from './components/partials/Attendee/Attendee';
 import FaceRegister from './components/partials/Attendee/FaceRegister';
+import DetailAnnual from './components/partials/Annual/DetailAnnual';
 
 import { PrivateRoute } from './components/_security/PrivateRoute';
 import { LoginPage } from './components/auth/LoginPage';
@@ -49,6 +50,7 @@ class App extends React.Component {
                     <PrivateRoute exact path="/annual/list" component={ListAnnual} />
                     <PrivateRoute exact path="/annual/form" component={FormAnnual} />
                     <PrivateRoute exact path="/annual/request" component={AnnualRequest} />
+                    <PrivateRoute exact path="/annual/detail-annual" component={DetailAnnual} />
                     <PrivateRoute exact path="/employee" component={Employee} />
                     <PrivateRoute exact path="/employee/form" component={EmployeeForm} />
                     <PrivateRoute exact path="/report/annual" component={ReportAnnual} />
@@ -59,6 +61,8 @@ class App extends React.Component {
                     <PrivateRoute exact path="/attendee/absen" component={Attendee} />
                     <PrivateRoute exact path="/attendee/register" component={FaceRegister} />
                     <PrivateRoute exact path="/annual/leave" component={AnnualLeave} />
+                    <PrivateRoute exact path="/attendee" component={Attendee} />
+                    <Route path="/logout" component={LoginPage} />
                   </Switch>
                 </div>
               </Router>

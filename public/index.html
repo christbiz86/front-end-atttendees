@@ -14,18 +14,20 @@
     <link rel="stylesheet" href="%PUBLIC_URL%/assets/plugins/morris/morris.css"/>
     <link rel="stylesheet" href="%PUBLIC_URL%/plugins/jquery.steps/css/jquery.steps.css" />
 
+    <link href="%PUBLIC_URL%/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
     <link href="%PUBLIC_URL%/plugins/timepicker/bootstrap-timepicker.min.css" rel="stylesheet"/>
 		<link href="%PUBLIC_URL%/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css" rel="stylesheet"/>
 		<link href="%PUBLIC_URL%/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
 		<link href="%PUBLIC_URL%/plugins/clockpicker/css/bootstrap-clockpicker.min.css" rel="stylesheet"/>
 		<link href="%PUBLIC_URL%/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet"/>
 
-    <link href="%PUBLIC_URL%/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="%PUBLIC_URL%/css/core.css" rel="stylesheet" type="text/css" />
     <link href="%PUBLIC_URL%/css/components.css" rel="stylesheet" type="text/css" />
     <link href="%PUBLIC_URL%/css/icons.css" rel="stylesheet" type="text/css" />
     <link href="%PUBLIC_URL%/css/pages.css" rel="stylesheet" type="text/css" />
     <link href="%PUBLIC_URL%/css/responsive.css" rel="stylesheet" type="text/css" />
+    <link href="%PUBLIC_URL%/css/datepicker-cssmodules.scss" rel="stylesheet" type="text/scss" />
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -96,6 +98,8 @@
       <script src="%PUBLIC_URL%/plugins/ladda-buttons/js/spin.min.js"></script>
       <script src="%PUBLIC_URL%/plugins/ladda-buttons/js/ladda.min.js"></script>
       <script src="%PUBLIC_URL%/plugins/ladda-buttons/js/ladda.jquery.min.js"></script>
+      <script src="%PUBLIC_URL%/plugins/notifyjs/js/notify.js"></script>
+      <script src="%PUBLIC_URL%/plugins/notifications/notify-metro.js"></script>
 
 
       <script type="text/javascript">
@@ -106,22 +110,6 @@
           });
   
           $(".knob").knob();
-  
-        });
-
-        var l = $('.ladda-button-demo').ladda();
-
-        l.click(function () {
-            // Start loading
-            l.ladda('start');
-
-            // Timeout example
-            // Do something in backend and then stop ladda
-            setTimeout(function () {
-                l.ladda('stop');
-            }, 12000)
-
-
         });
       </script>
   </body>

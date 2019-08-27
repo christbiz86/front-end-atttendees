@@ -41,7 +41,7 @@ class Profile extends Component {
                         <li><a href="#"><i className="ti-settings m-r-10 text-custom"></i> Settings</a></li>
                         <li><a href="#"><i className="ti-lock m-r-10 text-custom"></i> Lock screen</a></li>
                         <li className="divider"></li>
-                        <li><a href={'/login'}><i className="ti-power-off m-r-10 text-danger"></i> Logout</a></li>
+                        <li><a href={'/logout'}><i className="ti-power-off m-r-10 text-danger"></i> Logout</a></li>
                     </ul>
                 </li>
         );
