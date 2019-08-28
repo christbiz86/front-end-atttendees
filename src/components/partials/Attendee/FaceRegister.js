@@ -3,9 +3,9 @@ import { withRouter } from 'react-router-dom';
 import {
   loadModels,
   getFullFaceDescription,
-  createMatcher,
   isFaceDetectionModelLoaded
 } from '../../../api/face';
+import * as Constant from '../../_helpers/constant';
 
 const MaxWidth = 600;
 
@@ -23,7 +23,6 @@ class FaceRegister extends Component {
     super(props);
     this.state = {
       ...INIT_STATE,
-      faceMatcher: null,
       showDescriptors: false,
       WIDTH: null,
       HEIGHT: 0,
@@ -36,7 +35,12 @@ class FaceRegister extends Component {
     let _W = document.documentElement.clientWidth;
     if (_W > MaxWidth) _W = MaxWidth;
     this.setState({ WIDTH: _W });
+    this.mounting();
   }
+
+  mounting = async () => {
+    await loadModels();
+  };
 
   handleFileChange = async event => {
     this.resetState();
@@ -71,7 +75,7 @@ class FaceRegister extends Component {
         descriptors: temp
     }
     console.log(data);
-    fetch('http://localhost:8080/coba', { 
+    fetch(Constant.API_LIVE + '/user/descriptor/register', {
             method: 'POST',
             body: JSON.stringify(data),
             headers:{

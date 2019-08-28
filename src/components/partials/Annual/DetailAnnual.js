@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // import Profile from './Profile';
 import axios from 'axios';
+import * as Constant from '../../_helpers/constant';
 
 let user = JSON.parse(localStorage.getItem('user'));
 
@@ -15,21 +16,28 @@ class DetailAnnual extends Component {
             namauser: '',
             tglMulai: '',
             tglAkhir: '',
-            keterangan: ''
+            keterangan: '',
+            isLoading: false,
+            redirect: false,
         }
     }
 
     handleApprove(annual) {
-        // event.preventDefault();
+        this.setState({
+            isLoading:true
+        });
         this.approve(annual);
     }
 
     handleReject(annual) {
+        this.setState({
+            isLoading:true
+        });
         this.reject(annual);
     }
 
     approve(annual){
-        fetch('http://localhost:8080/request/Approved', {
+        fetch(Constant.API_LIVE + '/request/Approved', {
             method: 'PATCH',
             body: JSON.stringify(annual),
             headers:{
@@ -37,14 +45,21 @@ class DetailAnnual extends Component {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
-        .then(res => res.json())
-        // .then(response => console.log('Success:', response))
-        .then(() => { this.props.history.push('/') })
+        .then(res => { res.json()
+            if (res.ok){
+                // console.log(res.ok) 
+                this.setState({redirect:true})
+            }else{
+                console.log(res.status)
+                window.alert('Approve Gagal')
+                this.setState({isLoading:false})
+            }
+        })
         .catch(error => console.error('Error:', error))
     }
 
     reject(annual) {
-        fetch('http://localhost:8080/request/Rejected', {
+        fetch(Constant.API_LIVE + '/request/Rejected', {
             method: 'PATCH',
             body: 
             JSON.stringify(annual),
@@ -53,14 +68,27 @@ class DetailAnnual extends Component {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
-        .then(res => res.json())
+        .then(res => { res.json()
+            if (res.ok){
+                // console.log(res.ok) 
+                this.setState({redirect:true})
+            }else{
+                // console.log(res.status)
+                window.alert('Rejected Gagal')
+                this.setState({isLoading:false})
+            }
+        })
         // .then(response => console.log('Success:', response))
-        .then(() => { this.props.history.push('/') })
+        // .then(() => { this.props.history.push('/') })
         .catch(error => console.error('Error:', error))
     }
 
     render() {
         const { data } = this.props.location;
+        const { redirect, isLoading } = this.state;
+        if(redirect){
+            window.location.href = '/report/annual';
+        }
         // console.log(data);
         return(
             <>
@@ -69,9 +97,9 @@ class DetailAnnual extends Component {
                         <div className="container">
                             <div className="row">
                                 <div className="col-sm-12">
-                                    <div className="btn-group pull-right m-t-15">
+                                    {/* <div className="btn-group pull-right m-t-15">
                                         <button type="button" className="btn btn-default dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false"><span className="m-l-5"><i className="fa fa-chevron-circle-left"></i></span> Back To List Request</button>
-                                    </div>
+                                    </div> */}
                                     <h4 className="page-title">Detail Annual</h4>
                                     <ol className="breadcrumb">
                                         <li>
@@ -89,7 +117,15 @@ class DetailAnnual extends Component {
                             <div className="row">
                                 <div className="col-sm-12">
                                     <div className="card-box table-responsive">
-                                        <h4 className="m-t-0 header-title"><b>Detail Annual Employee  </b><small  className="font-600">{ data.request.userCompany.idUser.nama }</small></h4>
+                                    <h4 className="m-t-0 header-title"><b>Detail Annual Employee </b>
+                                        {
+                                            data.request.status.status == 'Approved' ?
+                                                <small className="font-600" style={{color: 'green'}}>Approved</small>
+                                            : data.request.status.status == 'Rejected' ?
+                                                <small className="font-600" style={{color: 'red'}}>Rejected</small>
+                                            : <small></small>
+                                        }
+                                        </h4>
                                         <hr />
                                             <div className="form-group clearfix">
                                                 <label className="col-sm-2 control-label" >NIK</label>
@@ -131,19 +167,30 @@ class DetailAnnual extends Component {
                                                 <div className="col-sm-2 control-label">
                                                 </div>
                                             </div>
-                                            
-                                            <div className="form-group clearfix">
-                                                {/* <label  className="col-sm-6 control-label"></label> */}
-                                                <div className="control-label">
-                                                    <button type="submit" className="btn btn-default waves-effect waves-light btn-md" id="sa-warning" value={data.request} onClick={() => this.handleApprove(data.request)}> Approve</button>
+                                            {
+                                                data.request.status.status == "Request" ?
+                                                <div>
+                                                    <div className="form-group clearfix">
+                                                        <div className="control-label">
+                                                            <button type="submit" className="btn btn-default waves-effect waves-light btn-md" id="sa-warning" value={data.request} onClick={() => this.handleApprove(data.request)} disabled={isLoading}> 
+                                                                { isLoading && <i className="spinner-border"> </i> }
+                                                                { isLoading && <span> Loading </span> }
+                                                                { !isLoading && <span> Approve </span> }
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div className="form-group clearfix">
+                                                        <div className="control-label">
+                                                            <button type="submit" className="btn btn-danger waves-effect waves-light btn-md" id="sa-warning" value={data.request} onClick={() => this.handleReject(data.request)} disabled={isLoading}>
+                                                                { isLoading && <i className="spinner-border"> </i> }
+                                                                { isLoading && <span> Loading </span> }
+                                                                { !isLoading && <span> Reject </span> }  
+                                                            </button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                
-                                            </div>
-                                            <div className="form-group clearfix">
-                                                <div className="control-label">
-                                                    <button type="submit" className="btn btn-danger waves-effect waves-light btn-md" id="sa-warning" value={data.request} onClick={() => this.handleReject(data.request)}> Reject</button>
-                                                </div>
-                                            </div>
+                                                : <div></div>
+                                            }
                                         {/* </form> */}
                                     </div>
                                 </div>

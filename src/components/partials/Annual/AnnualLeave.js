@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import { MDBDataTable } from 'mdbreact';
 import Layout from '../../layout/Layout';
 import axios from 'axios';
+import moment from "moment";
+import * as Constant from '../../_helpers/constant';
 
+let user = JSON.parse(localStorage.getItem('user'));
 class AnnualLeave extends Component {
     constructor(props){
         super(props);
@@ -15,9 +18,14 @@ class AnnualLeave extends Component {
 
     
     componentWillMount=async() => {
-        await axios.request('http://localhost:8282/annual/saldos', {
-            method: 'GET',
-            
+        await axios.request(Constant.API_LIVE + '/annual/saldo', {
+            method: 'POST',
+            body:JSON.stringify({
+                id:{
+                    tahun:moment().format("YYYY")
+                },
+                idCompany:user.idCompanyUnitPosisi.idCompany.id
+            }),
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Layout from '../../layout/Layout';
+import * as Constant from '../../_helpers/constant';
 
 let token = localStorage.getItem('token');
 class AnnualRequest extends Component {    
@@ -9,26 +10,9 @@ class AnnualRequest extends Component {
         this.handleApprove = this.handleApprove.bind(this);
         this.handleReject = this.handleReject.bind(this);
         this.state = {
-            listRequest: []
-
+            listRequest: [],
+            isLoading:true
         };
-    }
-    
-    update() {
-        fetch('http://api.attendees.today/request/company/Request', {
-            method: 'GET',
-            
-            headers:{
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            }
-        })
-        .then(res => res.json())
-        .then(listRequest => this.setState({
-            listRequest
-        }))
-        .catch(error => console.log('parsing failed', error)
-        )       
     }
 
     handleApprove (annual) {
@@ -42,7 +26,7 @@ class AnnualRequest extends Component {
     };
 
     Approve(annual){
-        fetch('http://api.attendees.today/request/Approved', {
+        fetch(Constant.API_LIVE + '/request/Approved', {
                 method: 'PATCH',
                 body: 
                     JSON.stringify(annual)
@@ -54,12 +38,15 @@ class AnnualRequest extends Component {
             })
             .then(res => {res.json()
                 
-                    if (res.ok){
-                        this.update();
-                    }else{
-                        console.log(res.status)
-                    }})
-            .catch(error => console.error('Error:', error))
+                if (res.ok){
+                    window.alert('Permintaan berhasil disetujui')
+                    window.location.reload();
+                }else{
+                    window.alert('gagal')
+                    console.log(res.status)
+                }})
+            .catch(error => {console.error('Error:', error)
+                window.alert('gagal')})
             .then(response => console.log('Success:', response)
         ); 
     }
@@ -78,18 +65,21 @@ class AnnualRequest extends Component {
             .then(res => {res.json()
                 
                 if (res.ok){
-                    this.update();
+                    window.alert('Permintaan berhasil ditolak')
+                    window.location.reload();
                 }else{
+                    window.alert('gagal')
                     console.log(res.status)
                 }})
-            .catch(error => console.error('Error:', error))
+            .catch(error => {console.error('Error:', error)
+                window.alert('gagal')
+            })
             .then(response => console.log('Success:', response),
         ); 
     }
 
     componentDidMount() {
-        // fetch('http://localhost:8282/request/Request', {
-        fetch('http://api.attendees.today/request/company/Request', {
+        fetch(Constant.API_LIVE + '/request/company/Request', {
             method: 'GET',
             
             headers:{
@@ -97,16 +87,20 @@ class AnnualRequest extends Component {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
-        .then(res => res.json())
+        .then(res => 
+            res.json()
+        )
         .then(listRequest => this.setState({
-            listRequest
+            listRequest ,isLoading:false
         }))
-        .catch(error => console.log('parsing failed', error)
-        )       
+        .catch(error => {
+            console.log('parsing failed', error)
+            window.alert('Request gagal')
+        })       
     }
 
     render() {
-        const {listRequest } = this.state;
+        const {listRequest,isLoading } = this.state;
 
         return (
             <div>
@@ -150,7 +144,6 @@ class AnnualRequest extends Component {
                                     <div className="table-responsive" data-pattern="priority-columns">
                                         <table id="tech-companies-1" className="table  table-striped">
                                             <thead>
-                                                
                                                 <tr>
                                                     <th data-priority="1">NIK</th>
                                                     <th data-priority="2">Nama</th>
@@ -162,44 +155,54 @@ class AnnualRequest extends Component {
                                                     
                                                 </tr>
                                             </thead>
-                                            <tbody>                                                     
-
-                                                {
-                                                    listRequest.length >0 ? listRequest.map((annual,index)=> {
-                                                        return (
-                                                            <tr>
-                                                                <th data-priority="1">{annual.userCompany.idUser.kode}</th>
-                                                                <th data-priority="2">{annual.userCompany.idUser.nama}</th>
-                                                                <th data-priority="5">{annual.tglMulai}</th>
-                                                                <th data-priority="6">{annual.tglAkhir}</th>
-                                                                <th data-priority="7">{annual.keterangan}</th>
-                                                                <th data-priority="8">{annual.status.status}</th>
-                                                                <th>
-                                                                    <button type="submit" name ="approve" className="btn btn-primary waves-effect waves-light m-l-10 btn-sm"
-                                                                     value={annual} onClick={() => this.handleApprove(annual)}>
-                                                                         <b className="font-bold">Setujui</b></button>                                                            
-                                                                    <button type="submit" name="reject" className="btn btn-danger waves-effect waves-light m-l-10 btn-sm" 
-                                                                    value={index} onClick={() => this.handleReject(annual)}>
-                                                                        <b className="font-bold" >Tolak</b></button>
-                                                                </th>
-                                                            </tr>    
-        
-                                                        )
-                                                    }):null
-                                                }
-                                            </tbody>
-                                        </table>
-                                        </div>
-
+                                            <tbody> 
+                                            { isLoading &&  
+                                            <tr>
+                                            <td ></td>
+                                            <td ></td>
+                                            <td ></td>
+                                            <td ><i className="fa fa-refresh fa-spin"> </i></td>
+                                            <td ></td>
+                                            <td ></td>
+                                            <td></td>
+                                            </tr>
+                                             }
+                                            { listRequest.length >0 ? listRequest.map((annual,index)=> {
+                                                return (
+                                                    <tr>
+                                                        <th data-priority="1">{annual.userCompany.idUser.kode}</th>
+                                                        <th data-priority="2">{annual.userCompany.idUser.nama}</th>
+                                                        <th data-priority="5">{annual.tglMulai}</th>
+                                                        <th data-priority="6">{annual.tglAkhir}</th>
+                                                        <th data-priority="7">{annual.keterangan}</th>
+                                                        <th data-priority="8">{annual.status.status}</th>
+                                                        <th>
+                                                            <button type="submit" name ="approve" className="btn btn-primary waves-effect waves-light m-l-10 btn-sm"
+                                                                value={annual} onClick={() => this.handleApprove(annual)}>
+                                                                <b className="font-bold">Setujui</b> 
+                                                            </button>                                                            
+                                                            <button type="submit" name="reject" className="btn btn-danger waves-effect waves-light m-l-10 btn-sm" 
+                                                                value={index} onClick={() => this.handleReject(annual)}>
+                                                                <b className="font-bold" >Tolak</b>
+                                                            </button>
+                                                        </th>
+                                                    </tr> 
+                                                )
+                                                }):null
+                                            }
+                                        </tbody>
+                                    </table>
                                     </div>
-	                                        
-                        				</div>                        				
-                                    </div>
+
                                 </div>
+	                                        
+                                    </div>                        				
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                </div>
+            </div>
                         
         );
         

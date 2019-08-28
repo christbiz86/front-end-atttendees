@@ -1,5 +1,6 @@
 import React from 'react';
 import Moment from 'moment';
+import * as Constant from '../_helpers/constant';
 
 export default class Registrasi extends React.Component{
     constructor(props){
@@ -37,7 +38,7 @@ export default class Registrasi extends React.Component{
             foto:this.state.foto
         }
 
-        fetch('http://localhost:8080/company', {
+        fetch(Constant.API_LIVE + '/company', {
                 method: 'POST',
                 body: (JSON.stringify(data)),
                 headers:{

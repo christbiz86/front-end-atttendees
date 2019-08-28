@@ -10,31 +10,66 @@ import Reporting from './Reporting';
 import Attendee from './Attendee';
 import "./../Header/ScrollbarPage.css";
 
+let user = JSON.parse(localStorage.getItem('user'));
+
 class Sidebar extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isSuperAdmin: false,
+            isAdmin: false
+        };
+    }
+
+    componentDidMount() {
+        if(user.idTipeUser.tipe === 'Super Admin') {
+            this.setState({
+                isSuperAdmin: true
+            })
+        } else if(user.idTipeUser.tipe === 'Admin'){
+            this.setState({
+                isAdmin: true
+            })
+        }
+    }
+
     render(){
-    const scrollNavigasi = { width:"300px auto", maxHeight: "100%" }
+        const { isSuperAdmin, isAdmin } = this.state;
+        const scrollNavigasi = { width:"auto", maxHeight: "100% auto" }
         return(
             <div className="left side-menu">
-                {/* <div classname="scrollbar mx-auto" style={scrollNavigasi}> */}
-                    <div className="sidebar sidebar-inner slimscrollleft">
-                        <div id="sidebar-menu">
-                            <ul>
-                                <li className="text-muted menu-title">Navigation</li>
-                                <Dashboard />
-                                <Attendee />
-                                <Company />
-                                <TimeSheet />
-                                <Employee />
-                                <Annual />
-                                <Reporting />
+                <div className="sidebar sidebar-inner slimscrollleft mx-auto" style={scrollNavigasi}>
+                    <div id="sidebar-menu">
+                        <ul>
+                            <li className="text-muted menu-title">Navigation</li>
+                            <Dashboard />
+                            <Attendee 
+                                isSuperAdmin={isSuperAdmin}
+                            />
+                            <Company />
+                            <Annual 
+                                isSuperAdmin={isSuperAdmin}
+                                isAdmin={isAdmin}
+                            />
+                            <TimeSheet />
+                            { isSuperAdmin && 
+                                <>
                                 <Unit />
                                 <Posisi />
-                            </ul>
-                            <div className="clearfix"></div>
-                        </div>
+                                </>
+                            }
+                            { isAdmin || isSuperAdmin && 
+                                <>
+                                <Employee />
+                                <Reporting />
+                                </>
+                            }
+                        </ul>
                         <div className="clearfix"></div>
                     </div>
-                {/* </div> */}
+                    <div className="clearfix"></div>
+                </div>
             </div>
         );
     }

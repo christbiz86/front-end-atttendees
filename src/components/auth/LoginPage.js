@@ -28,7 +28,7 @@ class LoginPage extends React.Component{
     handleSubmit(e) {
         e.preventDefault();
 
-        this.setState({ submitted: true, isLoading: true });
+        this.setState({ submitted: true });
         const { email, password } = this.state;
         if (email && password) {
             this.props.login(email, password);
@@ -36,8 +36,7 @@ class LoginPage extends React.Component{
     }
 
     render(){
-        const { loggingIn } = this.props;
-        const { email, password, submitted, isLoading } = this.state;
+        const { email, password, isLoading } = this.state;
         return(
             <div>
                 <div className="account-pages"/>
@@ -75,11 +74,11 @@ class LoginPage extends React.Component{
     
                                 <div className="form-group text-center m-t-40">
                                     <div className="col-xs-12">
-                                    <button className="btn btn-pink btn-block text-uppercase waves-effect waves-light" type="submit" onClick={this.handleSubmit} disabled={isLoading}>
-                                        { isLoading &&  <i className="spinner-border"> </i> }
-                                        { isLoading &&  <span> Loading </span> }
-                                        { !isLoading &&  <span> Log In </span> }
-                                    </button>  
+                                        <button className="btn btn-pink btn-block text-uppercase waves-effect waves-light" type="submit" disabled={isLoading}>
+                                            { isLoading &&  <i className="spinner-border"> </i> }
+                                            { isLoading &&  <span> Loading </span> }
+                                            { !isLoading &&  <span> Log In </span> }
+                                        </button>
                                     </div>
                                 </div>
     

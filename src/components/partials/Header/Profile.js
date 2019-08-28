@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import * as Constant from '../../_helpers/constant';
 
 class Profile extends Component {
 
@@ -14,7 +15,7 @@ class Profile extends Component {
     componentDidMount(){
         axios
         .get(
-            'http://localhost:8080/image/'+ JSON.parse(localStorage.getItem('user')).idUser.foto,
+            Constant.API_LIVE + '/image/'+ JSON.parse(localStorage.getItem('user')).idUser.foto,
             {   responseType: 'arraybuffer',
                 headers:{
                             'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -42,7 +43,7 @@ class Profile extends Component {
                         <li><a href="#"><i className="ti-settings m-r-10 text-custom"></i> Settings</a></li>
                         <li><a href="#"><i className="ti-lock m-r-10 text-custom"></i> Lock screen</a></li>
                         <li className="divider"></li>
-                        <li><a href={'/login'}><i className="ti-power-off m-r-10 text-danger"></i> Logout</a></li>
+                        <li><a href={'/logout'}><i className="ti-power-off m-r-10 text-danger"></i> Logout</a></li>
                     </ul>
                 </li>
         );

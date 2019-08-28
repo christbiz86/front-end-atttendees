@@ -5,6 +5,8 @@ import originalMoment from "moment";
 import { extendMoment } from "moment-range";
 import { MDBDataTable } from 'mdbreact';
 import axios from 'axios';
+import * as Constant from '../../_helpers/constant';
+
 const moment = extendMoment(originalMoment);
 
 class ReportAttendee extends Component {
@@ -39,7 +41,7 @@ class ReportAttendee extends Component {
     }
 
     requestAttendee = async() => {
-        await axios.request('http://localhost:8080/api/attendee-recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD'), {
+        await axios.request(Constant.API_LIVE + '/api/attendee-recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD'), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -73,7 +75,7 @@ class ReportAttendee extends Component {
     }
 
     downloadReportData = () => {
-        fetch('http://localhost:8080/api/attendee-recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD') + '/report', {
+        fetch(Constant.API_LIVE + '/api/attendee-recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD') + '/report', {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')

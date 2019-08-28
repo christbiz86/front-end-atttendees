@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import { MDBDataTable } from 'mdbreact';
 import Layout from '../../layout/Layout';
 import axios from 'axios';
+import * as Constant from '../../_helpers/constant';
 
-const url = 'http://api.attendees.today/request/Approved';
-
-class ListPengajuan extends Component {
+class ListAnnual extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -15,12 +14,9 @@ class ListPengajuan extends Component {
         };
     }
 
-
     componentWillMount=async() => {
-        // await axios.request('http://localhost:8282/request/Approved', {
-        await axios.request('http://api.attendees.today/request/company/Approved', {
+        await axios.request(Constant.API_LIVE + '/request/Approved', {
             method: 'GET',
-
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -33,18 +29,7 @@ class ListPengajuan extends Component {
             .then(async() => {
                 this.setState({ tableRows:this.assemblePosts(), isLoading:false });
             })
-
     }
-    // componentWillMount=async() => {
-    //     await axios.get(url)
-    //     .then(response => response.data)
-    //     .then(data => {
-    //         this.setState({ items: data })
-    //     })
-    //     .then(async() => {
-    //         this.setState({ tableRows:this.assemblePosts(), isLoading:false });
-    //     })
-    // }
 
     assemblePosts= () => {
         let items = this.state.items.map((annual) => {
@@ -60,7 +45,6 @@ class ListPengajuan extends Component {
 
             )
         });
-
         return items;
     }
 
@@ -92,9 +76,9 @@ class ListPengajuan extends Component {
                     field: 'status'
                 }
             ],
-
             rows:this.state.tableRows,
         }
+
         return (
             <div>
                 <Layout />
@@ -116,8 +100,6 @@ class ListPengajuan extends Component {
                                     </ol>
                                 </div>
                             </div>
-
-
                             <div className="card-box table-responsive" id="shift-list">
                                 <h4 className="m-t-0 header-title"><b>Daftar Cuti Karyawan </b></h4>
                                 <MDBDataTable striped bordered data={data} />
@@ -127,10 +109,8 @@ class ListPengajuan extends Component {
                     </div>
                 </div>
             </div>
-
         );
     }
 
-
 }
-export default ListPengajuan;
+export default ListAnnual;
