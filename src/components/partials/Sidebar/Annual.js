@@ -5,7 +5,7 @@ class Annual extends Component {
         const {isAdmin, isSuperAdmin} = this.props;
         return(
             <li>
-                <a href="#annual" className="waves-effect "><i className="ti-agenda"></i> <span> Annual </span> <span className="menu-arrow"></span></a>
+                <a href="#annual" className="waves-effect "><i className="ti-pencil-alt"></i> <span> Annual </span> <span className="menu-arrow"></span></a>
                 <ul className="list-unstyled treeview-menu">
                     <li>
                         <a href={"/annual/form"}  className="waves-effect">Annual Form</a>

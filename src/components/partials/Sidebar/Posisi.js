@@ -4,7 +4,7 @@ class Posisi extends Component {
     render(){
         return(
             <li>
-                <a href="#" className="waves-effect"><i className="icon-people"></i> <span> Position </span></a>
+                <a href="#" className="waves-effect"><i className="ti-star"></i> <span> Position </span></a>
             </li>
         );
     }
