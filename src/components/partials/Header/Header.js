@@ -9,7 +9,7 @@ export default function Header(){
             <div className="topbar">
                 <div className="topbar-left">
                     <div className="text-center">
-                        <a href="#" className="logo">
+                        <a href="/" className="logo">
                             <i className="icon-magnet icon-c-logo"></i><span>Attendee</span>
                         </a>
                     </div>

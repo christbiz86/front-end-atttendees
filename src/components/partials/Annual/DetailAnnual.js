@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 // import Profile from './Profile';
-import axios from 'axios';
 import * as Constant from '../../_helpers/constant';
-
-let user = JSON.parse(localStorage.getItem('user'));
 
 class DetailAnnual extends Component {
     constructor(props) {
@@ -103,10 +100,10 @@ class DetailAnnual extends Component {
                                     <h4 className="page-title">Detail Annual</h4>
                                     <ol className="breadcrumb">
                                         <li>
-                                            <a href="#">Attendee Application</a>
+                                            <a href="#attendee">Attendee Application</a>
                                         </li>
                                         <li>
-                                            <a href="#">Annual</a>
+                                            <a href="#annual">Annual</a>
                                         </li>
                                         <li className="active">
                                             Detail Annual
@@ -119,9 +116,9 @@ class DetailAnnual extends Component {
                                     <div className="card-box table-responsive">
                                     <h4 className="m-t-0 header-title"><b>Detail Annual Employee </b>
                                         {
-                                            data.request.status.status == 'Approved' ?
+                                            data.request.status.status === 'Approved' ?
                                                 <small className="font-600" style={{color: 'green'}}>Approved</small>
-                                            : data.request.status.status == 'Rejected' ?
+                                            : data.request.status.status === 'Rejected' ?
                                                 <small className="font-600" style={{color: 'red'}}>Rejected</small>
                                             : <small></small>
                                         }
@@ -168,7 +165,7 @@ class DetailAnnual extends Component {
                                                 </div>
                                             </div>
                                             {
-                                                data.request.status.status == "Request" ?
+                                                data.request.status.status === "Request" ?
                                                 <div>
                                                     <div className="form-group clearfix">
                                                         <div className="control-label">

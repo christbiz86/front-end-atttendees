@@ -109,7 +109,7 @@ class ProfileUpdateForm extends React.Component{
                                 <h4 className="page-title">Edit Profile</h4>
                                 <ol className="breadcrumb">
                                     <li>
-                                        <a href="#">Profile</a>
+                                        <a href="/profile">Profile</a>
                                     </li>
                                     <li className="active">
                                         Edit

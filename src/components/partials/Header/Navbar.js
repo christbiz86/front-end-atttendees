@@ -1,5 +1,4 @@
 import React from 'react';
-import Notifications from './Notifications';
 
 export default function Navbar(){
     return(
@@ -13,14 +12,14 @@ export default function Navbar(){
 
             <ul className="nav navbar-nav hidden-xs">
                 <li className="dropdown">
-                    <a href="#" className="dropdown-toggle waves-effect waves-light" data-toggle="dropdown"
+                    <a href="#action" className="dropdown-toggle waves-effect waves-light" data-toggle="dropdown"
                         role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span
                         className="caret"></span></a>
                     <ul className="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#action">Action</a></li>
+                        <li><a href="#action">Another action</a></li>
+                        <li><a href="#action">Something else here</a></li>
+                        <li><a href="#action">Separated link</a></li>
                     </ul>
                 </li>
             </ul>

@@ -31,6 +31,10 @@ export default class Employee extends Component {
         this.setState({ submitted:true, isLoading:true })
     }
 
+    componentWillMount(){
+        this.fetchUserByFilter();
+    }
+    
     fetchUserByFilter = async() => {
         const userCom = {
             idUser:{

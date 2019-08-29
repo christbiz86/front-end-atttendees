@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import Layout from '../../layout/Layout';
 import * as Constant from '../../_helpers/constant';
 
-let token = localStorage.getItem('token');
-class AnnualRequest extends Component {    
+class AnnualRequest extends Component {
     constructor(props){
         super(props);
 

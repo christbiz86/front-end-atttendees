@@ -39,9 +39,9 @@ class Profile extends Component {
                     <a href={'/login'} className="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true">
                         <img src={this.state.source} alt="user-img" className="img-circle"/> </a>
                     <ul className="dropdown-menu">
-                        <li><a href="#"><i className="ti-user m-r-10 text-custom"></i> Profile</a></li>
-                        <li><a href="#"><i className="ti-settings m-r-10 text-custom"></i> Settings</a></li>
-                        <li><a href="#"><i className="ti-lock m-r-10 text-custom"></i> Lock screen</a></li>
+                        <li><a href="#profile"><i className="ti-user m-r-10 text-custom"></i> Profile</a></li>
+                        <li><a href="#setting"><i className="ti-settings m-r-10 text-custom"></i> Settings</a></li>
+                        <li><a href="#lockscreen"><i className="ti-lock m-r-10 text-custom"></i> Lock screen</a></li>
                         <li className="divider"></li>
                         <li><a href={'/logout'}><i className="ti-power-off m-r-10 text-danger"></i> Logout</a></li>
                     </ul>

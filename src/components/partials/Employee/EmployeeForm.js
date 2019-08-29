@@ -32,7 +32,12 @@ class EmployeeForm extends React.Component{
     }
 
     fetchUnit() {
-        fetch(Constant.API_LIVE + '/unit')
+        fetch(Constant.API_LIVE + '/unit', {
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        })
         .then(response => response.json())
         .then(data =>
             this.setState({
@@ -45,7 +50,12 @@ class EmployeeForm extends React.Component{
     }
 
     fetchPosisi() {
-        fetch(Constant.API_LIVE + '/posisi')
+        fetch(Constant.API_LIVE + '/posisi', {
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        })
         .then(response => response.json())
         .then(data =>
             this.setState({
@@ -58,7 +68,12 @@ class EmployeeForm extends React.Component{
     }
 
     fetchTipeUser() {
-        fetch(Constant.API_LIVE + '/tipeuser')
+        fetch(Constant.API_LIVE + '/tipeuser',{
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        })
         .then(response => response.json())
         .then(data =>
             this.setState({
@@ -115,10 +130,9 @@ class EmployeeForm extends React.Component{
         formData.append('user',JSON.stringify(data));
 
         fetch(Constant.API_LIVE + '/user/save', {
-            method: 'POST', // or 'PUT'
-            body: JSON.stringify(data),
+            method: 'POST',
+            body: formData,
             headers:{
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
             }
         })
@@ -144,7 +158,7 @@ class EmployeeForm extends React.Component{
                                 <h4 class="page-title">Form Employee</h4>
                                 <ol class="breadcrumb">
                                     <li>
-                                        <a href="#">Employee</a>
+                                        <a href="#employee">Employee</a>
                                     </li>
                                     <li class="active">
                                         Form
@@ -161,7 +175,6 @@ class EmployeeForm extends React.Component{
                                     
                                     <form id="wizard-validation-form" onSubmit={this.handleSubmit}>
                                         <div>
-                                            {/* <h3>Step 1</h3> */}
                                             <section>
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label" htmlFor="name2">Nama Employee *</label>
@@ -201,12 +214,12 @@ class EmployeeForm extends React.Component{
                                                 <div className="form-group clearfix">
                                                     <label className="col-sm-2 control-label" >Foto</label>
                                                     <div className="col-lg-6">
-                                                        <input type="file" data-buttonname="btn-primary" name="myImage" onChange= {this.handleImage}  placeholder="foto"/>                                        </div>
+                                                        <input type="file" data-buttonname="btn-primary" name="myImage" onChange= {this.handleImage}  placeholder="foto"/>
                                                     </div>
+                                                </div>
                                                 
 
                                             </section>
-                                            {/* <h3>Step 2</h3> */}
                                             <section>
 
                                                 <div className="form-group clearfix">
@@ -269,14 +282,7 @@ class EmployeeForm extends React.Component{
                                                 </div>
 
                                             </section>
-                                            {/* <h3>Step Final</h3> */}
                                             <section>
-                                                {/* <div className="form-group clearfix">
-                                                    <div className="col-lg-12">
-                                                        <input id="acceptTerms-2" name="acceptTerms2" type="checkbox" className="required"/>
-                                                        <label htmlFor="acceptTerms-2">I agree with the Terms and Conditions.</label>
-                                                    </div>
-                                                </div> */}
                                                 <button type="submit" class="btn btn-success btn-rounded waves-effect waves-light">
                                                     <span class="btn-label"><i class="fa fa-check"></i></span>
                                                     Submit

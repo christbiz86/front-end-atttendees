@@ -107,7 +107,7 @@ class Attendee extends Component {
                 );
                 this.setState({ match });
 
-                if(this.state.match!=null && this.state.fetch==false){
+                if(this.state.match!=null && this.state.fetch===false){
                     this.setState({capture: false});
                     this.setState({fetch: true});
                     this.checkGeo();
@@ -185,7 +185,6 @@ class Attendee extends Component {
     render(){
         const {facingMode, redirect} = this.state;
         let videoConstraints = null;
-        let camera = '';
 
         if(redirect){
             return <Redirect to='/' />;
@@ -197,11 +196,6 @@ class Attendee extends Component {
                 height: HEIGHT,
                 facingMode: facingMode
             };
-            if(facingMode === 'user'){
-                camera = 'Front';
-            } else {
-                camera = 'Back';
-            }
         }
         return(
             <div className="content-page">
@@ -212,10 +206,10 @@ class Attendee extends Component {
                                 <h4 className="page-title">Dashboard</h4>
                                 <ol className="breadcrumb">
                                  <li>
-                                     <a href="#">Attendee Application</a>
+                                     <a href="#attendee">Attendee Application</a>
                                  </li>
                                  <li>
-                                     <a href="#">Attendee</a>
+                                     <a href="#attendee">Attendee</a>
                                  </li>
                              </ol>
                             </div>

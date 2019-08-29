@@ -39,7 +39,12 @@ class EmployeeUpdateForm extends React.Component{
     }
 
     fetchUnit() {
-        fetch(Constant.API_LIVE + '/unit')
+        fetch(Constant.API_LIVE + '/unit', {
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        })
         .then(response => response.json())
         .then(data =>
             this.setState({
@@ -52,7 +57,12 @@ class EmployeeUpdateForm extends React.Component{
     }
 
     fetchPosisi() {
-        fetch(Constant.API_LIVE + '/posisi')
+        fetch(Constant.API_LIVE + '/posisi', {
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        })
         .then(response => response.json())
         .then(data =>
             this.setState({
@@ -65,7 +75,12 @@ class EmployeeUpdateForm extends React.Component{
     }
 
     fetchTipeUser() {
-        fetch(Constant.API_LIVE + '/tipeuser')
+        fetch(Constant.API_LIVE + '/tipeuser', {
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        })
         .then(response => response.json())
         .then(data =>
             this.setState({
@@ -147,15 +162,15 @@ class EmployeeUpdateForm extends React.Component{
             <div className="content-page">
                 <div className="content">
                     <div className="container">
-                        <div class="row">
-                            <div class="col-sm-12">
+                        <div className="row">
+                            <div className="col-sm-12">
 
-                                <h4 class="page-title">Edit Employee</h4>
-                                <ol class="breadcrumb">
+                                <h4 className="page-title">Edit Employee</h4>
+                                <ol className="breadcrumb">
                                     <li>
-                                        <a href="#">Employee</a>
+                                        <a href="#employee">Employee</a>
                                     </li>
-                                    <li class="active">
+                                    <li className="active">
                                         Edit
                                     </li>
                                 </ol>
@@ -170,7 +185,6 @@ class EmployeeUpdateForm extends React.Component{
                                     
                                     <form id="wizard-validation-form" onSubmit={this.handleSubmit}>
                                         <div>
-                                            {/* <h3>Step 1</h3> */}
                                             <section>
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label" htmlFor="name2">Nama Employee *</label>
@@ -264,16 +278,9 @@ class EmployeeUpdateForm extends React.Component{
                                                 </div>
 
                                             </section>
-                                            {/* <h3>Step Final</h3> */}
                                             <section>
-                                                {/* <div className="form-group clearfix">
-                                                    <div className="col-lg-12">
-                                                        <input id="acceptTerms-2" name="acceptTerms2" type="checkbox" className="required"/>
-                                                        <label htmlFor="acceptTerms-2">I agree with the Terms and Conditions.</label>
-                                                    </div>
-                                                </div> */}
-                                                <button type="submit" class="btn btn-success btn-rounded waves-effect waves-light">
-                                                    <span class="btn-label"><i class="fa fa-check"></i></span>
+                                                <button type="submit" className="btn btn-success btn-rounded waves-effect waves-light">
+                                                    <span className="btn-label"><i className="fa fa-check"></i></span>
                                                     Submit
                                                 </button>
                                             </section>

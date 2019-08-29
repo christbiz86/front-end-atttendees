@@ -20,7 +20,9 @@ class Sidebar extends Component {
             isSuperAdmin: false,
             isAdmin: false
         };
+        this.scrollNavigasi = { width:"auto", maxHeight: "100% auto" };
     }
+
 
     componentDidMount() {
         if(user.idTipeUser.tipe === 'Super Admin') {
@@ -36,10 +38,10 @@ class Sidebar extends Component {
 
     render(){
         const { isSuperAdmin, isAdmin } = this.state;
-        const scrollNavigasi = { width:"auto", maxHeight: "100% auto" }
+        // const scrollNavigasi = { width:"auto", maxHeight: "100% auto" }
         return(
             <div className="left side-menu">
-                <div className="sidebar sidebar-inner slimscrollleft mx-auto" style={scrollNavigasi}>
+                <div className="sidebar sidebar-inner slimscrollleft mx-auto" style={this.scrollNavigasi}>
                     <div id="sidebar-menu">
                         <ul>
                             <li className="text-muted menu-title">Navigation</li>

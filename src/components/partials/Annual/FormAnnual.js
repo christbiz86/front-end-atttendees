@@ -76,14 +76,11 @@ class FormPengajuan extends Component {
             sisaCuti:saldo.sisaCuti,loadingData:false
         }))
         .catch(error => {
-            console.log('parsing failed', error)
             window.alert('Request gagal')
         })       
     }
 
     Request(){
-        console.log('Success:', this.state.value.start.format("YYYY-MM-DD"))
-        console.log('Success:', this.state.value.end.format("YYYY-MM-DD"))
         fetch(Constant.API_LIVE + '/request', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -125,7 +122,7 @@ class FormPengajuan extends Component {
     }
 
     render() { 
-        const {redirect,submitted, isLoading } = this.state;
+        const {redirect, isLoading } = this.state;
         if(redirect){
             // return <Redirect to='/annual/list'/>
             window.location.reload();
@@ -144,7 +141,7 @@ class FormPengajuan extends Component {
                                 <h4 className="page-title">Form Annual</h4>
                                 <ol className="breadcrumb">
                                     <li>
-                                        <a href="#">Annual</a>
+                                        <a href="#annual">Annual</a>
                                     </li>
                                     <li className="active">
                                         Form
@@ -230,13 +227,13 @@ class FormPengajuan extends Component {
                                             </div>
 
                                                 <div className="form-group clearfix">
-                                                    <a className="col-md-2 control-label"   />
+                                                    <a className="col-md-2 control-label"/>
                                                     <div className="col-sm-2 control-label">
                                                     </div>
                                                 </div>
                                                 
                                                 <div className="form-group clearfix">
-                                                    <label  className="col-sm-6 control-label"></label>
+                                                    <label className="col-sm-6 control-label"></label>
                                                     <div className="col-sm-2 control-label">
                                                         <button type="submit" className="btn btn-default waves-effect waves-light btn-lg" data-style="contract" id="sa-warning" disabled={isLoading}>
                                                         { isLoading &&  <i className="fa fa-refresh fa-spin"> </i> }

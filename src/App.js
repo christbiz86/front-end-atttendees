@@ -21,7 +21,7 @@ import FaceRegister from './components/partials/Attendee/FaceRegister';
 import Forbidden from './components/auth/Forbidden';
 import DetailAnnual from './components/partials/Annual/DetailAnnual';
 
-import { PrivateRoute, AdminRoute, SuperAdminRoute, ErrorRoute } from './components/_security/PrivateRoute';
+import { PrivateRoute, AdminRoute } from './components/_security/PrivateRoute';
 import { LoginPage } from './components/auth/LoginPage';
 import { history } from './components/_helpers';
 import { alertActions } from './components/_actions';
@@ -65,7 +65,7 @@ class App extends React.Component {
                     <PrivateRoute exact path="/timesheet/Shift" component={Shift} />
                     <PrivateRoute exact path="/attendee/absen" component={Attendee} />
                     <AdminRoute exact path="/attendee/register" component={FaceRegister} />
-                    <ErrorRoute exact path="/forbidden" component={Forbidden} />
+                    <Route exact path="/forbidden" component={Forbidden} />
                   </Switch>
                 </div>
               </Router>
