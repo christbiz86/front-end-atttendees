@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import { MDBDataTable } from 'mdbreact';
 import axios from 'axios';
-import * as Constant from '../../_helpers/constant';
+import { Link } from 'react-router-dom';
+import * as Constant from '../../_helpers/constant'
 
+let user = JSON.parse(localStorage.getItem('user'));
 export default class Employee extends Component {
     constructor(props){
         super(props);
@@ -17,11 +19,12 @@ export default class Employee extends Component {
             email: null,
             tglLahir: null,
             telp: null,
-            company: null,
+            company: user.idCompanyUnitPosisi.idCompany.id,
             unit: null,
             posisi: null,
             tipe: null,
-            error: null
+            error: null,
+            data: []
         }
     }
 
@@ -34,7 +37,7 @@ export default class Employee extends Component {
     componentWillMount(){
         this.fetchUserByFilter();
     }
-    
+
     fetchUserByFilter = async() => {
         const userCom = {
             idUser:{
@@ -59,7 +62,7 @@ export default class Employee extends Component {
                 tipe: this.state.tipe,
             }
         }
-        await axios.post(Constant.API_LIVE + '/usercompany/filter', userCom, {
+        await axios.post(Constant.API_LIVE + `/usercompany/filter`, userCom, {
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -78,7 +81,8 @@ export default class Employee extends Component {
 
     assemblePosts= () => {
         console.log(this.state.userCompany)
-        let userCompany = this.state.userCompany.map((user) => {
+        const { userCompany } = this.state;
+        let userCom = userCompany.map((user) => {
             return (
                 {
                     namaUser: user.idUser.nama,
@@ -89,13 +93,14 @@ export default class Employee extends Component {
                     unit: user.idCompanyUnitPosisi.idUnit == null ? "-" : user.idCompanyUnitPosisi.idUnit.unit,
                     posisi: user.idCompanyUnitPosisi.idPosisi == null ? "-" : user.idCompanyUnitPosisi.idPosisi.posisi,
                     tipeUser: user.idTipeUser.tipe,
-                    action: <div><a href="/employee/update-form" type="" className="btn btn-warning" defaultValue={user} >Edit</a>
-                    <a href="" type="" className="btn btn-danger">Delete</a></div>
+                    view: <Link to={{pathname: "/profile/view", data: user}} className="btn btn-primary" key={user.id} data={this.state.data} ><i className="fa fa-user"></i></Link>,
+                    edit: <Link to={{pathname: "/employee/update", data: user}} className="btn btn-warning" key={user.id} ><i className="fa fa-edit"></i></Link>,
+                    register: <Link to={{pathname: "/attendee/register", data: user}} className="btn btn-purple" key={user.id} ><i className="fa fa-camera"></i></Link>
                 }
             )
         });
-        console.log(userCompany);
-        return userCompany;
+        console.log(userCom);
+        return userCom;
     }
 
     render() {
@@ -135,14 +140,23 @@ export default class Employee extends Component {
                     field: 'tipeUser'
                 },
                 {
-                    label: 'Action',
-                    field: 'action'
+                    label: 'View',
+                    field: 'view'
+                },
+                {
+                    label: 'Edit',
+                    field: 'edit'
+                },
+                {
+                    label: 'Face Register',
+                    field: 'register'
                 },
             ],
 
             rows:this.state.tableRows,
         }
         const { submitted, isLoading } = this.state;
+        this.state.data = data;
         return(
             <div>
                 <div className="content-page">
@@ -180,7 +194,7 @@ export default class Employee extends Component {
                                             </div>
                                         </form>
                                         <hr />
-                                        <MDBDataTable striped bordered data={data} />
+                                        <MDBDataTable striped bordered data={this.state.data} />
                                     </div>
                                 </div>
                             </div>

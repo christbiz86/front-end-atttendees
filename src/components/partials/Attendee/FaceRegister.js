@@ -15,7 +15,8 @@ const INIT_STATE = {
   fullDesc: [],
   imageDimension: null,
   error: null,
-  loading: false
+  loading: false,
+  image: null
 };
 
 class FaceRegister extends Component {
@@ -44,7 +45,8 @@ class FaceRegister extends Component {
 
   handleFileChange = async event => {
     this.resetState();
-    this.setState({loading: true})
+    this.setState({loading: true});
+    this.setState({image:event.target.files[0]});
     await Promise.all(Array.from(event.target.files).map(async file =>(
       await this.setState(prevState => ({
         imageURL: [...prevState.imageURL, URL.createObjectURL(file)],
@@ -71,11 +73,15 @@ class FaceRegister extends Component {
       tempInside = [];
     });
     const data = {
-        name: JSON.parse(localStorage.getItem('user')).idUser.nama,
+        name: this.props.location.data.idUser.id,
         descriptors: temp
     }
     console.log(data);
-    fetch(Constant.API_LIVE + '/user/descriptor/register', {
+    const formData = new FormData();
+    formData.append('file',this.state.image);
+    formData.append('id',JSON.parse(localStorage.getItem('user')).idUser.email);
+
+    fetch(Constant.API_LIVE + '/user/descriptor/register/json', {
             method: 'POST',
             body: JSON.stringify(data),
             headers:{
@@ -83,9 +89,16 @@ class FaceRegister extends Component {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
-        .then(res => res.json())
-        .catch(error => console.error('Error:', error))
-        .then(response => console.log('Success:', response)); 
+        .then(res => res.json()) 
+
+        fetch(Constant.API_LIVE + '/user/descriptor/register/image', {
+          method: 'POST',
+          body: formData,
+          headers:{
+              'Authorization': 'Bearer ' + localStorage.getItem('token')
+          }
+      })
+      .then(res => res.json()) 
   };
 
   handleImageChange = async (images = this.state.imageURL) => {
@@ -158,11 +171,13 @@ class FaceRegister extends Component {
                 <p>Input Image file</p>
                 <input id="myFileUpload" type="file" multiple onChange={this.handleFileChange} accept=".jpg, .jpeg, .png"/>
                 <br />
-                <div>
-                  <button type="submit" onClick={this.handleButtonClick} class="btn btn-success waves-effect waves-light m-l-10 btn-md"> 
-                      Submit
-                  </button>
-                </div>
+                { (fullDesc.length > 0) &&
+                  <div>
+                    <button type="submit" onClick={this.handleButtonClick} class="btn btn-success waves-effect waves-light m-l-10 btn-md"> 
+                        Submit
+                    </button>
+                  </div>
+                }
               </div>
             </div>
           </div>

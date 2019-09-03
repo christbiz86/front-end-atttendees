@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Webcam from 'react-webcam';
 import { loadModels, getFullFaceDescription, createMatcher } from '../../../api/face';
-import {Redirect} from 'react-router-dom';
+import swal from 'sweetalert';
 import moment from 'moment';
 import * as Constant from '../../_helpers/constant';
 
@@ -17,7 +17,6 @@ class Attendee extends Component {
             user: localStorage.getItem('user'),
 
             fetch: false,
-            redirect: false,
             capture: true,
             time: new Date(),
 
@@ -69,12 +68,7 @@ class Attendee extends Component {
     };
 
     matcher = async () => {
-        const getter = {
-            name: JSON.parse(localStorage.getItem('user')).idUser.nama
-        }
-        await fetch(Constant.API_LIVE + '/user/descriptor', {
-            method: 'POST',
-            body: JSON.stringify(getter),
+        await fetch(Constant.API_LIVE + '/user/descriptor/'+JSON.parse(localStorage.getItem('user')).idUser.id, {
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -91,8 +85,6 @@ class Attendee extends Component {
         
         const faceMatcher = await createMatcher(this.state.users);
         this.setState({ faceMatcher });
-        console.log(this.state.users);
-        console.log(this.state.faceMatcher);
     };
 
     getDescription = async () => {
@@ -107,7 +99,7 @@ class Attendee extends Component {
                 );
                 this.setState({ match });
 
-                if(this.state.match!=null && this.state.fetch===false){
+                if(this.state.match.length!=0 && this.state.fetch==false){
                     this.setState({capture: false});
                     this.setState({fetch: true});
                     this.checkGeo();
@@ -117,14 +109,14 @@ class Attendee extends Component {
     };
 
     checkGeo = async () =>{
-        if(this.state.match[0]._label===JSON.parse(localStorage.getItem('user')).idUser.nama){
+        if(this.state.match[0]._label===JSON.parse(localStorage.getItem('user')).idUser.id){
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(this.setLocation);
             }
         }
         else{
-            console.log("coba lagi");
             this.setState({capture: true});
+            this.setState({fetch: false});
         }
     }
 
@@ -146,8 +138,7 @@ class Attendee extends Component {
     }
 
     absen = async () =>{
-        console.log(this.state.absen);
-        await fetch( Constant.API_LIVE + '/user/absen', {
+        await fetch(Constant.API_LIVE + '/user/absen', {
             method: 'POST',
             body: JSON.stringify(this.state.absen),
             headers:{
@@ -155,8 +146,14 @@ class Attendee extends Component {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
-        .then(async res => await res.json());
-        this.setState({redirect: true});
+        .then(res => {res.json()
+                if(res.ok){
+                    swal("Success!", "Absen Berhasil!", "success")
+                    .then(function() {
+                        window.location.href = "/";
+                    });
+                }
+        });
     }
 
     startCapture = () => {
@@ -178,17 +175,13 @@ class Attendee extends Component {
               inputSize
             ).then(fullDesc => this.setState({ fullDesc }));
         }
-        console.log(this.state.fullDesc);
         await this.getDescription();
     };
 
     render(){
         const {facingMode, redirect} = this.state;
         let videoConstraints = null;
-
-        if(redirect){
-            return <Redirect to='/' />;
-        }
+        let camera = '';
 
         if(!!facingMode) {
             videoConstraints = {
@@ -196,6 +189,11 @@ class Attendee extends Component {
                 height: HEIGHT,
                 facingMode: facingMode
             };
+            if(facingMode === 'user'){
+                camera = 'Front';
+            } else {
+                camera = 'Back';
+            }
         }
         return(
             <div className="content-page">
@@ -206,10 +204,10 @@ class Attendee extends Component {
                                 <h4 className="page-title">Dashboard</h4>
                                 <ol className="breadcrumb">
                                  <li>
-                                     <a href="#attendee">Attendee Application</a>
+                                     <a href="#">Attendee Application</a>
                                  </li>
                                  <li>
-                                     <a href="#attendee">Attendee</a>
+                                     <a href="#">Attendee</a>
                                  </li>
                              </ol>
                             </div>

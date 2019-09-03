@@ -18,7 +18,7 @@ class EmployeeForm extends React.Component{
             telp:'',
             email:'',
             password:'',
-            foto:'null',
+            foto:'',
             idStatus: '',
             unit: '',
             posisi: '',
@@ -158,7 +158,7 @@ class EmployeeForm extends React.Component{
                                 <h4 class="page-title">Form Employee</h4>
                                 <ol class="breadcrumb">
                                     <li>
-                                        <a href="#employee">Employee</a>
+                                        <a href="#">Employee</a>
                                     </li>
                                     <li class="active">
                                         Form
@@ -214,7 +214,7 @@ class EmployeeForm extends React.Component{
                                                 <div className="form-group clearfix">
                                                     <label className="col-sm-2 control-label" >Foto</label>
                                                     <div className="col-lg-6">
-                                                        <input type="file" data-buttonname="btn-primary" name="myImage" onChange= {this.handleImage}  placeholder="foto"/>
+                                                        <input type="file" data-buttonname="btn-primary" name="foto" onChange= {this.handleImage} placeholder="foto"/>
                                                     </div>
                                                 </div>
                                                 
@@ -225,7 +225,7 @@ class EmployeeForm extends React.Component{
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label " htmlFor="email2">Unit *</label>
                                                     <div className="col-lg-8">
-                                                        <select className="selectpicker col-sm-3" data-style="btn-white" defaultValue={this.state.getUnit.indexOf(0)} name="unit" onChange={this.handleChange}>
+                                                        <select className="form-control" data-style="btn-white" defaultValue={this.state.getUnit.indexOf(0)} name="unit" onChange={this.handleChange}>
                                                         {this.state.error ? <p>{this.state.error.message}</p> : null}
                                                         {!this.state.isLoading ? (
                                                             this.state.getUnit.map(u => {
@@ -234,7 +234,7 @@ class EmployeeForm extends React.Component{
                                                                 );
                                                             })
                                                         ) : (
-                                                            <h3>Loading...</h3>
+                                                            <span>Loading...</span>
                                                         )}
                                                         </select>
                                                     </div>
@@ -243,7 +243,7 @@ class EmployeeForm extends React.Component{
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label " htmlFor="address2">Posisi *</label>
                                                     <div className="col-lg-8">
-                                                        <select className="selectpicker col-sm-3" data-style="btn-white" defaultValue={this.state.getPosisi.indexOf(0)} name="posisi" onChange={this.handleChange}>
+                                                        <select className="form-control" data-style="btn-white" defaultValue={this.state.getPosisi.indexOf(0)} name="posisi" onChange={this.handleChange}>
                                                         {this.state.error ? <p>{this.state.error.message}</p> : null}
                                                         {!this.state.isLoading ? (
                                                             this.state.getPosisi.map(p => {
@@ -252,7 +252,7 @@ class EmployeeForm extends React.Component{
                                                                 );
                                                             })
                                                         ) : (
-                                                            <h3>Loading...</h3>
+                                                            <span>Loading...</span>
                                                         )}
                                                         </select>
                                                     </div>
@@ -261,7 +261,7 @@ class EmployeeForm extends React.Component{
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label " htmlFor="address2">Tipe User *</label>
                                                     <div className="col-lg-8">
-                                                        <select className="selectpicker col-sm-3" data-style="btn-white" name="tipeUser" defaultValue={this.state.getTipeUser.indexOf(0)} onChange={this.handleChange}>
+                                                        <select className="form-control" data-style="btn-white" name="tipeUser" defaultValue={this.state.getTipeUser.indexOf(0)} onChange={this.handleChange}>
                                                         {this.state.error ? <p>{this.state.error.message}</p> : null}
                                                         {!this.state.isLoading ? (
                                                             this.state.getTipeUser.map(t => {
@@ -271,7 +271,7 @@ class EmployeeForm extends React.Component{
                                                             
                                                             })
                                                         ) : (
-                                                            <h3>Loading...</h3>
+                                                            <span>Loading...</span>
                                                         )}
                                                         </select>
                                                     </div>

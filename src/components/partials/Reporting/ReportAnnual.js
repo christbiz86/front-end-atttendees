@@ -128,7 +128,7 @@ class ReportAnnual extends Component {
 
             rows:this.state.tableRows,
         }
-        const { isLoading } = this.state;
+        const { submitted, isLoading } = this.state;
 		return (
         <div className="content-page">
             <div className="content">
@@ -139,7 +139,7 @@ class ReportAnnual extends Component {
                             <h4 className="page-title">Report Annual</h4>
                             <ol className="breadcrumb">
                                 <li>
-                                    <a href="#report">Report</a>
+                                    <a href="#">Report</a>
                                 </li>
                                 <li className="active">
                                     Annual
@@ -155,7 +155,8 @@ class ReportAnnual extends Component {
                                 <div className="btn-group pull-right m-t-15">
                                         <button type="button" className="btn btn-default dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Export <span className="m-l-5"><i className="fa fa-cog"></i></span></button>
                                         <ul className="dropdown-menu drop-menu-right" role="menu">
-                                            <li><a href="#report" onClick={this.downloadReportData}>PDF</a></li>
+                                            <li><a href="#"  onClick={this.downloadReportData}>PDF</a></li>
+                                            
                                         </ul>
                                     </div>
 
