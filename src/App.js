@@ -21,7 +21,7 @@ import FaceRegister from './components/partials/Attendee/FaceRegister';
 import Forbidden from './components/auth/Forbidden';
 import DetailAnnual from './components/partials/Annual/DetailAnnual';
 
-import { PrivateRoute, AdminRoute } from './components/_security/PrivateRoute';
+import { PrivateRoute, AdminRoute, SuperAdminRoute } from './components/_security/PrivateRoute';
 import { LoginPage } from './components/auth/LoginPage';
 import { history } from './components/_helpers';
 import { alertActions } from './components/_actions';

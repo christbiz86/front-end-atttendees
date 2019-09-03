@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import Layout from '../../layout/Layout';
 import * as Constant from '../../_helpers/constant';
 
-class AnnualRequest extends Component {
+let token = localStorage.getItem('token');
+class AnnualRequest extends Component {    
     constructor(props){
         super(props);
 
@@ -80,7 +81,6 @@ class AnnualRequest extends Component {
     componentDidMount() {
         fetch(Constant.API_LIVE + '/request/company/Request', {
             method: 'GET',
-            
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')

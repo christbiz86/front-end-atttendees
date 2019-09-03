@@ -10,9 +10,12 @@ let user = JSON.parse(localStorage.getItem('user'));
 class Notifications extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             items: []
         }
+        
+        
     }
 
     componentDidMount() {
