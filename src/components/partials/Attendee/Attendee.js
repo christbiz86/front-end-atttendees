@@ -3,7 +3,6 @@ import Webcam from 'react-webcam';
 import { loadModels, getFullFaceDescription, createMatcher } from '../../../api/face';
 import swal from 'sweetalert';
 import moment from 'moment';
-import * as Constant from '../../_helpers/constant';
 
 const WIDTH = 420;
 const HEIGHT = 420;
@@ -68,7 +67,7 @@ class Attendee extends Component {
     };
 
     matcher = async () => {
-        await fetch(Constant.API_LIVE + '/user/descriptor/'+JSON.parse(localStorage.getItem('user')).idUser.id, {
+        await fetch('http://localhost:8080/user/descriptor/'+JSON.parse(localStorage.getItem('user')).idUser.id, { 
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -110,9 +109,16 @@ class Attendee extends Component {
 
     checkGeo = async () =>{
         if(this.state.match[0]._label===JSON.parse(localStorage.getItem('user')).idUser.id){
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(this.setLocation);
-            }
+            this.setState({
+                absen: {
+                    jam: moment().format('YYYY-MM-DD hh:mm:ss'),
+                    lokasi: "Wisma Staco"
+                }
+            });
+            this.absen();
+            // if (navigator.geolocation) {
+                // navigator.geolocation.getCurrentPosition(this.setLocation);
+            // }
         }
         else{
             this.setState({capture: true});
@@ -138,7 +144,7 @@ class Attendee extends Component {
     }
 
     absen = async () =>{
-        await fetch(Constant.API_LIVE + '/user/absen', {
+        await fetch('http://localhost:8080/user/absen', { 
             method: 'POST',
             body: JSON.stringify(this.state.absen),
             headers:{
