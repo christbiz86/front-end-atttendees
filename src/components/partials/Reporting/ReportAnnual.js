@@ -42,7 +42,7 @@ class ReportAnnual extends Component {
     }
 
     requestAnnual = async() => {
-        await axios.request(Constant.API_LIVE + '/annual/company/'+user.idCompanyUnitPosisi.idCompany.nama+'/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD'), {
+        await axios.request(Constant.API_LIVE + '/annual/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD'), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -75,21 +75,18 @@ class ReportAnnual extends Component {
     }
 
     downloadReportData = () => {
-		fetch(Constant.API_LIVE + '/annual/company/'+user.idCompanyUnitPosisi.idCompany.nama+'/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD')+'/report',{
+		fetch(Constant.API_LIVE + '/annual/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD')+'/report',{
             
                 headers:{
-                    'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
         })
 		.then(response => {
-                if (response.ok){
-				response.blob().then(blob => {
-					let url = window.URL.createObjectURL(blob);
-					let a = document.createElement('a');
-					a.href = url;
-					a.download = 'AnnualReport.pdf';
-					a.click();
+            if (response.ok){
+                response.blob([response.data], 
+                    {type: 'application/pdf'}).then(blob => {
+                    var fileDownload = require('js-file-download');
+                    fileDownload(blob, 'report-annual.pdf');
                 })
                 }else{
                     console.log(response.status)
@@ -151,7 +148,7 @@ class ReportAnnual extends Component {
                     <div className="row">
                         <div className="col-sm-12">
                             <div className="card-box table-responsive">
-                                <h4 className="m-t-0 header-title"><b>Report Attendee List</b></h4>
+                                <h4 className="m-t-0 header-title"><b>Report Annual List</b></h4>
                                 <div className="btn-group pull-right m-t-15">
                                         <button type="button" className="btn btn-default dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Export <span className="m-l-5"><i className="fa fa-cog"></i></span></button>
                                         <ul className="dropdown-menu drop-menu-right" role="menu">

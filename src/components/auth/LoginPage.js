@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { userActions } from '../_actions';
+import "./SpinnerLoader.css";
 
 class LoginPage extends React.Component{
     constructor(props) {
@@ -28,10 +29,11 @@ class LoginPage extends React.Component{
     handleSubmit(e) {
         e.preventDefault();
 
-        this.setState({ submitted: true });
+        this.setState({ submitted: true, isLoading: true });
         const { email, password } = this.state;
         if (email && password) {
             this.props.login(email, password);
+            this.setState({ isLoading: false })
         }
     }
 

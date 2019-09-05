@@ -4,11 +4,14 @@ import "react-daterange-picker/dist/css/react-calendar.css";
 import originalMoment from "moment";
 import { extendMoment } from "moment-range";
 import * as Constant from '../../_helpers/constant';
+import swal from 'sweetalert';
+import { history } from '../../_helpers';
+import "./../../auth/SpinnerLoader.css";
 
 const moment = extendMoment(originalMoment);
 let user = JSON.parse(localStorage.getItem('user'));
 
-class FormPengajuan extends Component {
+class FormAnnual extends Component {
     constructor(props,context){
         super(props,context);
         const today = moment(); 
@@ -44,24 +47,15 @@ class FormPengajuan extends Component {
 
     onSelect = (value, states) => {
         this.setState({ value, states });
+        
     }
-    renderSelectionValue = () => {
-        return (
-            <div className="input-group">
-                <input type="text" className="form-control" disabled placeholder={this.state.value.start.format("YYYY-MM-DD")} />
-                <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
-                <input type="text" className="form-control"disabled  placeholder= {this.state.value.end.format("YYYY-MM-DD")} />
-            </div>
-        );
-      }
-
-      componentDidMount() {
-        fetch(Constant.API_LIVE + '/annual/saldo/user', {
+    
+    componentDidMount() {
+        fetch(Constant.API_LIVE +'/annual/saldo', {
             method: 'POST',
             body:JSON.stringify({
                 id:{
-                    kode:user.idUser.kode,
-                    tahun:moment().format("YYYY")
+                    kode:user.idUser.kode
                 }
             }),
             headers:{
@@ -73,18 +67,20 @@ class FormPengajuan extends Component {
             res.json()
         )
         .then(saldo => this.setState({
-            sisaCuti:saldo.sisaCuti,loadingData:false
+            sisaCuti:saldo[0].sisaCuti,loadingData:false
         }))
         .catch(error => {
             console.log('parsing failed', error)
-            window.alert('Request gagal')
+            swal("Failed!", "Failed to get annual leave!", "error")
+
+            history.push("/annual/form")
         })       
     }
 
     Request(){
         console.log('Success:', this.state.value.start.format("YYYY-MM-DD"))
         console.log('Success:', this.state.value.end.format("YYYY-MM-DD"))
-        fetch(Constant.API_LIVE + '/request', {
+        fetch(Constant.API_LIVE +'/request', {
                 method: 'POST',
                 body: JSON.stringify({
                     
@@ -108,15 +104,20 @@ class FormPengajuan extends Component {
             .then(res => {res.json()
                 if (res.ok){
                     console.log(res.ok) 
-                    this.setState({redirect:true})
+                    swal("Success!", "Request Successfully!", "success")
+
+                    history.push("/dashboard")
+                    this.setState({isLoading:false})
                 }else{
                     console.log(res.status)
-                    window.alert('Request gagal')
+                    swal("Failed!", "Request Failled!", "erroe")
+
                     this.setState({isLoading:false})
                 }}
                 )
             .catch(error => {console.error('Error:', error)
-                window.alert('Request gagal')
+                swal("Failed!", "Request Failled!", "error")
+                
                 this.setState({isLoading:false})
             }
             )
@@ -125,15 +126,9 @@ class FormPengajuan extends Component {
     }
 
     render() { 
-        const {redirect,submitted, isLoading } = this.state;
-        if(redirect){
-            // return <Redirect to='/annual/list'/>
-            window.location.reload();
-            window.alert('Request berhasil dikirim')
-            
-        }
+        const { isLoading } = this.state;
         return (
-            <div className="content-page">
+            <div id="render" className="content-page">
 
                 <div className="content">
                     <div className="container">
@@ -158,7 +153,7 @@ class FormPengajuan extends Component {
                                 <div className="card-box">
 
                                     {
-                                    this.state.loadingData && <i className="fa fa-refresh fa-spin"> </i> }
+                                    this.state.loadingData && <div>Please wait, getting your data  <i className="spinner-border"> </i></div> }
                                     { !this.state.loadingData && 
                                     <div>
                                             <div className="form-group clearfix">
@@ -170,7 +165,7 @@ class FormPengajuan extends Component {
                                             <form id="basic-form"  onSubmit={this.handleRequest} >   
                                                 
                                                 <div className="form-group clearfix">
-                                                    <label className="col-sm-2 control-label" >NIK</label>
+                                                    <label className="col-sm-2 control-label" >Kode</label>
                                                     <div className="col-lg-6">
                                                         <input type="text" id="kode" name="kode" className="form-control" disabled value={user.idUser.kode} placeholder="NIK"/>
                                                     </div>
@@ -195,7 +190,6 @@ class FormPengajuan extends Component {
                                                 <label className="col-md-2 control-label">Tanggal Cuti</label>
                                                 <div className="col-lg-6">
                                                     <div>
-                                                        {/* {this.renderSelectionValue()} */}
                                                         <div className="input-group">
                                                             <input type="text" className="form-control" disabled placeholder={this.state.value.start.format("YYYY-MM-DD")} />
                                                             <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
@@ -225,7 +219,7 @@ class FormPengajuan extends Component {
                                             <div className="form-group clearfix">
                                                 <label className="col-md-2 control-label">Keterangan Cuti</label>
                                                 <div className="col-lg-6">
-                                                    <textarea className="form-control" name="keterangan" onChange={this.handleChange} rows="6"></textarea>
+                                                    <textarea className="form-control" name="keterangan" required onChange={this.handleChange} rows="6"></textarea>
                                                 </div>
                                             </div>
 
@@ -239,7 +233,7 @@ class FormPengajuan extends Component {
                                                     <label  className="col-sm-6 control-label"></label>
                                                     <div className="col-sm-2 control-label">
                                                         <button type="submit" className="btn btn-default waves-effect waves-light btn-lg" data-style="contract" id="sa-warning" disabled={isLoading}>
-                                                        { isLoading &&  <i className="fa fa-refresh fa-spin"> </i> }
+                                                        { isLoading &&  <i className="spinner-border">  </i> }
                                                         { isLoading &&  <span> Loading </span> }
                                                         { !isLoading &&  <span> Submit </span> }
                                                         </button>
@@ -262,4 +256,4 @@ class FormPengajuan extends Component {
     }
 }
 
-export default FormPengajuan;
+export default FormAnnual;

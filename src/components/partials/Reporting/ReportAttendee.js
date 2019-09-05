@@ -41,7 +41,7 @@ class ReportAttendee extends Component {
     }
 
     requestAttendee = async() => {
-        await axios.request(Constant.API_LIVE + '/api/attendee-recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD'), {
+        await axios.request(Constant.API_LIVE + '/attendee/recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD'), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -75,21 +75,26 @@ class ReportAttendee extends Component {
     }
 
     downloadReportData = () => {
-        fetch(Constant.API_LIVE + '/api/attendee-recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD') + '/report', {
+        fetch(Constant.API_LIVE + '/attendee/recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD') + '/report', {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
         .then(response => {
-            response.blob().then(blob => {
-                let url = window.URL.createObjectURL(blob);
-                let a = document.createElement('a');
-                a.href = url;
-                a.download = 'AttendeeReport.pdf';
-                a.click();
-            })
-        })
+            if (response.ok){
+                response.blob([response.data], 
+                    {type: 'application/pdf'}).then(blob => {
+                    var fileDownload = require('js-file-download');
+                    fileDownload(blob, 'report-attendee.pdf');
+                })
+                }else{
+                    console.log(response.status)
+                };
+				// window.location.href = response.url;
+		}).catch(error=>
+            console.log(error)
+        );
     }
 
     render(){

@@ -1,5 +1,6 @@
 import React from 'react';
 import Moment from 'moment';
+import swal from 'sweetalert';
 import * as Constant from '../_helpers/constant';
 
 export default class Registrasi extends React.Component{
@@ -47,9 +48,14 @@ export default class Registrasi extends React.Component{
                     'Content-Type': 'application/json' 
                 }
             })
-            .then(res => res.json())
-            .catch(error => console.error('Error:', error))
-            .then(response => console.log('Success:', response)); 
+            .then(res => {res.json()
+                if(res.ok){
+                    swal("Success!", "Registrasi Berhasil!", "success")
+                    .then(function() {
+                        window.location.href = "/";
+                    });
+                }
+            }); 
     }
 
     render(){

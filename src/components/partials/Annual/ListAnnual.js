@@ -16,7 +16,7 @@ class ListAnnual extends Component {
 
 
     componentWillMount=async() => {
-        await axios.request(Constant.API_LIVE + '/request/Approved', {
+        await axios.request(Constant.API_LIVE +'/request/Approved', {
             method: 'GET',
 
             headers:{
@@ -33,16 +33,6 @@ class ListAnnual extends Component {
             })
 
     }
-    // componentWillMount=async() => {
-    //     await axios.get(url)
-    //     .then(response => response.data)
-    //     .then(data => {
-    //         this.setState({ items: data })
-    //     })
-    //     .then(async() => {
-    //         this.setState({ tableRows:this.assemblePosts(), isLoading:false });
-    //     })
-    // }
 
     assemblePosts= () => {
         let items = this.state.items.map((annual) => {
@@ -66,7 +56,7 @@ class ListAnnual extends Component {
         const data = {
             columns: [
                 {
-                    label: 'Nik',
+                    label: 'Kode',
                     field: 'nik'
                 },
                 {
@@ -95,7 +85,6 @@ class ListAnnual extends Component {
         }
         return (
             <div>
-                <Layout />
                 <div className="content-page">
                     <div className="content">
                         <div className="container">

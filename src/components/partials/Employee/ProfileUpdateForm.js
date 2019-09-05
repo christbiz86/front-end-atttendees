@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import * as Constant from '../../_helpers/constant';
+import swal from 'sweetalert';
 
 let token = localStorage.getItem('token');
 let user = JSON.parse(localStorage.getItem('user'));
@@ -15,7 +16,7 @@ class ProfileUpdateForm extends React.Component{
             kode: user.idUser.kode,
             nama: user.idUser.nama,
             alamat: user.idUser.alamat,
-            tglLahir: moment(user.idUser.tglLahir, moment.ISO_8601), 
+            tglLahir: moment(user.idUser.tglLahir, 'LLL').format('YYYY-MM-DD'), 
             telp: user.idUser.telp,
             email: user.idUser.email,
             password: user.idUser.password,
@@ -25,32 +26,8 @@ class ProfileUpdateForm extends React.Component{
             createdAt: user.idUser.createdAt,
             updatedBy: user.idUser.updatedBy,
             updatedAt: user.idUser.updatedAt,
-            users: {
-                email: user.idUser.email
-            },
-            getUser:[],
             error: null
         }
-    }
-
-    fetchUserById() {
-        const users = this.state.users;
-        fetch(Constant.API_LIVE + '/user/filter', {
-            method: 'POST',
-            body: JSON.stringify(users),
-            headers:{
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            }
-        })
-        .then(response => response.json())
-        .then(data =>
-            this.setState({
-                getUser: data,
-                isLoading: false,
-            })
-        )
-        .catch(error => this.setState({ error, isLoading: false }));
     }
     
     handleChange = event =>{
@@ -89,14 +66,20 @@ class ProfileUpdateForm extends React.Component{
                 'Authorization': 'Bearer ' + token
             }
         })
-        .then(res => res.json())
+        .then(res => {res.json()
+            if(res.ok){
+                swal("Success!", "Data Successfully updated!", "success")
+                .then()
+                .then(function() {
+                    window.location.href = "/profile";
+                });
+            }
+            else {
+                swal("Failed", "Update Failed!", "error")
+            }
+        })
         .catch(error => console.error('Error:', error))
         .then(response => console.log('Success:', response)); 
-    }
-
-    componentDidMount() {
-        this.fetchUserById();
-        console.log(this.state.getUser.nama);
     }
     
     render() {
@@ -109,7 +92,7 @@ class ProfileUpdateForm extends React.Component{
                                 <h4 className="page-title">Edit Profile</h4>
                                 <ol className="breadcrumb">
                                     <li>
-                                        <a href="#">Profile</a>
+                                        <a href="/profile">Profile</a>
                                     </li>
                                     <li className="active">
                                         Edit
@@ -126,40 +109,39 @@ class ProfileUpdateForm extends React.Component{
                                     
                                     <form id="wizard-validation-form" onSubmit={this.handleSubmit}>
                                         <div>
-                                            <h3>Step 1</h3>
                                             <section>
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label" htmlFor="name2">Nama *</label>
-                                                    <div className="col-lg-10">
-                                                        <input id="name2" name="nama" type="text" defaultValue={user.idUser.nama} className="required form-control" onChange={this.handleChange}/>
+                                                    <div className="col-lg-8">
+                                                        <input id="name2" name="nama" type="text" defaultValue={this.state.nama} className="required form-control" onChange={this.handleChange}/>
                                                     </div>
                                                 </div>
 
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label " htmlFor="surname2">Alamat *</label>
-                                                    <div className="col-lg-10">
-                                                        <input id="surname2" name="alamat" type="text" defaultValue={user.idUser.alamat} className="required form-control" onChange={this.handleChange}/>
+                                                    <div className="col-lg-8">
+                                                        <input id="surname2" name="alamat" type="text" defaultValue={this.state.alamat} className="required form-control" onChange={this.handleChange}/>
                                                     </div>
                                                 </div>
 
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label " htmlFor="email2">Tanggal Lahir *</label>
-                                                    <div className="col-lg-10">
-                                                        <input id="email2" name="tglLahir" type="date" defaultValue={user.idUser.tglLahir} className="required form-control" onChange={this.handleChange}/>
+                                                    <div className="col-lg-8">
+                                                        <input id="email2" name="tglLahir" type="date" defaultValue={this.state.tglLahir} className="required form-control" onChange={this.handleChange}/>
                                                     </div>
                                                 </div>
 
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label " htmlFor="userName2">Email *</label>
-                                                    <div className="col-lg-10">
-                                                        <input className="required email form-control" id="userName2" name="email" type="email" defaultValue={user.idUser.email} onChange={this.handleChange}/>
+                                                    <div className="col-lg-8">
+                                                        <input className="required email form-control" id="userName2" name="email" type="email" defaultValue={this.state.email} onChange={this.handleChange}/>
                                                     </div>
                                                 </div>
 
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label " htmlFor="address2">Telepon *</label>
-                                                    <div className="col-lg-10">
-                                                        <input id="address2" name="telp" type="text" className="required form-control" defaultValue={user.idUser.telp} onChange={this.handleChange}/>
+                                                    <div className="col-lg-8">
+                                                        <input id="address2" name="telp" type="text" className="required form-control" defaultValue={this.state.telp} onChange={this.handleChange}/>
                                                     </div>
                                                 </div>
 
@@ -167,7 +149,6 @@ class ProfileUpdateForm extends React.Component{
                                                     <label className="col-lg-12 control-label ">(*) Mandatory</label>
                                                 </div>
                                             </section>
-                                            <h3>Step Final</h3>
                                             <section>
                                                 <button type="submit" class="btn btn-success btn-rounded waves-effect waves-light">
                                                     <span class="btn-label"><i class="fa fa-check"></i></span>

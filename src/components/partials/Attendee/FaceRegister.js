@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import swal from 'sweetalert';
 import {
   loadModels,
   getFullFaceDescription,
@@ -76,29 +77,37 @@ class FaceRegister extends Component {
         name: this.props.location.data.idUser.id,
         descriptors: temp
     }
-    console.log(data);
+    
     const formData = new FormData();
     formData.append('file',this.state.image);
-    formData.append('id',JSON.parse(localStorage.getItem('user')).idUser.email);
+    formData.append('id',this.props.location.data.idUser.kode+this.props.location.data.idUser.nama+"FACE");
 
-    fetch(Constant.API_LIVE + '/user/descriptor/register/json', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers:{
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
+    fetch(Constant.API_LIVE + '/user/descriptor/register/json', { 
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers:{
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+    })
+    .then(res => {res.json()
+        if(res.ok){
+          fetch(Constant.API_LIVE + '/user/descriptor/register/image', { 
+              method: 'POST',
+              body: formData,
+              headers:{
+                  'Authorization': 'Bearer ' + localStorage.getItem('token')
+              }
+          }).then(res => {res.json()
+            if(res.ok){
+              swal("Success!", "Absen Berhasil!", "success")
+              .then(function() {
+                window.location.href = "/employee";
+              });
             }
-        })
-        .then(res => res.json()) 
-
-        fetch(Constant.API_LIVE + '/user/descriptor/register/image', {
-          method: 'POST',
-          body: formData,
-          headers:{
-              'Authorization': 'Bearer ' + localStorage.getItem('token')
-          }
-      })
-      .then(res => res.json()) 
+          });
+        }
+    });
   };
 
   handleImageChange = async (images = this.state.imageURL) => {
@@ -106,7 +115,9 @@ class FaceRegister extends Component {
     await Promise.all(Array.from(images).map(async image =>(
       await this.getImageDimension(image),
       await getFullFaceDescription(image).then(fullDesc => {
-        this.setState(prevState =>({fullDesc:[...prevState.fullDesc, fullDesc]}));
+        if(fullDesc.length > 0){
+          this.setState(prevState =>({fullDesc:[...prevState.fullDesc, fullDesc]}));
+        }
       })
     )));
     console.log(this.state.fullDesc);
@@ -156,9 +167,9 @@ class FaceRegister extends Component {
       status = <p style={{ color: 'blue' }}>Status: LOADING...</p>;
     } else if (!!fullDesc && !!imageURL && !loading) {
       if (fullDesc.length < 2)
-        status = <p>Status: {fullDesc.length} Face Detect</p>;
+        status = <p>Status: {fullDesc.length} Descriptor Detected</p>;
       if (fullDesc.length > 1)
-        status = <p>Status: {fullDesc.length} Faces Detect</p>;
+        status = <p>Status: {fullDesc.length} Descriptors Detected</p>;
     }
 
     return (
