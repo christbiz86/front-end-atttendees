@@ -56,7 +56,7 @@ class Notifications extends Component {
             }
         }
         
-        axios.post('http://localhost:8080/notification/request', filter, {
+        axios.post(Constant.API_LIVE + '/notification/request', filter, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -100,7 +100,7 @@ class Notifications extends Component {
                     status: 'Unread'
                 }
             }
-            axios.post('http://localhost:8080/notification/approval', filter, {
+            axios.post(Constant.API_LIVE + '/notification/approval', filter, {
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -115,7 +115,7 @@ class Notifications extends Component {
     }
 
     handleRead(notif) {
-        fetch('http://localhost:8080/notification', {
+        fetch(Constant.API_LIVE + '/notification', {
             method: 'PATCH',
             body: JSON.stringify(notif),
             headers:{

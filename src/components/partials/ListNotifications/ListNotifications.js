@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { MDBDataTable } from 'mdbreact';
+import * as Constant from '../../_helpers/constant';
 
 let user = JSON.parse(localStorage.getItem('user'));
 
@@ -17,7 +18,7 @@ class ListNotifications extends Component {
     componentDidMount = async() => {
 
         if(this.state.unit === 'HR'){
-            await axios.get('http://localhost:8080/notification/' , {
+            await axios.get(Constant.API_LIVE + '/notification/' , {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -67,7 +68,7 @@ class ListNotifications extends Component {
                     status: null
                 }
             }
-            await axios.post('http://localhost:8080/notification/approval', filter, {
+            await axios.post(Constant.API_LIVE + '/notification/approval', filter, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')

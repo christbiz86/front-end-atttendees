@@ -3,6 +3,7 @@ import axios from 'axios';
 import { MDBDataTable } from 'mdbreact';
 import { NavLink } from 'react-router-dom';
 import Modal from 'react-responsive-modal';
+import * as Constant from '../../_helpers/constant';
 
 class Position extends Component {
     constructor(props) {
@@ -90,7 +91,7 @@ class Position extends Component {
     }
 
     componentDidMount = async() => {
-        await axios.request('http://localhost:8080/posisi', {
+        await axios.request(Constant.API_LIVE + '/posisi', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

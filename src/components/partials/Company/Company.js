@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as Constant from '../../_helpers/constant';
 
 let token = localStorage.getItem('token');
 let user = JSON.parse(localStorage.getItem('user'));
@@ -49,7 +50,7 @@ export default class Company extends Component {
             }
         }
 
-        fetch(`http://localhost:8080//usercompany/filter`, {
+        fetch(Constant.API_LIVE + `/usercompany/filter`, {
             method: 'POST',
             body: JSON.stringify(userCom),
             headers:{

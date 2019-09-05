@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import swal from 'sweetalert';
 import "./../../auth/SpinnerLoader.css";
+import * as Constant from '../../_helpers/constant';
 
 class PositionForm extends Component {
     constructor(props) {
@@ -31,7 +32,7 @@ class PositionForm extends Component {
             posisi: this.state.posisi
         }
 
-        fetch('http://localhost:8080/posisi', {
+        fetch(Constant.API_LIVE + '/posisi', {
             method: 'POST',
             body: JSON.stringify(data),
             headers:{

@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import swal from 'sweetalert';
 import "./../../auth/SpinnerLoader.css";
 import { history } from '../../_helpers';
+import * as Constant from '../../_helpers/constant';
 
 let user = JSON.parse(localStorage.getItem('user'));
 
@@ -40,7 +41,7 @@ class EditUnit extends Component {
             createdBy: this.state.createdBy
         }
 
-        fetch('http://localhost:8080/unit', {
+        fetch(Constant.API_LIVE + '/unit', {
             method: 'PUT',
             body: JSON.stringify(data),
             headers:{

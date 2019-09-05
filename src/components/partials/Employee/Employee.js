@@ -155,7 +155,7 @@ export default class Employee extends Component {
             updatedAt: this.state.updatedAt
         }
 
-        fetch('http://localhost:8080/user', { 
+        fetch(Constant.API_LIVE + '/user', { 
             method: 'PATCH',
             body: JSON.stringify(data),
             headers:{

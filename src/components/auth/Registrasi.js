@@ -41,7 +41,7 @@ export default class Registrasi extends React.Component{
             }
         }
 
-        fetch('http://localhost:8080/company', {
+        fetch(Constant.API_LIVE + '/company', {
                 method: 'POST',
                 body: (JSON.stringify(data)),
                 headers:{

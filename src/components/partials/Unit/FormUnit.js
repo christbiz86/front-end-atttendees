@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import swal from 'sweetalert';
 import "./../../auth/SpinnerLoader.css";
 import { history } from '../../_helpers';
+import * as Constant from '../../_helpers/constant';
 
 class FormUnit extends Component {
     constructor(props) {
@@ -32,7 +33,7 @@ class FormUnit extends Component {
             unit: this.state.unit
         }
 
-        fetch('http://localhost:8080/unit', {
+        fetch(Constant.API_LIVE + '/unit', {
             method: 'POST',
             body: JSON.stringify(data),
             headers:{

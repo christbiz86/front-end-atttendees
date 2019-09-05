@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
+import * as Constant from '../../_helpers/constant';
 
 let token = localStorage.getItem('token');
 let user = JSON.parse(localStorage.getItem('user'));
@@ -51,7 +52,7 @@ class EmployeeView extends Component {
             updatedAt: this.state.updatedAt
         }
 
-        fetch('http://localhost:8080/user', { 
+        fetch(Constant.API_LIVE + '/user', { 
             method: 'PATCH',
             body: JSON.stringify(data),
             headers:{
