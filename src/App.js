@@ -16,9 +16,6 @@ import ProfileView from './components/partials/Employee/ProfileView';
 import ProfileUpdateForm from './components/partials/Employee/ProfileUpdateForm';
 import ReportAnnual from './components/partials/Reporting/ReportAnnual';
 import ReportAttendee from './components/partials/Reporting/ReportAttendee';
-import Libur from './components/partials/TimeSheet/Libur';
-import Project from './components/partials/TimeSheet/Project';
-import Shift from './components/partials/TimeSheet/Shift';
 import Attendee from './components/partials/Attendee/Attendee';
 import FaceRegister from './components/partials/Attendee/FaceRegister';
 import Forbidden from './components/auth/Forbidden';
@@ -27,6 +24,12 @@ import Position from './components/partials/Position/Position';
 import PositionForm from './components/partials/Position/PositionForm';
 import EditPosition from './components/partials/Position/EditPosition';
 import ListNotifications from './components/partials/ListNotifications/ListNotifications';
+import Libur from './components/partials/TimeSheet/Libur';
+import Project from './components/partials/TimeSheet/Project';
+import Shift from './components/partials/TimeSheet/Shift';
+import EditShift from './components/partials/TimeSheet/EditShift';
+import EditProject from './components/partials/TimeSheet/EditProject';
+import EditLibur from './components/partials/TimeSheet/EditLibur';
 
 import { PrivateRoute, AdminRoute, SuperAdminRoute } from './components/_security/PrivateRoute';
 import AnnualLeave from './components/partials/Annual/AnnualLeave';
@@ -88,6 +91,12 @@ class App extends React.Component {
                     <AdminRoute exact path="/unit/edit" component={EditUnit} />
                     <PrivateRoute exact path="/attendee/absen" component={Attendee} />
                     <AdminRoute exact path="/attendee/register" component={FaceRegister} />
+                    <PrivateRoute exact path="/timesheet/libur" component={Libur} />
+                    <PrivateRoute exact path="/timesheet/project" component={Project} />
+                    <PrivateRoute exact path="/timesheet/shift" component={Shift} />
+                    <PrivateRoute exact path="/timesheet/edit-shift" component={EditShift} />
+                    <PrivateRoute exact path="/timesheet/edit-project" component={EditProject} />
+                    <PrivateRoute exact path="/timesheet/edit-libur" component={EditLibur} />
                   </Switch>
                 </div>
               </Router>

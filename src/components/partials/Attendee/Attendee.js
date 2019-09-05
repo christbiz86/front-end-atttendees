@@ -68,7 +68,7 @@ class Attendee extends Component {
     };
 
     matcher = async () => {
-        await fetch(Constant.API_LIVE + '/user/descriptor'+JSON.parse(localStorage.getItem('user')).idUser.id, { 
+        await fetch(Constant.API_LIVE + '/user/descriptor/'+JSON.parse(localStorage.getItem('user')).idUser.id, { 
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')

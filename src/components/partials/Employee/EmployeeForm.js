@@ -24,7 +24,6 @@ class EmployeeForm extends React.Component{
             unit: '',
             posisi: '',
             tipeUser: '',
-            getCompany:[],
             getUnit:[],
             getPosisi:[],
             getTipeUser:[],

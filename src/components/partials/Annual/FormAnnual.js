@@ -106,7 +106,7 @@ class FormAnnual extends Component {
                     console.log(res.ok) 
                     swal("Success!", "Request Successfully!", "success")
 
-                    history.push("/")
+                    history.push("/dashboard")
                     this.setState({isLoading:false})
                 }else{
                     console.log(res.status)
