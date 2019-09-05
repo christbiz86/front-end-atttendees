@@ -1,14 +1,16 @@
 import React from 'react';
 import moment from 'moment';
+import swal from 'sweetalert';
+import * as Constant from '../../_helpers/constant';
 
 let token = localStorage.getItem('token');
 let user = JSON.parse(localStorage.getItem('user'));
+
 class EmployeeUpdateForm extends React.Component{
     constructor(props){
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit=this.handleSubmit.bind(this);
-        this.handleImage=this.handleImage.bind(this);
         this.state = {
             isLoading: true,
             idUserCompany: this.props.location.data.id,
@@ -39,7 +41,7 @@ class EmployeeUpdateForm extends React.Component{
     }
 
     fetchUnit() {
-        fetch(`http://localhost:8080/unit`, {
+        fetch(Constant.API_LIVE + `/unit`, {
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
@@ -57,7 +59,7 @@ class EmployeeUpdateForm extends React.Component{
     }
 
     fetchPosisi() {
-        fetch(`http://localhost:8080/posisi`, {
+        fetch(Constant.API_LIVE + `/posisi`, {
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
@@ -75,7 +77,12 @@ class EmployeeUpdateForm extends React.Component{
     }
 
     fetchTipeUser() {
-        fetch(`http://localhost:8080/tipeuser`, {
+        const tipe = {
+            tipe: 'Super Admin'
+        }
+        fetch(Constant.API_LIVE + `/tipeuser/filter`,{
+            method: 'POST',
+            body: JSON.stringify(tipe),
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
@@ -98,15 +105,8 @@ class EmployeeUpdateForm extends React.Component{
          })
     }
 
-    handleImage=event=>{
-        this.setState({file:event.target.files==null ?"null" :event.target.files[0]});
-    }
-
     handleSubmit = event =>{
     event.preventDefault();
-
-    const formData = new FormData();
-    // formData.append('file',"");
 
         const data = {
             id: this.state.idUserCompany,
@@ -145,9 +145,7 @@ class EmployeeUpdateForm extends React.Component{
             }
         }
 
-        formData.append('user',JSON.stringify(data));
-
-        fetch('http://localhost:8080/usercompany', { 
+        fetch(Constant.API_LIVE + '/usercompany', { 
             method: 'PUT',
             body: JSON.stringify(data),
             headers:{
@@ -155,7 +153,17 @@ class EmployeeUpdateForm extends React.Component{
                 'Authorization': 'Bearer ' + token
             }
         })
-        .then(res => res.json())
+        .then(res => { res.json()
+            if(res.ok){
+                swal("Success!", "Data Successfully updated!", "success")
+                .then(function() {
+                    window.location.href = "/employee";
+                });
+            }
+            else {
+                swal("Failed", "Update Failed!", "error")
+            }
+        })
         .catch(error => console.error('Error:', error))
         .then(response => console.log('Success:', response)); 
     }
@@ -177,6 +185,9 @@ class EmployeeUpdateForm extends React.Component{
 
                                 <h4 class="page-title">Edit Employee</h4>
                                 <ol class="breadcrumb">
+                                    <li>
+                                        <a href="/dashboard">Dashboard</a>
+                                    </li>
                                     <li>
                                         <a href="/employee">Employee</a>
                                     </li>
@@ -230,13 +241,6 @@ class EmployeeUpdateForm extends React.Component{
                                                         <input id="address2" name="telp" type="text" defaultValue={this.state.telp} className="required form-control" onChange={this.handleChange} required/>
                                                     </div>
                                                 </div>
-                                                
-                                                {/* <div className="form-group clearfix">
-                                                    <label className="col-sm-2 control-label" >Foto</label>
-                                                    <div className="col-lg-6">
-                                                        <input type="file" data-buttonname="btn-primary" name="foto" onChange= {this.handleImage} placeholder="foto"/>
-                                                    </div>
-                                                </div> */}
 
                                             </section>
                                             {data.idTipeUser.tipe === "Super Admin" ? null :
@@ -283,7 +287,7 @@ class EmployeeUpdateForm extends React.Component{
                                                         {!this.state.isLoading ? (
                                                             this.state.getTipeUser.map(t => {
                                                                 return (
-                                                                    <option key={t.id} value={t.id}>{t.tipe}</option>
+                                                                    <option key={t.id} value={t.id} >{t.tipe}</option>
                                                                 );
                                                             
                                                             })

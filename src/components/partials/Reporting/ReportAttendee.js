@@ -41,7 +41,7 @@ class ReportAttendee extends Component {
     }
 
     requestAttendee = async() => {
-        await axios.request('http://localhost:8080/attendee/recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD'), {
+        await axios.request(Constant.API_LIVE + '/attendee/recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD'), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ class ReportAttendee extends Component {
     }
 
     downloadReportData = () => {
-        fetch('http://localhost:8080/attendee/recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD') + '/report', {
+        fetch(Constant.API_LIVE + '/attendee/recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD') + '/report', {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')

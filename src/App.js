@@ -7,9 +7,12 @@ import ListAnnual from './components/partials/Annual/ListAnnual';
 import FormAnnual from './components/partials/Annual/FormAnnual';
 import AnnualRequest from './components/partials/Annual/AnnualRequest';
 import Dashboard from './components/partials/Dashboard/Dashboard';
+import Company from './components/partials/Company/Company';
 import Employee from './components/partials/Employee/Employee';
 import EmployeeForm from './components/partials/Employee/EmployeeForm';
 import EmployeeUpdateForm from './components/partials/Employee/EmployeeUpdateForm';
+import EmployeeView from './components/partials/Employee/EmployeeView';
+import ProfileView from './components/partials/Employee/ProfileView';
 import ProfileUpdateForm from './components/partials/Employee/ProfileUpdateForm';
 import ReportAnnual from './components/partials/Reporting/ReportAnnual';
 import ReportAttendee from './components/partials/Reporting/ReportAttendee';
@@ -57,31 +60,34 @@ class App extends React.Component {
                     <Route exact path="/registrasi" component={Registrasi} />
                     <Route exact path="/logout" component={LoginPage} />
                     <Route exact path="/" component={LoginPage} />
+                    <Route exact path="/forbidden" component={Forbidden} />
                     <PrivateRoute exact path="/dashboard" component={Dashboard} />
-                    <PrivateRoute exact path="/annual/list" component={ListAnnual} />
+                    <AdminRoute exact path="/annual/list" component={ListAnnual} />
                     <PrivateRoute exact path="/annual/form" component={FormAnnual} />
-                    <PrivateRoute exact path="/annual/request" component={AnnualRequest} />
+                    <AdminRoute exact path="/annual/request" component={AnnualRequest} />
                     <PrivateRoute exact path="/annual/detail" component={DetailAnnual} />
-                    <PrivateRoute exact path="/annual/leave" component={AnnualLeave} />
-                    <PrivateRoute exact path="/employee" component={Employee} />
-                    <PrivateRoute exact path="/employee/form" component={EmployeeForm} />
-                    <PrivateRoute exact path="/employee/update" component={EmployeeUpdateForm} />
+                    <AdminRoute exact path="/annual/leave" component={AnnualLeave} />
+                    <PrivateRoute exact path="/company" component={Company} />
+                    <AdminRoute exact path="/employee" component={Employee} />
+                    <AdminRoute exact path="/employee/form" component={EmployeeForm} />
+                    <AdminRoute exact path="/employee/update" component={EmployeeUpdateForm} />
+                    <AdminRoute exact path="/employee/view" component={EmployeeView} />
+                    <PrivateRoute exact path="/profile" component={ProfileView} />
                     <PrivateRoute exact path="/profile/edit" component={ProfileUpdateForm} />
-                    <PrivateRoute exact path="/report/annual" component={ReportAnnual} />
-                    <PrivateRoute exact path="/report/attendee" component={ReportAttendee} />
+                    <AdminRoute exact path="/report/annual" component={ReportAnnual} />
+                    <AdminRoute exact path="/report/attendee" component={ReportAttendee} />
                     <PrivateRoute exact path="/timesheet/Libur" component={Libur} />
                     <PrivateRoute exact path="/timesheet/Project" component={Project} />
                     <PrivateRoute exact path="/timesheet/Shift" component={Shift} />
-                    <PrivateRoute exact path="/position" component={Position} />
-                    <PrivateRoute exact path="/position/form" component={PositionForm} />
-                    <PrivateRoute exact path="/position/form-edit" component={EditPosition} />
+                    <AdminRoute exact path="/position" component={Position} />
+                    <AdminRoute exact path="/position/form" component={PositionForm} />
+                    <AdminRoute exact path="/position/form-edit" component={EditPosition} />
                     <PrivateRoute exact path="/notifications" component={ListNotifications} />
+                    <AdminRoute exact path="/unit/form" component={FomUnit} />
+                    <AdminRoute exact path="/unit" component={Unit} />
+                    <AdminRoute exact path="/unit/edit" component={EditUnit} />
                     <PrivateRoute exact path="/attendee/absen" component={Attendee} />
-                    <PrivateRoute exact path="/unit/form" component={FomUnit} />
-                    <PrivateRoute exact path="/unit" component={Unit} />
-                    <PrivateRoute exact path="/unit/edit" component={EditUnit} />
                     <AdminRoute exact path="/attendee/register" component={FaceRegister} />
-                    <Route exact path="/forbidden" component={Forbidden} />
                   </Switch>
                 </div>
               </Router>

@@ -4,6 +4,7 @@ import Layout from '../../layout/Layout';
 import axios from 'axios';
 import moment from "moment";
 import * as Constant from '../../_helpers/constant';
+import constants from "jest-haste-map/build/constants";
 
 let user = JSON.parse(localStorage.getItem('user'));
 class AnnualLeave extends Component {
@@ -22,7 +23,7 @@ class AnnualLeave extends Component {
             id:{
                 kode:null
             } })
-        await axios.post('localhost:8080/annual/saldo',data,
+        await axios.post(Constant.API_LIVE + '/annual/saldo',data,
             {
             headers:{
                 'Content-Type': 'application/json',

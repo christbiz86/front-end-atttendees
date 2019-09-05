@@ -75,7 +75,7 @@ class ReportAnnual extends Component {
     }
 
     downloadReportData = () => {
-		fetch('http://localhost:8080/annual/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD')+'/report',{
+		fetch(Constant.API_LIVE + '/annual/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD')+'/report',{
             
                 headers:{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
