@@ -3,6 +3,7 @@ import Webcam from 'react-webcam';
 import { loadModels, getFullFaceDescription, createMatcher } from '../../../api/face';
 import swal from 'sweetalert';
 import moment from 'moment';
+import * as Constant from '../../_helpers/constant';
 
 const WIDTH = 420;
 const HEIGHT = 420;
@@ -67,7 +68,7 @@ class Attendee extends Component {
     };
 
     matcher = async () => {
-        await fetch('http://localhost:8080/user/descriptor/'+JSON.parse(localStorage.getItem('user')).idUser.id, { 
+        await fetch(Constant.API_LIVE + '/user/descriptor'+JSON.parse(localStorage.getItem('user')).idUser.id, { 
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -144,7 +145,7 @@ class Attendee extends Component {
     }
 
     absen = async () =>{
-        await fetch('http://localhost:8080/user/absen', { 
+        await fetch( Constant.API_LIVE + '/user/absen', {
             method: 'POST',
             body: JSON.stringify(this.state.absen),
             headers:{

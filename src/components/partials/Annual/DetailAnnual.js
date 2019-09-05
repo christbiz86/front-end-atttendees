@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import swal from 'sweetalert';
 import "./../../auth/SpinnerLoader.css";
+import * as Constant from '../../_helpers/constant';
 
 let user = JSON.parse(localStorage.getItem('user'));
 
@@ -38,7 +39,7 @@ class DetailAnnual extends Component {
     }
 
     approve(annual){
-        fetch('http://localhost:8080/request/Approved', {
+        fetch(Constant.API_LIVE + '/request/Approved', {
             method: 'PATCH',
             body: JSON.stringify(annual),
             headers:{
@@ -62,7 +63,7 @@ class DetailAnnual extends Component {
     }
 
     reject(annual) {
-        fetch('http://localhost:8080/request/Rejected', {
+        fetch(Constant.API_LIVE + '/request/Rejected', {
             method: 'PATCH',
             body: 
             JSON.stringify(annual),

@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import * as Constant from '../../_helpers/constant';
 
 let token = localStorage.getItem('token');
 let user = JSON.parse(localStorage.getItem('user'));
@@ -34,7 +35,7 @@ class ProfileUpdateForm extends React.Component{
 
     fetchUserById() {
         const users = this.state.users;
-        fetch(`http://localhost:8080/user/filter`, {
+        fetch(Constant.API_LIVE + '/user/filter', {
             method: 'POST',
             body: JSON.stringify(users),
             headers:{
@@ -80,7 +81,7 @@ class ProfileUpdateForm extends React.Component{
             updatedAt: this.state.updatedAt
         }
 
-        fetch('http://localhost:8080/user', { 
+        fetch(Constant.API_LIVE + '/user', {
             method: 'PUT',
             body: JSON.stringify(data),
             headers:{

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 // import Profile from './Profile';
 import axios from 'axios';
 import "./ScrollbarPage.css";
+import * as Constant from '../../_helpers/constant';
 
 let user = JSON.parse(localStorage.getItem('user'));
 
@@ -145,7 +146,6 @@ class Notifications extends Component {
                         <div className="scrollbar mx-auto" style={scrolleContainerStyle}>
                             {
                                 items.length > 0 ? items.map((notif, index) => {
-                                    // console.log(notif);
                                     return(
                                         <Link to={{
                                             pathname: "/annual/detail",

@@ -8,31 +8,28 @@ class EmployeeUpdateForm extends React.Component{
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit=this.handleSubmit.bind(this);
+        this.handleImage=this.handleImage.bind(this);
         this.state = {
             isLoading: true,
-            idUserCompany: user.id,
+            idUserCompany: this.props.location.data.id,
             id: this.props.location.data.idUser.id,
             kode: this.props.location.data.idUser.kode,
             nama: this.props.location.data.idUser.nama,
             alamat: this.props.location.data.idUser.alamat,
-            tglLahir: moment(this.props.location.data.idUser.tglLahir, moment.ISO_8601), 
+            tglLahir: moment(this.props.location.data.idUser.tglLahir, 'LLL').format('YYYY-MM-DD'), 
             telp: this.props.location.data.idUser.telp,
             email: this.props.location.data.idUser.email,
             password: this.props.location.data.idUser.password,
             foto: this.props.location.data.idUser.foto,
             idStatus: this.props.location.data.idUser.idStatus.id,
-            createdBy: this.props.location.data.idUser.createdBy.id,
+            createdBy: this.props.location.data.idUser.createdBy,
             createdAt: this.props.location.data.idUser.createdAt,
             updatedBy: this.props.location.data.idUser.updatedBy,
             updatedAt: this.props.location.data.idUser.updatedAt,
             companyUnitPosisi: this.props.location.data.idCompanyUnitPosisi.id,
             company: this.props.location.data.idCompanyUnitPosisi.idCompany.id,
-            unit: 
-            // this.props.location.data.idCompanyUnitPosisi.idUnit == null ? "-" : 
-            this.props.location.data.idCompanyUnitPosisi.idUnit.id,
-            posisi: 
-            // this.props.location.data.idCompanyUnitPosisi.idPosisi == null ? "-" : 
-            this.props.location.data.idCompanyUnitPosisi.idPosisi.id,
+            unit: this.props.location.data.idCompanyUnitPosisi.idUnit == null ? null : this.props.location.data.idCompanyUnitPosisi.idUnit.id,
+            posisi: this.props.location.data.idCompanyUnitPosisi.idPosisi == null ? null : this.props.location.data.idCompanyUnitPosisi.idPosisi.id,
             tipeUser: this.props.location.data.idTipeUser.id,
             getUnit:[],
             getPosisi:[],
@@ -109,7 +106,7 @@ class EmployeeUpdateForm extends React.Component{
     event.preventDefault();
 
     const formData = new FormData();
-    formData.append('file',this.state.file);
+    // formData.append('file',"");
 
         const data = {
             id: this.state.idUserCompany,
@@ -152,7 +149,7 @@ class EmployeeUpdateForm extends React.Component{
 
         fetch('http://localhost:8080/usercompany', { 
             method: 'PUT',
-            body: formData,
+            body: JSON.stringify(data),
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
@@ -202,52 +199,53 @@ class EmployeeUpdateForm extends React.Component{
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label" htmlFor="name2">Nama Employee *</label>
                                                     <div className="col-lg-4">
-                                                        <input id="name2" name="nama" type="text" defaultValue={data.idUser.nama} className="required form-control" onChange={this.handleChange} required/>
+                                                        <input id="name2" name="nama" type="text" defaultValue={this.state.nama} className="required form-control" onChange={this.handleChange} required/>
                                                     </div>
                                                 </div>
 
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label " htmlFor="surname2">Alamat *</label>
                                                     <div className="col-lg-4">
-                                                        <input id="surname2" name="alamat" type="text" defaultValue={data.idUser.alamat} className="required form-control" onChange={this.handleChange} required/>
+                                                        <input id="surname2" name="alamat" type="text" defaultValue={this.state.alamat} className="required form-control" onChange={this.handleChange} required/>
                                                     </div>
                                                 </div>
 
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label " htmlFor="email2">Tanggal Lahir *</label>
                                                     <div className="col-lg-4">
-                                                        <input id="email2" name="tglLahir" type="date" defaultValue={data.idUser.tglLahir} className="required form-control" onChange={this.handleChange} required/>
+                                                        <input id="email2" name="tglLahir" type="date" defaultValue={this.state.tglLahir} className="required form-control" onChange={this.handleChange} required/>
                                                     </div>
                                                 </div>
 
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label " htmlFor="userName2">Email *</label>
                                                     <div className="col-lg-4">
-                                                        <input className="required email form-control" id="userName2" defaultValue={data.idUser.email} name="email" type="email" onChange={this.handleChange} required/>
+                                                        <input className="required email form-control" id="userName2" defaultValue={this.state.email} name="email" type="email" onChange={this.handleChange} required/>
                                                     </div>
                                                 </div>
 
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label " htmlFor="address2">Telepon *</label>
                                                     <div className="col-lg-4">
-                                                        <input id="address2" name="telp" type="text" defaultValue={data.idUser.telp} className="required form-control" onChange={this.handleChange} required/>
+                                                        <input id="address2" name="telp" type="text" defaultValue={this.state.telp} className="required form-control" onChange={this.handleChange} required/>
                                                     </div>
                                                 </div>
                                                 
-                                                <div className="form-group clearfix">
+                                                {/* <div className="form-group clearfix">
                                                     <label className="col-sm-2 control-label" >Foto</label>
                                                     <div className="col-lg-6">
-                                                        <input type="file" data-buttonname="btn-primary" name="myImage" onChange= {this.handleImage} placeholder="foto"/>
+                                                        <input type="file" data-buttonname="btn-primary" name="foto" onChange= {this.handleImage} placeholder="foto"/>
                                                     </div>
-                                                </div>
+                                                </div> */}
 
                                             </section>
+                                            {data.idTipeUser.tipe === "Super Admin" ? null :
                                             <section>
 
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label " htmlFor="email2">Unit *</label>
                                                     <div className="col-lg-4">
-                                                        <select className="selectpicker" data-style="btn-white" defaultValue={data.idCompanyUnitPosisi.idUnit.id} name="unit" onChange={this.handleChange} required>
+                                                        <select className="form-control" value={this.state.unit} name="unit" onChange={this.handleChange} required>
                                                         {this.state.error ? <p>{this.state.error.message}</p> : null}
                                                         {!this.state.isLoading ? (
                                                             this.state.getUnit.map(u => {
@@ -260,10 +258,11 @@ class EmployeeUpdateForm extends React.Component{
                                                     </div>
                                                 </div>
 
+                                                
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label " htmlFor="address2">Posisi *</label>
                                                     <div className="col-lg-4">
-                                                        <select className="selectpicker" data-style="btn-white" defaultValue={data.idCompanyUnitPosisi.idPosisi.id} name="posisi" onChange={this.handleChange} required>
+                                                        <select className="form-control" value={this.state.posisi} name="posisi" onChange={this.handleChange} required>
                                                         {this.state.error ? <p>{this.state.error.message}</p> : null}
                                                         {!this.state.isLoading ? (
                                                             this.state.getPosisi.map(p => {
@@ -279,7 +278,7 @@ class EmployeeUpdateForm extends React.Component{
                                                 <div className="form-group clearfix">
                                                     <label className="col-lg-2 control-label " htmlFor="address2">Tipe User *</label>
                                                     <div className="col-lg-4">
-                                                        <select className="selectpicker" data-style="btn-white" name="tipeUser" value={data.idTipeUser.id} defaultValue={data.idTipeUser.id} onChange={this.handleChange} required>
+                                                        <select className="form-control" name="tipeUser" value={this.state.tipeUser} onChange={this.handleChange} required>
                                                         {this.state.error ? <p>{this.state.error.message}</p> : null}
                                                         {!this.state.isLoading ? (
                                                             this.state.getTipeUser.map(t => {
@@ -298,6 +297,7 @@ class EmployeeUpdateForm extends React.Component{
                                                 </div>
 
                                             </section>
+                                            }
                                             <section>
                                                 <button type="submit" class="btn btn-success btn-rounded waves-effect waves-light">
                                                     <span class="btn-label"><i class="fa fa-check"></i></span>

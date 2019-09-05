@@ -6,6 +6,7 @@ import {
   getFullFaceDescription,
   isFaceDetectionModelLoaded
 } from '../../../api/face';
+import * as Constant from '../../_helpers/constant';
 
 const MaxWidth = 600;
 
@@ -81,7 +82,7 @@ class FaceRegister extends Component {
     formData.append('file',this.state.image);
     formData.append('id',this.props.location.data.idUser.kode+this.props.location.data.idUser.nama+"FACE");
 
-    fetch('http://localhost:8080/user/descriptor/register/json', { 
+    fetch(Constant.API_LIVE + '/user/descriptor/register/json', { 
         method: 'POST',
         body: JSON.stringify(data),
         headers:{
@@ -91,7 +92,7 @@ class FaceRegister extends Component {
     })
     .then(res => {res.json()
         if(res.ok){
-          fetch('http://localhost:8080/user/descriptor/register/image', { 
+          fetch(Constant.API_LIVE + '/user/descriptor/register/image', { 
               method: 'POST',
               body: formData,
               headers:{

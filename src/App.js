@@ -26,6 +26,10 @@ import EditPosition from './components/partials/Position/EditPosition';
 import ListNotifications from './components/partials/ListNotifications/ListNotifications';
 
 import { PrivateRoute, AdminRoute, SuperAdminRoute } from './components/_security/PrivateRoute';
+import AnnualLeave from './components/partials/Annual/AnnualLeave';
+import Unit from './components/partials/Unit/Unit';
+import FomUnit from './components/partials/Unit/FormUnit';
+import EditUnit from './components/partials/Unit/EditUnit';
 import { LoginPage } from './components/auth/LoginPage';
 import { history } from './components/_helpers';
 import { alertActions } from './components/_actions';
@@ -58,6 +62,7 @@ class App extends React.Component {
                     <PrivateRoute exact path="/annual/form" component={FormAnnual} />
                     <PrivateRoute exact path="/annual/request" component={AnnualRequest} />
                     <PrivateRoute exact path="/annual/detail" component={DetailAnnual} />
+                    <PrivateRoute exact path="/annual/leave" component={AnnualLeave} />
                     <PrivateRoute exact path="/employee" component={Employee} />
                     <PrivateRoute exact path="/employee/form" component={EmployeeForm} />
                     <PrivateRoute exact path="/employee/update" component={EmployeeUpdateForm} />
@@ -72,8 +77,11 @@ class App extends React.Component {
                     <PrivateRoute exact path="/position/form-edit" component={EditPosition} />
                     <PrivateRoute exact path="/notifications" component={ListNotifications} />
                     <PrivateRoute exact path="/attendee/absen" component={Attendee} />
+                    <PrivateRoute exact path="/unit/form" component={FomUnit} />
+                    <PrivateRoute exact path="/unit" component={Unit} />
+                    <PrivateRoute exact path="/unit/edit" component={EditUnit} />
                     <AdminRoute exact path="/attendee/register" component={FaceRegister} />
-                    <ErrorRoute exact path="/forbidden" component={Forbidden} />
+                    <Route exact path="/forbidden" component={Forbidden} />
                   </Switch>
                 </div>
               </Router>

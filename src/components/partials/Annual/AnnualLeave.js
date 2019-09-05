@@ -3,6 +3,7 @@ import { MDBDataTable } from 'mdbreact';
 import Layout from '../../layout/Layout';
 import axios from 'axios';
 import moment from "moment";
+import * as Constant from '../../_helpers/constant';
 
 let user = JSON.parse(localStorage.getItem('user'));
 class AnnualLeave extends Component {
@@ -17,14 +18,12 @@ class AnnualLeave extends Component {
 
     
     componentWillMount=async() => {
-        await axios.request('http://localhost:8080/annual/saldo', {
-            method: 'POST',
-            body:JSON.stringify({
-                id:{
-                    tahun:moment().format("YYYY")
-                },
-                idCompany:user.idCompanyUnitPosisi.idCompany.id
-            }),
+        let data =JSON.stringify({
+            id:{
+                kode:null
+            } })
+        await axios.post('localhost:8080/annual/saldo',data,
+            {
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -62,7 +61,7 @@ class AnnualLeave extends Component {
         const data = {
             columns: [
                 {
-                    label: 'Nik',
+                    label: 'Kode',
                     field: 'nik'
                 },
                 {
@@ -90,8 +89,6 @@ class AnnualLeave extends Component {
             rows:this.state.tableRows,
         }   
             return (
-                <div>
-                <Layout />
                 <div className="content-page">
                     <div className="content">
                         <div className="container">
@@ -120,8 +117,6 @@ class AnnualLeave extends Component {
                         </div>
                     </div>
                 </div>
-            </div>
-
             );
         }
 

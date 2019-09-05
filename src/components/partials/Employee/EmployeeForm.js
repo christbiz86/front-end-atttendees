@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import * as Constant from '../../_helpers/constant';
 
 let token = localStorage.getItem('token');
 class EmployeeForm extends React.Component{
@@ -31,7 +32,7 @@ class EmployeeForm extends React.Component{
     }
 
     fetchUnit() {
-        fetch(`http://localhost:8080/unit`, {
+        fetch(Constant.API_LIVE + '/unit',{
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
@@ -49,7 +50,7 @@ class EmployeeForm extends React.Component{
     }
 
     fetchPosisi() {
-        fetch(`http://localhost:8080/posisi`, {
+        fetch(Constant.API_LIVE + '/posisi',{
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
@@ -128,8 +129,8 @@ class EmployeeForm extends React.Component{
 
         formData.append('user',JSON.stringify(data));
 
-        fetch('http://localhost:8080/user/save', { 
-            method: 'POST',
+        fetch(Constant.API_LIVE + '/usercompany', {
+            method: 'POST', 
             body: formData,
             headers:{
                 'Authorization': 'Bearer ' + token

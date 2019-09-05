@@ -37,7 +37,6 @@ export default class Employee extends Component {
     componentWillMount(){
         this.fetchUserByFilter();
     }
-
     fetchUserByFilter = async() => {
         const userCom = {
             idUser:{

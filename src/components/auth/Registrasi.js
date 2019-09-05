@@ -1,6 +1,7 @@
 import React from 'react';
 import Moment from 'moment';
 import swal from 'sweetalert';
+import * as Constant from '../_helpers/constant';
 
 export default class Registrasi extends React.Component{
     constructor(props){

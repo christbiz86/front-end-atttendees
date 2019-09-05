@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import {Link} from 'react-router-dom';
 
 class Unit extends Component {
     render(){
         return(
             <li>
-                <a href="#" className="waves-effect"><i className="md-business"></i> <span> Unit </span></a>
+                <Link to={'/unit'} className="waves-effect"><i className="md-business"></i> <span> Unit </span></Link>
             </li>
         );
     }

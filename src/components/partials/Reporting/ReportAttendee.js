@@ -5,6 +5,8 @@ import originalMoment from "moment";
 import { extendMoment } from "moment-range";
 import { MDBDataTable } from 'mdbreact';
 import axios from 'axios';
+import * as Constant from '../../_helpers/constant';
+
 const moment = extendMoment(originalMoment);
 
 class ReportAttendee extends Component {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import * as Constant from '../../_helpers/constant';
 
 class Profile extends Component {
 

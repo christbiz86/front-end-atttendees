@@ -1,5 +1,9 @@
 import React, { Component } from "react";
-import Layout from '../../layout/Layout';
+import * as Constant from '../../_helpers/constant';
+import swal from 'sweetalert';
+import axios from 'axios';
+import { MDBDataTable } from 'mdbreact';
+
 
 let token = localStorage.getItem('token');
 class AnnualRequest extends Component {    
@@ -9,8 +13,7 @@ class AnnualRequest extends Component {
         this.handleApprove = this.handleApprove.bind(this);
         this.handleReject = this.handleReject.bind(this);
         this.state = {
-            listRequest: [],
-            isLoading:true
+            isLoading:false
         };
     }
 
@@ -20,12 +23,11 @@ class AnnualRequest extends Component {
     };
 
     handleReject(annual){
-        // event.preventDefault();   
         this.Reject(annual);
     };
 
     Approve(annual){
-        fetch('http://localhost:8080/request/Approved', {
+        fetch(Constant.API_LIVE +'/request/Approved', {
                 method: 'PATCH',
                 body: 
                     JSON.stringify(annual)
@@ -38,20 +40,24 @@ class AnnualRequest extends Component {
             .then(res => {res.json()
                 
                 if (res.ok){
-                    window.alert('Permintaan berhasil disetujui')
-                    window.location.reload();
+                    swal("Success!", "Berhasil Menyetujui !", "success")
+                    this.componentDidMount()
+                    
                 }else{
-                    window.alert('gagal')
+                    swal("Failed!", "Gagal Menyetujui!", "error")
+                    
                     console.log(res.status)
                 }})
             .catch(error => {console.error('Error:', error)
-                window.alert('gagal')})
+                swal("Failed!", "Gagal Menyetujui!", "error")
+               
+            })
             .then(response => console.log('Success:', response)
         ); 
     }
 
     Reject(annual){
-        fetch('http://api.attendees.today/request/Rejected', {
+        fetch(Constant.API_LIVE +'/request/Rejected', {
                 method: 'PATCH',
                 body: 
                     JSON.stringify(annual)
@@ -64,22 +70,24 @@ class AnnualRequest extends Component {
             .then(res => {res.json()
                 
                 if (res.ok){
-                    window.alert('Permintaan berhasil ditolak')
-                    window.location.reload();
+                    swal("Success!", "Berhasil Menolak !", "success")
+                    this.componentDidMount()
+                    
                 }else{
-                    window.alert('gagal')
+                    swal("failed!", "Gagal Menolak !", "error")
+                    
                     console.log(res.status)
                 }})
             .catch(error => {console.error('Error:', error)
-                window.alert('gagal')
+                
+                swal("failed!", "Gagal Menolak !", "error")
             })
             .then(response => console.log('Success:', response),
         ); 
     }
 
-    componentDidMount() {
-        fetch('http://localhost:8080/request/company/Request', {
-        // fetch('http://api.attendees.today/request/company/Request', {
+    componentDidMount= async() => {
+        await axios.request(Constant.API_LIVE +'/request/company/Request', {
             method: 'GET',
             
             headers:{
@@ -87,125 +95,137 @@ class AnnualRequest extends Component {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
-        .then(res => 
-            res.json()
-        )
-        .then(listRequest => this.setState({
-            listRequest ,isLoading:false
-        }))
-        .catch(error => {
-            console.log('parsing failed', error)
-            window.alert('Request gagal')
-        })       
+        .then(response => response.data)
+        .then(data => {
+            this.setState({ items: data })
+        })
+        .then(async() => {
+            this.setState({ tableRows:this.assemblePosts() })
+            console.log(this.state.tableRows);
+        })     
+    }
+
+    assemblePosts = () => {
+
+        let items = this.state.items.map((annual, index) => {
+            return(
+                {
+                    kode:annual.userCompany.idUser.kode,
+                    nama:annual.userCompany.idUser.nama,
+                    tglMulai:annual.tglMulai,
+                    tglAkhir:annual.tglAkhir,
+                    keterangan:annual.keterangan,
+                    status:annual.status.status,
+                    action: 
+                    <div>
+                    <button type="submit" name ="approve" className="btn btn-primary waves-effect waves-light m-l-10 btn-sm"
+                        value={annual} onClick={() => this.handleApprove(annual)}> 
+                        <b className="font-bold" >Setujui</b>
+                    </button>
+
+                    <button type="submit" name="reject" className="btn btn-danger waves-effect waves-light m-l-10 btn-sm" 
+                        value={index} onClick={() => this.handleReject(annual)}>
+                        <b className="font-bold" >Tolak</b>
+                    </button>
+                    </div>
+                }
+            );
+        });
+
+        return items;
     }
 
     render() {
-        const {listRequest,isLoading } = this.state;
 
+        const data = {
+            columns: [
+                {
+                    label: 'Kode',
+                    field: 'kode',
+                    width: 100
+                },
+                {
+                    label: 'Nama',
+                    field: 'nama',
+                    width: 150
+                },
+                {
+                    label: 'Tanggal Mulai',
+                    field: 'tglAwal',
+                    width: 150
+                },
+                {
+                    label: 'Tanggal Selesai',
+                    field: 'tglAkhir',
+                    width: 150
+                },
+                {
+                    label: 'Keterangan',
+                    field: 'keterangan',
+                    width: 150
+                },
+                {
+                    label: 'Status',
+                    field: 'status',
+                    width: 150
+                },
+                {
+                    label: 'Action',
+                    field: 'action',
+                    width: 100
+                }
+            ],
+
+            rows: this.state.tableRows,
+        }
         return (
-            <div>
-            <Layout />
-            <div className="content-page">
+        <div className="content-page">
 
-				<div className="content">
-                    <div className="container">
+            <div className="content">
+                <div className="container">
 
-						<div className="row">
-							<div className="col-sm-12">
+                    <div className="row">
+                        <div className="col-sm-12">
 
-								<h4 className="page-title">Request Annual</h4>
-								<ol className="breadcrumb">
-									<li>
-										<a href="#">Annual</a>
-									</li>
-									<li className="active">
-										request
-									</li>
-								</ol>
-							</div>
-						</div>
+                            <h4 className="page-title">Request Annual</h4>
+                            <ol className="breadcrumb">
+                                <li>
+                                    <a href="#">Annual</a>
+                                </li>
+                                <li className="active">
+                                    request
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
 
-                        
-                        <div className="row">
-                        	<div className="col-md-12">
-                        		<div className="card-box">
+                    
+                    <div className="row">
+                        <div className="col-md-12">
+                            <div className="card-box">
 
-                                    <div className="form-group clearfix">
-                                        <label className="col-sm-2 control-label" ></label>
-                                        <div className="col-lg-6">
-                                            <h4 className="m-t-0 header-title"><b>PERMINTAAN CUTI</b></h4>    
-                                        </div>
+                                <div className="form-group clearfix">
+                                    <label className="col-sm-2 control-label" ></label>
+                                    <div className="col-lg-6">
+                                        <h4 className="m-t-0 header-title"><b>PERMINTAAN CUTI</b></h4>    
                                     </div>
-                        			<p className="text-muted m-b-30 font-13">
-										{/* Most common form control, text-based input fields. Includes support for all HTML5 types: <code>text</code>, <code>password</code>, <code>datetime</code>, <code>datetime-local</code>, <code>date</code>, <code>month</code>, <code>time</code>, <code>week</code>, <code>number</code>, <code>email</code>, <code>url</code>, <code>search</code>, <code>tel</code>, and <code>color</code>. */}
-									</p>
+                                </div>
+                                <p className="text-muted m-b-30 font-13"></p>
 
-                                    <div className="table-rep-plugin">
+                                <div className="table-rep-plugin">
                                     <div className="table-responsive" data-pattern="priority-columns">
-                                        <table id="tech-companies-1" className="table  table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th data-priority="1">NIK</th>
-                                                    <th data-priority="2">Nama</th>
-                                                    <th data-priority="5">Tanggal Mulai</th>
-                                                    <th data-priority="6">Tanggal Selesai</th>
-                                                    <th data-priority="7">Keterangan</th>
-                                                    <th data-priority="8">Status</th>
-                                                    <th></th>
-                                                    
-                                                </tr>
-                                            </thead>
-                                            <tbody> 
-                                            { isLoading &&  
-                                            <tr>
-                                            <td ></td>
-                                            <td ></td>
-                                            <td ></td>
-                                            <td ><i className="fa fa-refresh fa-spin"> </i></td>
-                                            <td ></td>
-                                            <td ></td>
-                                            <td></td>
-                                            </tr>
-                                             }
-                                            { listRequest.length >0 ? listRequest.map((annual,index)=> {
-                                                return (
-                                                    <tr>
-                                                        <th data-priority="1">{annual.userCompany.idUser.kode}</th>
-                                                        <th data-priority="2">{annual.userCompany.idUser.nama}</th>
-                                                        <th data-priority="5">{annual.tglMulai}</th>
-                                                        <th data-priority="6">{annual.tglAkhir}</th>
-                                                        <th data-priority="7">{annual.keterangan}</th>
-                                                        <th data-priority="8">{annual.status.status}</th>
-                                                        <th>
-                                                            <button type="submit" name ="approve" className="btn btn-primary waves-effect waves-light m-l-10 btn-sm"
-                                                                value={annual} onClick={() => this.handleApprove(annual)}>
-                                                                <b className="font-bold">Setujui</b> 
-                                                            </button>                                                            
-                                                            <button type="submit" name="reject" className="btn btn-danger waves-effect waves-light m-l-10 btn-sm" 
-                                                                value={index} onClick={() => this.handleReject(annual)}>
-                                                                <b className="font-bold" >Tolak</b>
-                                                            </button>
-                                                        </th>
-                                                    </tr> 
-                                                )
-                                                }):null
-                                            }
-                                        </tbody>
-                                    </table>
+                                    <div>
+                                        <MDBDataTable striped bordered data={data} />
                                     </div>
-
-                                </div>
-	                                        
-                                    </div>                        				
-                                </div>
+                                    </div>
+                                </div>  
+                                </div>                        				
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-                        
-        );
-        
+            </div>      
+        );   
     }
 }
 
