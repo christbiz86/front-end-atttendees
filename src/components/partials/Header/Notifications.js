@@ -11,15 +11,51 @@ class Notifications extends Component {
         super(props);
 
         this.state = {
-            items: []
+            items: [],
+            unit: user.idCompanyUnitPosisi.idUnit == null ? null : user.idCompanyUnitPosisi.idUnit.unit,
+            posisi: null,
+            company: user.idCompanyUnitPosisi.idCompany.nama
+        }
+    }
+    
+    getAllNotification() {
+        // const filter = {
+        //     request: {
+        //         status: {
+        //             status: 'Request'
+        //         }
+        //     }
+        // }
+
+        const filter = {
+            request: {
+                userCompany: {
+                    idCompanyUnitPosisi: {
+                        idCompany: {
+                            id: null
+                        },
+                        idUnit: {
+                            unit: null
+                        },
+                        idPosisi: {
+                            posisi: null
+                        }
+                    },
+                    idUser: {
+                        id: null
+                    }
+                },
+                kode: null,
+                status: {
+                    status: 'Request'
+                }
+            },
+            status: {
+                status: null
+            }
         }
         
-        
-    }
-
-    componentDidMount() {
-        axios.request('http://localhost:8080/notification', {
-            method: 'GET',
+        axios.post('http://localhost:8080/notification/request', filter, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -30,6 +66,64 @@ class Notifications extends Component {
             this.setState({ items: data })
         })
         .catch(error => console.log('Error: ', error));
+    }
+
+    componentDidMount() {
+        if(this.state.unit === 'HR'){
+            this.getAllNotification();
+        } else {
+            const filter = {
+                request: {
+                    userCompany: {
+                        idCompanyUnitPosisi: {
+                            idCompany: {
+                                id: user.idCompanyUnitPosisi.idCompany.id
+                            },
+                            idUnit: {
+                                unit: null
+                            },
+                            idPosisi: {
+                                posisi: null
+                            }
+                        },
+                        idUser: {
+                            id: user.idUser.id
+                        }
+                    },
+                    kode: null,
+                    status: {
+                        status: 'Request'
+                    }
+                },
+                status: {
+                    status: 'Unread'
+                }
+            }
+            axios.post('http://localhost:8080/notification/approval', filter, {
+                headers:{
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+            .then(response => response.data)
+            .then(data => {
+                this.setState({ items: data })
+            })
+            .catch(error => console.log('Error: ', error));
+        }
+    }
+
+    handleRead(notif) {
+        fetch('http://localhost:8080/notification', {
+            method: 'PATCH',
+            body: JSON.stringify(notif),
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        .then(res => res.json())
+        .catch(error => console.error('Error: ', error))
     }
 
     render(){
@@ -51,18 +145,18 @@ class Notifications extends Component {
                         <div className="scrollbar mx-auto" style={scrolleContainerStyle}>
                             {
                                 items.length > 0 ? items.map((notif, index) => {
-                                    // console.log(notif.request.id);
+                                    // console.log(notif);
                                     return(
                                         <Link to={{
-                                            pathname: "/annual/detail-annual",
+                                            pathname: "/annual/detail",
                                             data: notif
-                                        }} className="list-group-item" key={notif.id} >
+                                        }} value={notif} onClick={() => this.handleRead(notif)} className="list-group-item" key={notif.id} >
                                             <div className="media">
                                                 <div className="pull-left p-r-10">
                                                     <em className="fa fa-check-square-o noti-primary"></em>
                                                 </div>
                                                 <div className="media-body">
-                                                    <h5 className="media-heading">Annual Request</h5>
+                                                    <h5 className="media-heading">Annual Request</h5><small>Date Request: { notif.request.createdAt }</small>
                                                     <p className="m-0">
                                                         <small>From: { notif.request.createdBy.nama }</small>
                                                     </p>
@@ -78,7 +172,7 @@ class Notifications extends Component {
                         </div>
                     </li>
                     <li>
-                        <a href="#" className="list-group-item text-right">
+                        <a href={'/notifications'} className="list-group-item text-right">
                             <small className="font-600">See all notifications</small>
                         </a>
                     </li>

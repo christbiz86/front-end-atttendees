@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 // import Profile from './Profile';
 import axios from 'axios';
+import swal from 'sweetalert';
+import "./../../auth/SpinnerLoader.css";
 
 let user = JSON.parse(localStorage.getItem('user'));
 
@@ -46,12 +48,14 @@ class DetailAnnual extends Component {
         })
         .then(res => { res.json()
             if (res.ok){
-                // console.log(res.ok) 
-                this.setState({redirect:true})
+                this.setState({ isLoading: false })
+                swal("Success!", "Data Annual Request has been Approved!", "success")
+                .then(function() {
+                    window.location.href = "/annual/request";
+                })
             }else{
-                console.log(res.status)
-                window.alert('Approve Gagal')
-                this.setState({isLoading:false})
+                swal("Failed!", "Failed to Update Annual Request", "error")
+                this.setState({ isLoading: false })
             }
         })
         .catch(error => console.error('Error:', error))
@@ -69,16 +73,16 @@ class DetailAnnual extends Component {
         })
         .then(res => { res.json()
             if (res.ok){
-                // console.log(res.ok) 
-                this.setState({redirect:true})
+                this.setState({ isLoading: false })
+                swal("Success!", "Data Annual Request has been Rejected!", "success")
+                .then(function() {
+                    window.location.href = "/annual/request";
+                })
             }else{
-                // console.log(res.status)
-                window.alert('Rejected Gagal')
-                this.setState({isLoading:false})
+                swal("Failed!", "Failed to Update Annual Request", "error")
+                this.setState({ isLoading: false })
             }
         })
-        // .then(response => console.log('Success:', response))
-        // .then(() => { this.props.history.push('/') })
         .catch(error => console.error('Error:', error))
     }
 
@@ -88,7 +92,6 @@ class DetailAnnual extends Component {
         if(redirect){
             window.location.href = '/report/annual';
         }
-        // console.log(data);
         return(
             <>
             <div className="content-page">
@@ -167,7 +170,7 @@ class DetailAnnual extends Component {
                                                 </div>
                                             </div>
                                             {
-                                                data.request.status.status == "Request" ?
+                                                data.request.status.status == "Request" && user.idCompanyUnitPosisi.idUnit.unit === 'HR' ?
                                                 <div>
                                                     <div className="form-group clearfix">
                                                         <div className="control-label">

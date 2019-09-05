@@ -3,7 +3,6 @@ import moment from 'moment';
 
 let token = localStorage.getItem('token');
 let user = JSON.parse(localStorage.getItem('user'));
-
 class EmployeeUpdateForm extends React.Component{
     constructor(props){
         super(props);

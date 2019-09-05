@@ -5,24 +5,24 @@ import Profile from './Profile';
 
 export default function Header(){
     return(
-        <div>
-            <div className="topbar">
-                <div className="topbar-left">
-                    <div className="text-center">
-                        <a href="#" className="logo">
-                            <i className="icon-magnet icon-c-logo"></i><span>Attendee</span>
-                        </a>
-                    </div>
+        <div className="topbar">
+            <div className="topbar-left">
+                <div className="text-center">
+                    <a href="#" className="logo">
+                        <i className="icon-magnet icon-c-logo"></i><span>Attendee</span>
+                    </a>
                 </div>
-                <div  className="navbar navbar-default" role="navigation">
-                    <div  className="container">
-                    <Navbar/>
-                        <ul className="nav navbar-nav navbar-right pull-right">
-                            <Notifications />
-                            <Profile />
-                        </ul> 
+            </div>
+            <div  className="navbar navbar-default" role="navigation">
+                <div  className="container">
+                    <div className="">
+                        <Navbar/>
+                            <ul className="nav navbar-nav navbar-right pull-right">
+                                <Notifications />
+                                <Profile />
+                            </ul> 
+                        </div>
                     </div>
-                </div>
             </div>
         </div>
     );

@@ -20,17 +20,8 @@ function checkToken(){
 export const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={props => (
         localStorage.getItem('token')
-            ? (checkToken() ? <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+            ? (checkToken() ? <Redirect to={{ pathname: '/', state: { from: props.location } }} />
             : <Layout> <Component {...props} /> </Layout>)
-            : <Redirect to={{ pathname: '/forbidden', state: { from: props.location } }} />
-    )} />
-)
-
-export const ErrorRoute = ({ component: Component, ...rest }) => (
-    <Route {...rest} render={props => (
-        localStorage.getItem('token')
-            ? (checkToken() ? <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-            : <Component {...props} />)
             : <Redirect to={{ pathname: '/forbidden', state: { from: props.location } }} />
     )} />
 )
@@ -38,7 +29,7 @@ export const ErrorRoute = ({ component: Component, ...rest }) => (
 export const AdminRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={props => (
         (localStorage.getItem('token') && JSON.parse(localStorage.getItem('user')).idTipeUser.tipe.includes('Admin'))
-            ? (checkToken() ? <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+            ? (checkToken() ? <Redirect to={{ pathname: '/', state: { from: props.location } }} />
             : <Layout> <Component {...props} /> </Layout>)
             : <Redirect to={{ pathname: '/forbidden', state: { from: props.location } }} />
     )} />
@@ -47,7 +38,7 @@ export const AdminRoute = ({ component: Component, ...rest }) => (
 export const SuperAdminRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={props => (
         (localStorage.getItem('token') && JSON.parse(localStorage.getItem('user')).idTipeUser.tipe.includes('Super'))
-            ? (checkToken() ? <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+            ? (checkToken() ? <Redirect to={{ pathname: '/', state: { from: props.location } }} />
             : <Layout> <Component {...props} /> </Layout>)
             : <Redirect to={{ pathname: '/forbidden', state: { from: props.location } }} />
     )} />

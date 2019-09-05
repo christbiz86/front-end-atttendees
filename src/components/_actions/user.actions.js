@@ -2,6 +2,7 @@ import { userConstants } from '../_constants';
 import { userService } from '../_services';
 import { alertActions } from './';
 import { history } from '../_helpers';
+import swal from 'sweetalert';
 
 export const userActions = {
     login,
@@ -24,6 +25,7 @@ function login(username, password) {
                 error => {
                     dispatch(failure(error.toString()));
                     dispatch(alertActions.error(error.toString()));
+                    swal("Failed!", "Email or Password incorrect", "error")
                 }
             );
     };
