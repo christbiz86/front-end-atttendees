@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import axios from 'axios';
 import swal from 'sweetalert';
 import * as Constant from '../../_helpers/constant';
 
@@ -10,6 +11,9 @@ class EmployeeView extends Component {
     constructor(props){
         super(props);
         this.handleClick.bind(this);
+        if(this.props.location.data == null) {
+            window.location.href = '/bad-request'
+        }
         this.state = {
             isLoading: true,
             id: this.props.location.data.idUser.id,
@@ -26,8 +30,30 @@ class EmployeeView extends Component {
             createdAt: this.props.location.data.idUser.createdAt,
             updatedBy: this.props.location.data.idUser.updatedBy,
             updatedAt: this.props.location.data.idUser.updatedAt,
-
+            tipeUser: this.props.location.data.idTipeUser.nama,
         }     
+    }
+
+    componentDidMount(){
+        const filename = this.state.kode + this.state.nama + 'FACE';
+        axios
+        .get(
+            Constant.API_LIVE + '/image/'+filename,
+            {   responseType: 'arraybuffer',
+                headers:{
+                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        }
+            },
+        )
+        .then(response => {
+            const base64 = btoa(
+                new Uint8Array(response.data).reduce(
+                    (data, byte) => data + String.fromCharCode(byte),
+                    '',
+                ),
+            );
+            this.setState({ foto: "data:;base64," + base64 });
+        });
     }
 
     handleClick = event =>{
@@ -82,10 +108,18 @@ class EmployeeView extends Component {
                 <div className="container">
                     <div className="row">
                         <div className="col-sm-12">
+                            <div className="btn-group pull-right m-t-15">
+                            <NavLink to='/employee'>
+                                <button type="button" className="btn btn-default btn-rounded waves-effect waves-light">
+                                    <span className="btn-label"><i className="fa fa-arrow-left"></i></span>
+                                    Back
+                                </button>
+                            </NavLink>
+                            </div>
                             <h4 className="page-title">Detail Profile</h4>
                             <ol className="breadcrumb">
                                 <li>
-                                    <a href="/">Dashboard</a>
+                                    <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li>
                                     <a href="/employee">Employee</a>
@@ -94,6 +128,7 @@ class EmployeeView extends Component {
                                     Detail
                                 </li>
                             </ol>
+
                         </div>
                     </div>
                     <div className="row">
@@ -105,7 +140,7 @@ class EmployeeView extends Component {
                                     <div className="form-group clearfix">
                                         <label className="col-md-2 control-label" >Foto</label>
                                         <div className="col-lg-3">
-                                            <img src={this.state.foto}></img>
+                                            <img src={this.state.foto} alt="image" class="img-responsive img-thumbnail" width="200"></img>
                                         </div>                                    
                                     </div>
 
@@ -150,21 +185,26 @@ class EmployeeView extends Component {
                                             <input type="text" id="telp" name="telp" className="form-control"  disabled value={this.state.telp} placeholder="Telepon"/>
                                         </div>                                    
                                     </div>
-
-                                    <div className="button-list">
-                                    <Link to={{pathname: "/employee/update", data: this.props.location.data}}>
-                                        <button className="btn btn-warning btn-rounded waves-effect waves-light">
-                                            <span className="btn-label"><i className="fa fa-edit"></i></span>
-                                            Edit
-                                        </button>
-                                    </Link>
-
                                     
-                                        <button className="btn btn-danger btn-rounded waves-effect waves-light" onClick={this.handleClick} >
-                                            <span className="btn-label"><i className="fa fa-trash"></i></span>
-                                            Delete
-                                        </button>
-                                    </div>
+                                    {
+                                        user.idTipeUser.tipe === "Admin" && this.state.tipeUser === "Super Admin" ?
+                                        (user.idTipeUser.tipe === "Admin" && this.state.tipeUser === "Admin" ? null
+                                        :
+                                        <div className="button-list">
+                                            <Link to={{pathname: "/employee/update", data: this.props.location.data}}>
+                                                <button className="btn btn-warning btn-rounded waves-effect waves-light">
+                                                    <span className="btn-label"><i className="fa fa-edit"></i></span>
+                                                    Edit
+                                                </button>
+                                            </Link>
+
+                                            <button className="btn btn-danger btn-rounded waves-effect waves-light" onClick={this.handleClick} >
+                                                <span className="btn-label"><i className="fa fa-trash"></i></span>
+                                                Delete
+                                            </button>
+                                        </div>)
+                                        : null
+                                    }
                             </div>
                         </div>
                     </div>

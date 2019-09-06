@@ -59,7 +59,7 @@ class Sidebar extends Component {
                                 <Posisi />
                                 </>
                             }
-                            { isAdmin || isSuperAdmin && 
+                            { (isAdmin || isSuperAdmin) && 
                                 <>
                                 <Employee />
                                 <Reporting />

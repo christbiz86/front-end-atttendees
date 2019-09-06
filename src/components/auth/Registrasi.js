@@ -149,7 +149,7 @@ export default class Registrasi extends React.Component{
                         <div class="row">
                             <div class="col-sm-12 text-center">
                                 <p>
-                                    Already have account?<a href={'/login'} class="text-primary m-l-5"><b>Sign In</b></a>
+                                    Already have account?<a href={'/'} class="text-primary m-l-5"><b>Sign In</b></a>
                                 </p>
                             </div>
                         </div>

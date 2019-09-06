@@ -30,6 +30,8 @@ import Shift from './components/partials/TimeSheet/Shift';
 import EditShift from './components/partials/TimeSheet/EditShift';
 import EditProject from './components/partials/TimeSheet/EditProject';
 import EditLibur from './components/partials/TimeSheet/EditLibur';
+import BadRequest from './components/auth/BadRequest';
+import NotFound from './components/auth/NotFound';
 
 import { PrivateRoute, AdminRoute, SuperAdminRoute } from './components/_security/PrivateRoute';
 import AnnualLeave from './components/partials/Annual/AnnualLeave';
@@ -64,6 +66,7 @@ class App extends React.Component {
                     <Route exact path="/logout" component={LoginPage} />
                     <Route exact path="/" component={LoginPage} />
                     <Route exact path="/forbidden" component={Forbidden} />
+                    <Route exact path="/bad-request" component={BadRequest} />
                     <PrivateRoute exact path="/dashboard" component={Dashboard} />
                     <AdminRoute exact path="/annual/list" component={ListAnnual} />
                     <PrivateRoute exact path="/annual/form" component={FormAnnual} />
@@ -97,6 +100,7 @@ class App extends React.Component {
                     <PrivateRoute exact path="/timesheet/edit-shift" component={EditShift} />
                     <PrivateRoute exact path="/timesheet/edit-project" component={EditProject} />
                     <PrivateRoute exact path="/timesheet/edit-libur" component={EditLibur} />
+                    <Route component={NotFound} />
                   </Switch>
                 </div>
               </Router>
