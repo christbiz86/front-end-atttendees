@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import swal from 'sweetalert';
 import * as Constant from '../../_helpers/constant';
+import { NavLink } from 'react-router-dom';
 
 let token = localStorage.getItem('token');
 let user = JSON.parse(localStorage.getItem('user'));
@@ -11,6 +12,9 @@ class EmployeeUpdateForm extends React.Component{
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit=this.handleSubmit.bind(this);
+        if(this.props.location.data == null) {
+            window.location.href = '/bad-request'
+        }
         this.state = {
             isLoading: true,
             idUserCompany: this.props.location.data.id,
@@ -182,7 +186,14 @@ class EmployeeUpdateForm extends React.Component{
                     <div className="container">
                         <div class="row">
                             <div class="col-sm-12">
-
+                                <div className="btn-group pull-right m-t-15">
+                                    <NavLink to='/employee'>
+                                        <button type="button" className="btn btn-default btn-rounded waves-effect waves-light">
+                                            <span className="btn-label"><i className="fa fa-arrow-left"></i></span>
+                                            Back
+                                        </button>
+                                    </NavLink>
+                                </div>
                                 <h4 class="page-title">Edit Employee</h4>
                                 <ol class="breadcrumb">
                                     <li>
