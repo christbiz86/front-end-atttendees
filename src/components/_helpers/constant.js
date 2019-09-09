@@ -1,1 +1,1 @@
-export const API_LIVE = "http://api.attendees.today"
+export const API_LIVE = "http://localhost:8080"

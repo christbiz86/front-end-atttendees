@@ -6,7 +6,7 @@ import Modal from 'react-responsive-modal';
 import axios from 'axios';
 import Moment from 'moment';
 import * as Constant from '../../_helpers/constant';
-const url = Constant.API_LIVE + '/api/shift';
+// const url = Constant.API_LIVE + '/api/shift';
 
 let token = localStorage.getItem('token');
 let user = JSON.parse(localStorage.getItem('user'));
@@ -62,52 +62,50 @@ class Shift extends Component {
         this.setState({ open: false });
     };
     
-    componentWillMount = async() => {
-        await axios.get(Constant.API_LIVE + '/api/shift')
-        .then(response => response.data)
-        .then(data => {
-            // console.log(data);
-            // if (err) throw err;
-            this.setState({ posts: data })
-        })
-        .then(async() => {
-            this.setState({ tableRows:this.assemblePosts(), isLoading:false })
-            // console.log(this.state.tableRows);
-        });
-    }
+    // componentWillMount = async() => {
+    //     await axios.get(Constant.API_LIVE + '/api/shift')
+    //     .then(response => response.data)
+    //     .then(data => {
+    //         // console.log(data);
+    //         // if (err) throw err;
+    //         this.setState({ posts: data })
+    //     })
+    //     .then(async() => {
+    //         this.setState({ tableRows:this.assemblePosts(), isLoading:false })
+    //         // console.log(this.state.tableRows);
+    //     });
+    // }
 
-    fetchShift() {
-        fetch(Constant.API_LIVE + '/api/shift', {
+    // fetchShift() {
+    //     fetch(Constant.API_LIVE + '/api/shift', {
+    //         headers:{
+    //             'Content-Type': 'application/json',
+    //             'Authorization': 'Bearer ' + token
+    //         }
+    //     })
+    //     .then(response => response.json())
+    //     .then(data =>
+    //         this.setState({
+    //             shift: data,
+    //             isLoading: false,
+    //         }),
+    //     ).catch(error => this.setState({ error, isLoading: false }));
+    // }
+
+    fetchProject (){
+        fetch(Constant.API_LIVE + '/api/project',{
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
             }
         })
         .then(response => response.json())
-        .then(data =>
-            this.setState({
-                shift: data,
-                isLoading: false,
-            }),
-        ).catch(error => this.setState({ error, isLoading: false }));
-    }
-
-    fetchProject = async() => {
-        await axios.get(Constant.API_LIVE + '/api/project',{
-            headers:{
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-            }
-        })
-        .then(response => response.data)
         .then(data => {
             this.setState({
                 getProject: data,
-                project: data[0].id
+                project: data[0].id,
+                isLoading:false
             })
-        })
-        .then(async() => {
-            this.setState({ tableRows:this.assemblePosts(), isLoading:false })
         });
     }
 
@@ -261,71 +259,71 @@ class Shift extends Component {
         .then(response => console.log('Success:', response)/*, console.log(shift)*/);
     }
 
-    renderModal = () => {
-        // Check to see if there's a selected post. If so, render it.
-        if (this.state.selectedPost !== null) {
-            const post = this.state.posts[this.state.selectedPost];
-            return (
-                <div className="modal-dialog modal-dialog-centered">
-                    <form onSubmit={this.handlePut} key={post.id}>
-                        <div className="modal-body">
-                            <div className="row"> 
-                                <div className="col-md-12"> 
-                                    <div className="form-group"> 
-                                        <input type="text" name="id" className="form-control" defaultValue={this.props.location.data.id} onChange={this.handleChange} />
-                                    </div>
+    // renderModal = () => {
+    //     // Check to see if there's a selected post. If so, render it.
+    //     if (this.state.selectedPost !== null) {
+    //         const post = this.state.posts[this.state.selectedPost];
+    //         return (
+    //             <div className="modal-dialog modal-dialog-centered">
+    //                 <form onSubmit={this.handlePut} key={post.id}>
+    //                     <div className="modal-body">
+    //                         <div className="row"> 
+    //                             <div className="col-md-12"> 
+    //                                 <div className="form-group"> 
+    //                                     <input type="text" name="id" className="form-control" defaultValue={this.props.location.data.id} onChange={this.handleChange} />
+    //                                 </div>
 
-                                    <div className="form-group"> 
-                                        <input type="text" name="idStatus" className="form-control" defaultValue={'{"id": "'+post.status.id+'"}'} onChange={this.handleChange} />
-                                    </div>
+    //                                 <div className="form-group"> 
+    //                                     <input type="text" name="idStatus" className="form-control" defaultValue={'{"id": "'+post.status.id+'"}'} onChange={this.handleChange} />
+    //                                 </div>
 
-                                    <div className="form-group"> 
-                                        <input type="text" name="createdAt" className="form-control" defaultValue={post.createdAt} onChange={this.handleChange} />
-                                    </div>
+    //                                 <div className="form-group"> 
+    //                                     <input type="text" name="createdAt" className="form-control" defaultValue={post.createdAt} onChange={this.handleChange} />
+    //                                 </div>
 
-                                    <div className="form-group"> 
-                                        <input type="text" name="createdBy" className="form-control" defaultValue={'{"id": "'+post.createdBy.id+'"}'} onChange={this.handleChange} />
-                                    </div>
+    //                                 <div className="form-group"> 
+    //                                     <input type="text" name="createdBy" className="form-control" defaultValue={'{"id": "'+post.createdBy.id+'"}'} onChange={this.handleChange} />
+    //                                 </div>
 
-                                    <div className="form-group"> 
-                                        <label htmlFor="field-3" className="control-label">Shift Code</label> 
-                                        <input type="text" className="form-control" defaultValue={post.kode} /* onChange={this.handleChange} */ ref={this.kodekode} disabled />
-                                    </div>
-                                </div> 
-                            </div>
-                            <div className="row"> 
-                                <div className="col-md-6"> 
-                                    <div className="form-group"> 
-                                        <label htmlFor="field-1" className="control-label">Clock In</label> 
-                                        <div className="input-group clockpicker" data-placement="top" data-align="top" data-autoclose="true">
-                                            <input type="time" step="1" name="masuk" className="form-control" defaultValue={post.masuk} /* onChange={this.handleChange} */ ref={this.clockin} />
-                                            <span className="input-group-addon"> <span className="glyphicon glyphicon-time"></span> </span>
-                                        </div>
-                                    </div>
-                                </div> 
-                                <div className="col-md-6"> 
-                                    <div className="form-group"> 
-                                        <label htmlFor="field-2" className="control-label">Clock Out</label> 
-                                        <div className="input-group clockpicker" data-placement="top" data-align="top" data-autoclose="true">
-                                            <input type="time" step="1" name="pulang" className="form-control" defaultValue={post.pulang} /* onChange={this.handleChange} */ ref={this.clockout} />
-                                            <span className="input-group-addon"> <span className="glyphicon glyphicon-time"></span> </span>
-                                        </div>
-                                    </div> 
-                                </div> 
-                            </div>
-                        </div>
+    //                                 <div className="form-group"> 
+    //                                     <label htmlFor="field-3" className="control-label">Shift Code</label> 
+    //                                     <input type="text" className="form-control" defaultValue={post.kode} /* onChange={this.handleChange} */ ref={this.kodekode} disabled />
+    //                                 </div>
+    //                             </div> 
+    //                         </div>
+    //                         <div className="row"> 
+    //                             <div className="col-md-6"> 
+    //                                 <div className="form-group"> 
+    //                                     <label htmlFor="field-1" className="control-label">Clock In</label> 
+    //                                     <div className="input-group clockpicker" data-placement="top" data-align="top" data-autoclose="true">
+    //                                         <input type="time" step="1" name="masuk" className="form-control" defaultValue={post.masuk} /* onChange={this.handleChange} */ ref={this.clockin} />
+    //                                         <span className="input-group-addon"> <span className="glyphicon glyphicon-time"></span> </span>
+    //                                     </div>
+    //                                 </div>
+    //                             </div> 
+    //                             <div className="col-md-6"> 
+    //                                 <div className="form-group"> 
+    //                                     <label htmlFor="field-2" className="control-label">Clock Out</label> 
+    //                                     <div className="input-group clockpicker" data-placement="top" data-align="top" data-autoclose="true">
+    //                                         <input type="time" step="1" name="pulang" className="form-control" defaultValue={post.pulang} /* onChange={this.handleChange} */ ref={this.clockout} />
+    //                                         <span className="input-group-addon"> <span className="glyphicon glyphicon-time"></span> </span>
+    //                                     </div>
+    //                                 </div> 
+    //                             </div> 
+    //                         </div>
+    //                     </div>
 
-                        <div className="modal-footer">
-                            <button type="submit" className="btn btn-info waves-effect waves-light">Save changes</button>
-                        </div>
-                    </form>
-                </div>
-            );
-        }
-    }
+    //                     <div className="modal-footer">
+    //                         <button type="submit" className="btn btn-info waves-effect waves-light">Save changes</button>
+    //                     </div>
+    //                 </form>
+    //             </div>
+    //         );
+    //     }
+    // }
 
     componentDidMount() {
-        this.fetchShift();
+        // this.fetchShift();
         this.fetchProject();
         this.fetchData();
     }
@@ -443,6 +441,7 @@ class Shift extends Component {
                                                         {/* {this.state.error ? <p>{this.state.error.message}</p> : null} */}
                                                         {!this.state.isLoading ? (
                                                             this.state.getProject.map(pro => {
+                                                                console.log(pro.namaProject);
                                                                 return (
                                                                     <option key={pro.id} value={pro.id}>{pro.namaProject}</option>
                                                                 );
@@ -487,10 +486,10 @@ class Shift extends Component {
                                 </div>
 
                                 <div>
-                                    <Modal open={open} onClose={this.onCloseModal} center>
+                                    {/* <Modal open={open} onClose={this.onCloseModal} center>
                                         <h3>Edit Shift</h3>
                                         <div>{this.renderModal()}</div>
-                                    </Modal>
+                                    </Modal> */}
                                 </div>
                                 
                             </div>
