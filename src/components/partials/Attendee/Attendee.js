@@ -4,6 +4,7 @@ import { loadModels, getFullFaceDescription, createMatcher } from '../../../api/
 import swal from 'sweetalert';
 import moment from 'moment';
 import * as Constant from '../../_helpers/constant';
+import {history} from '../../_helpers/history';
 
 const WIDTH = 420;
 const HEIGHT = 420;
@@ -15,6 +16,7 @@ class Attendee extends Component {
         this.webcam = React.createRef();
         this.state = {
             user: localStorage.getItem('user'),
+
 
             fetch: false,
             capture: true,
@@ -40,7 +42,8 @@ class Attendee extends Component {
         loadModels();
         this.setInputDevice();
         this.matcher();
-        setInterval(() => this.currentTime(), 500)
+        setTimeout(() => window.location.href = '/dashboard', 60000);
+        setInterval(() => this.currentTime(), 500);
     }
 
     currentTime(){

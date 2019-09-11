@@ -9,6 +9,7 @@ import Company from './Company';
 import Reporting from './Reporting';
 import Attendee from './Attendee';
 import "./../Header/ScrollbarPage.css";
+import { slide as Menu } from 'react-burger-menu';
 
 let user = JSON.parse(localStorage.getItem('user'));
 
@@ -38,7 +39,7 @@ class Sidebar extends Component {
         const { isSuperAdmin, isAdmin } = this.state;
         const scrollNavigasi = { width:"auto", maxHeight: "100% auto" }
         return(
-            <div className="left side-menu">
+            <div className="left side-menu" >
                 <div className="sidebar sidebar-inner slimscrollleft mx-auto" style={scrollNavigasi}>
                     <div id="sidebar-menu">
                         <ul>

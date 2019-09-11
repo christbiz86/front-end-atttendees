@@ -45,7 +45,7 @@ import { alertActions } from './components/_actions';
 class App extends React.Component {
   constructor(props) {
       super(props);
-
+      
       history.listen((location, action) => {
           // clear alert on location change
           this.props.clearAlerts();
