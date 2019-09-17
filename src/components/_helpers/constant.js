@@ -1,1 +1,2 @@
-export const API_LIVE = "http://localhost:8080"
+export const API_LIVE = "http://api.attendees.today"
+export const APPROVE_PRIVILAGES = "HR"

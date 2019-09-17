@@ -9,7 +9,6 @@ import Company from './Company';
 import Reporting from './Reporting';
 import Attendee from './Attendee';
 import "./../Header/ScrollbarPage.css";
-import { slide as Menu } from 'react-burger-menu';
 
 let user = JSON.parse(localStorage.getItem('user'));
 

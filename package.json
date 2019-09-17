@@ -63,6 +63,7 @@
     "react-responsive-modal": "^4.0.1",
     "react-router-dom": "^5.0.1",
     "react-router-redux": "^4.0.8",
+    "react-toggle": "^4.0.2",
     "react-webcam": "^1.1.1",
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",

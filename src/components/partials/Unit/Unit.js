@@ -4,94 +4,99 @@ import { MDBDataTable } from 'mdbreact';
 import { NavLink } from 'react-router-dom';
 import Modal from 'react-responsive-modal';
 import * as Constant from '../../_helpers/constant';
+import Toggle from 'react-toggle'
+import './unit.css';
+import swal from 'sweetalert';
 
+let postUpdate=[];
+let isChecked=[];
 class Unit extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             requiredItem: 0,
-            items: [],
             isLoading: false,
-
             open: false,
-            selectedPost: null
+            selectedPost: null,
+            edit:false,
+            tableRows:[],
+            items:[]
         }
 
     }
 
-    onOpenModal = index => {
-        // console.log(index);
+    updateSubmit(){
         this.setState({
-            open: true,
-            selectedPost: index
+            isLoading:true
+        })
+        fetch(Constant.API_LIVE + '/units', {
+            method: 'PUT',
+            body: JSON.stringify(postUpdate),
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        .then(res => { res.json()
+            if(res.ok) {
+                swal("Success!", "Data Successfully Updated!", "success");
+                this.setState({disabled:true,edit:false, isLoading:false})
+                this.getData()
+            }else{
+                swal("Failed!", "Data Failed to update!", "error")
+                this.setState({disabled:true,edit:false, isLoading:false})
+            }
+        })
+        .catch(error => {
+            swal("Failed!", "Data Failed to update!", "error")
+            this.setState({disabled:true,edit:false, isLoading:false})
         })
     }
 
-    onCloseModal = () => {
-        this.setState({ open:false })
-    }
-
-    renderModal = () => {
-        if (this.state.selectedPost !== null) {
-            const item = this.state.items[this.state.selectedPost]
-            return (
-                <div className="modal-dialog modal-dialog-centered">
-                    {/* <form key={item.id}> */}
-                    <div className="modal-body">
-                        <div className="row"> 
-                            <div className="col-md-12">
-                                <div className="form-group clearfix">
-                                    <div className="col-sm-12">
-                                        <label>Unit</label>
-                                        <input type="text" name="unit" readOnly value={item.unit} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="form-group clearfix">
-                                    <div className="col-sm-12">
-                                        <label>Status</label>
-                                        <input type="text" name="status" readOnly value={item.idStatus.status} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="form-group clearfix">
-                                    <div className="col-sm-12">
-                                        <label>Created By</label>
-                                        <input type="text" name="createdBy" readOnly value={item.createdBy.nama} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="form-group clearfix">
-                                    <div className="col-sm-12">
-                                        <label>Created At</label>
-                                        <input type="text" name="createdAt" readOnly value={item.createdAt} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="form-group clearfix">
-                                    <div className="col-sm-12">
-                                        <label>Updated By</label>
-                                        <input type="text" name="status" readOnly value={item.updatedBy} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="form-group clearfix">
-                                    <div className="col-sm-12">
-                                        <label>Updated At</label>
-                                        <input type="text" name="status" readOnly value={item.updatedAt} className="form-control" />
-                                    </div>
-                                </div>
-                            </div> 
-                        </div>
-                    </div>
-
-                    <div className="modal-footer">
-                        <button type="button" onClick={this.onCloseModal} className="btn btn-danger waves-effect waves-light">Close</button>
-                    </div>
-                    {/* </form> */}
-                </div>
-            );
+    changeStatus(unit,isStatus,index){
+        var unitUpdate=unit;
+        if(isStatus){
+            unitUpdate.idStatus.status="Inactive"
+            isChecked[index]=false
+        }else{
+            unitUpdate.idStatus.status="Active"
+            isChecked[index]=true
+        }
+        if(postUpdate[index]==undefined){
+            postUpdate[index]=unitUpdate ;
+        }else{
+            delete postUpdate[index];
         }
     }
+    
+    changeDisable(){       
+        postUpdate={};
+        this.setState({edit:true,tableRows:this.assemblePosts(this.state.items,false)})
+    }
 
-    componentDidMount = async() => {
-        await axios.request(Constant.API_LIVE + '/unit', {
+    cancel= async() =>{
+        console.log(postUpdate);
+        postUpdate.forEach(item =>{
+            console.log(item);
+            if(item.idStatus.status==="Inactive"){
+                item.idStatus.status = "Active";
+            }else{
+                item.idStatus.status = "Inactive";
+            }
+        })
+        console.log(postUpdate);
+        console.log(this.state.items);
+        postUpdate={};
+        this.setState({edit:false,tableRows:this.assemblePosts(this.state.items,true) })
+        // await this.getData();
+    }
+
+    componentDidMount= async() =>{
+        await this.getData();
+    }
+
+    getData(){
+        axios.request(Constant.API_LIVE + '/unit', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -100,28 +105,37 @@ class Unit extends Component {
         })
         .then(response => response.data)
         .then(data => {
-            this.setState({ items: data })
+            this.setState({items:data,tableRows:this.assemblePosts(data,true),edit:false })
         })
-        .then(async() => {
-            this.setState({ tableRows:this.assemblePosts() })
-            console.log(this.state.tableRows);
-        })
+
     }
 
-    assemblePosts = () => {
-        let items = this.state.items.map((unit, index) => {
+    assemblePosts = (data,disabled) => {
+        return( data.map((unit, index) => {   
+            if(unit.idStatus.status=="Active"){
+                isChecked[index]=true;
+            }else {
+                isChecked[index]=false;
+            }
             return(
                 {
                     nomor: index + 1,
                     unit: unit.unit,
                     status: unit.idStatus.status,
-                    action: <div className="button-list"><button type="button" data-toggle="modal" data-target="#myModal" key={unit.id} onClick={() => this.onOpenModal(index)} className="btn btn-icon waves-effect btn-default waves-light"> <i className="fa fa-eye"></i> </button>
-                    <NavLink to={{ pathname: "/unit/edit", data: unit }} key={index} className="btn btn-icon waves-effect waves-light btn-warning"> <i className="fa fa-edit"></i> </NavLink></div>
+                    action: 
+                    <>
+                        <div className="text-center">
+                        <Toggle 
+                        disabled={disabled}
+                        defaultChecked={isChecked[index]}
+                        onClick={()=>this.changeStatus(unit,isChecked[index],index)}>
+                        </Toggle>
+                        </div>
+                    </>
                 }
             );
-        });
-
-        return items;
+        })
+        );
     }
 
     render(){
@@ -147,6 +161,7 @@ class Unit extends Component {
                     label: 'Action',
                     field: 'action',
                     width: 100
+                    
                 }
             ],
 
@@ -178,16 +193,35 @@ class Unit extends Component {
                                 <div className="card-box table-responsive">
                                     <h4 className="m-t-0 header-title"><b>Unit List</b></h4>
                                     <br />
-                                    <NavLink to={'/unit/form'}><button type="button" className="btn btn-default btn-rounded waves-effect waves-light">Create</button></NavLink>
+                                    {
+                                        !this.state.edit &&
+                                        <NavLink to={'/unit/form'}><button type="button" className="btn btn-default btn-rounded waves-effect waves-light">Create</button></NavLink>
+                                    }
+                                    {
+                                        this.state.edit && !this.state.isLoading &&
+                                        <button type="button" className="btn btn-default btn-rounded waves-effect waves-light" onClick={()=>this.updateSubmit()}>Submit</button>    
+                                    }
+                                    {
+                                         this.state.edit && this.state.isLoading &&  <i className="spinner-border">  </i> 
+                                    }
+                                    
+                                    {
+                                        !this.state.edit &&
+                                        <button type="button" className="btn btn-default btn-rounded waves-effect waves-light" onClick={()=>this.changeDisable()}>Edit</button>
+                                    }{
+                                        this.state.edit && !this.state.isLoading &&
+                                        <button type="button" className="btn btn-default btn-rounded waves-effect waves-light" onClick={()=>this.cancel()}>Cancel</button>    
+                                    }
                                     <hr/>
                                     <div>
-                                        <MDBDataTable striped bordered data={data} />
+                                        <MDBDataTable paging={false} striped bordered data={data} />
                                     </div>
                                     <div>
                                         <Modal open={open} onClose={this.onCloseModal} center>
                                             <h3>Detail Unit</h3>
-                                            <div>{this.renderModal()}</div>
+                                            {/* <div>{this.renderModal()}</div> */}
                                         </Modal>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -195,8 +229,7 @@ class Unit extends Component {
                     </div>
                 </div>
 
-                <footer className="footer">
-                    © 2016. All rights reserved.
+                <footer className="footer">© 2016. All rights reserved.
                 </footer>
 
             </div>

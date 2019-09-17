@@ -33,7 +33,7 @@ import EditLibur from './components/partials/TimeSheet/EditLibur';
 import BadRequest from './components/auth/BadRequest';
 import NotFound from './components/auth/NotFound';
 
-import { PrivateRoute, AdminRoute, SuperAdminRoute } from './components/_security/PrivateRoute';
+import { PrivateRoute, AdminRoute, SuperAdminRoute, ApproveRoute } from './components/_security/PrivateRoute';
 import AnnualLeave from './components/partials/Annual/AnnualLeave';
 import Unit from './components/partials/Unit/Unit';
 import FomUnit from './components/partials/Unit/FormUnit';
@@ -68,9 +68,9 @@ class App extends React.Component {
                     <Route exact path="/forbidden" component={Forbidden} />
                     <Route exact path="/bad-request" component={BadRequest} />
                     <PrivateRoute exact path="/dashboard" component={Dashboard} />
-                    <AdminRoute exact path="/annual/list" component={ListAnnual} />
+                    <ApproveRoute exact path="/annual/list" component={ListAnnual} />
                     <PrivateRoute exact path="/annual/form" component={FormAnnual} />
-                    <AdminRoute exact path="/annual/request" component={AnnualRequest} />
+                    <ApproveRoute exact path="/annual/request" component={AnnualRequest} />
                     <PrivateRoute exact path="/annual/detail" component={DetailAnnual} />
                     <AdminRoute exact path="/annual/leave" component={AnnualLeave} />
                     <PrivateRoute exact path="/company" component={Company} />

@@ -24,7 +24,6 @@ function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('image');
-    localStorage.setItem('sideMenu',false);
 }
 
 function handleResponse(response) {
