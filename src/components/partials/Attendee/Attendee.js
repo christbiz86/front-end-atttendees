@@ -132,7 +132,7 @@ class Attendee extends Component {
     setLocation = async (position) => {
         const lng = position.coords.longitude;
         const lat = position.coords.latitude;
-        const __KEY = 'AIzaSyBYUa1RTDi3YxEBrN9ZqM3RDcwwF-2-rUc';
+        const __KEY = '*******';
         const latlng = lat + "," + lng;
         
         var temp=[];
