@@ -123,7 +123,7 @@ class Attendee extends Component {
     setLocation = async (position) => {
         const lng = position.coords.longitude;
         const lat = position.coords.latitude;
-        const __KEY = 'AIzaSyCsjiM8-cwH_7aFchKjbZU-pugT_ptG0sU';
+        const __KEY = '*******';
         const latlng = lat + "," + lng;
                
         await fetch( `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}&key=${__KEY}` )
