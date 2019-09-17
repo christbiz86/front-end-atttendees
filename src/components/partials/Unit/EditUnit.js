@@ -2,38 +2,47 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import swal from 'sweetalert';
 import "./../../auth/SpinnerLoader.css";
+import { history } from '../../_helpers';
 import * as Constant from '../../_helpers/constant';
 
-class PositionForm extends Component {
+let user = JSON.parse(localStorage.getItem('user'));
+
+class EditUnit extends Component {
     constructor(props) {
         super(props);
-        
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
 
         this.state = {
-            posisi: '',
-            isLoading: false
+            isLoading: false,
+            id: this.props.location.data.id,
+            unit: this.props.location.data.unit,
+            createdBy: this.props.location.data.createdBy,
+            createdAt: this.props.location.data.createdAt,
+            status: this.props.location.data.idStatus.status,
         }
-    }
-
-    handleChange = event => {
-        this.setState({ 
-            [event.target.name]: event.target.value
-         })
     }
 
     handleSubmit = e => {
         e.preventDefault();
 
-        this.setState({ isLoading: true })
+        this.setState({
+            isLoading: true
+        })
 
         const data = {
-            posisi: this.state.posisi
+            id: this.state.id,
+            unit: this.state.unit,
+            idStatus: {
+                status: this.state.status
+            },
+            createdAt: this.state.createdAt,
+            createdBy: this.state.createdBy
         }
 
-        fetch(Constant.API_LIVE + '/posisi', {
-            method: 'POST',
+        fetch(Constant.API_LIVE + '/unit', {
+            method: 'PUT',
             body: JSON.stringify(data),
             headers:{
                 'Content-Type': 'application/json',
@@ -41,26 +50,36 @@ class PositionForm extends Component {
             }
         })
         .then(res => { res.json()
-            if(res.ok){
-                swal("Success!", "Data Successfully added!", "success")
+            if(res.ok) {
+                swal("Success!", "Data Successfully Updated!", "success")
                 .then(function() {
-                    window.location.href = "/position";
-                });
-                // swal({
-                //     title: "Success!",
-                //     text: "Data Successfully added!",
-                //     type: "success"
-                // }, function() {
-                //     window.location.href = '/position';
-                // });
+                    history.push( "/unit");
+                })
+            }else{
+                swal("Failed!", "Data Failed to add!", "error")
+                this.setState({
+                isLoading:false
+            })
             }
         })
-        .then(response => console.log('Success: ', response))
-        .catch(error => console.log('Error: ', error))
+        .then(response => console.log('Success', response))
+        .catch(error => {swal("Failed!", error, "error")
+            swal("Failed!", "Data Failed to add!", "error")
+            this.setState({
+                isLoading:false
+            })
+        })
+    }
+
+    handleChange = (event) => {
+        this.setState({ 
+            [event.target.name]: event.target.value
+         })
     }
 
     render(){
         const { isLoading } = this.state;
+
         return(
             <>
                 <div className="content-page">
@@ -69,20 +88,20 @@ class PositionForm extends Component {
                         <div className="row">
                             <div className="col-sm-12">
                                 <div className="btn-group pull-right m-t-15">
-                                    <NavLink to='/position'>
+                                    <NavLink to='/unit'>
                                         <button type="button" className="btn btn-default btn-rounded waves-effect waves-light">
                                             <span className="btn-label"><i className="fa fa-arrow-left"></i></span>
                                             Back
                                         </button>
                                     </NavLink>
                                 </div>
-                                <h4 className="page-title">Form Position</h4>
+                                <h4 className="page-title">Form Unit</h4>
                                 <ol className="breadcrumb">
                                     <li>
                                         <a href="#">Attendee Application</a>
                                     </li>
                                     <li>
-                                        <a href="#">Position</a>
+                                        <a href="#">Unit</a>
                                     </li>
                                     <li className="active">
                                         Form
@@ -93,15 +112,25 @@ class PositionForm extends Component {
                         <div className="row">
                             <div className="col-sm-12">
                                 <div className="card-box">
-                                    <h4 className="m-t-0 header-title"><b>Add New Position</b></h4>
+                                    <h4 className="m-t-0 header-title"><b>Add New Unit</b></h4>
                                     <br />
                                     <form onSubmit={this.handleSubmit}>
 										<div className="form-group clearfix">
                                             <div className="col-sm-6">
-                                                <label>Position *</label>
-                                                <input type="text" name="posisi" onChange={this.handleChange} required placeholder="Eg: Supervisor" className="form-control" />
+                                                <label>Unit *</label>
+                                                <input type="text" name="unit" readOnly value={this.state.unit} onChange={this.handleChange} required placeholder="Eg: Finance" className="form-control" />
 										    </div>
                                         </div>
+                                        <div className="form-group clearfix">
+                                            <div className="col-sm-6">
+                                                <label>Status *</label>
+                                                    <select className="form-control" value={this.state.status} name="status" onChange={this.handleChange} required>                                                     
+                                                        <option value="Inactive">Inactive</option>
+                                                        <option value="Active">Active</option>       
+                                                    </select>
+										    </div>
+                                        </div>
+                                        
 										<div className="form-group clearfix">
                                             <div className="col-sm-6">
                                                 <button type="submit" className="btn btn-success btn-rounded waves-effect waves-light" disabled={isLoading}>
@@ -125,4 +154,4 @@ class PositionForm extends Component {
     }
 }
 
-export default PositionForm;
+export default EditUnit;

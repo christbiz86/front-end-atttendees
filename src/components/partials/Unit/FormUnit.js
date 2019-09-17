@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import swal from 'sweetalert';
 import "./../../auth/SpinnerLoader.css";
+import { history } from '../../_helpers';
 import * as Constant from '../../_helpers/constant';
 
-class PositionForm extends Component {
+class FormUnit extends Component {
     constructor(props) {
         super(props);
         
@@ -12,7 +13,7 @@ class PositionForm extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
 
         this.state = {
-            posisi: '',
+            unit: '',
             isLoading: false
         }
     }
@@ -29,10 +30,10 @@ class PositionForm extends Component {
         this.setState({ isLoading: true })
 
         const data = {
-            posisi: this.state.posisi
+            unit: this.state.unit
         }
 
-        fetch(Constant.API_LIVE + '/posisi', {
+        fetch(Constant.API_LIVE + '/unit', {
             method: 'POST',
             body: JSON.stringify(data),
             headers:{
@@ -44,19 +45,23 @@ class PositionForm extends Component {
             if(res.ok){
                 swal("Success!", "Data Successfully added!", "success")
                 .then(function() {
-                    window.location.href = "/position";
+
+                    history.push("/unit");
                 });
-                // swal({
-                //     title: "Success!",
-                //     text: "Data Successfully added!",
-                //     type: "success"
-                // }, function() {
-                //     window.location.href = '/position';
-                // });
+            }else{
+                swal("Failed!", "Data Failed to add!", "error")
+                this.setState({
+                    isLoading:false
+                })
             }
         })
         .then(response => console.log('Success: ', response))
-        .catch(error => console.log('Error: ', error))
+        .catch(error => {console.log('Error: ', error)
+            swal("Failed!", "Data Failed to add!", "error")
+            this.setState({
+                isLoading:false
+            })
+        })
     }
 
     render(){
@@ -69,20 +74,20 @@ class PositionForm extends Component {
                         <div className="row">
                             <div className="col-sm-12">
                                 <div className="btn-group pull-right m-t-15">
-                                    <NavLink to='/position'>
+                                    <NavLink to='/unit'>
                                         <button type="button" className="btn btn-default btn-rounded waves-effect waves-light">
                                             <span className="btn-label"><i className="fa fa-arrow-left"></i></span>
                                             Back
                                         </button>
                                     </NavLink>
                                 </div>
-                                <h4 className="page-title">Form Position</h4>
+                                <h4 className="page-title">Form Unit</h4>
                                 <ol className="breadcrumb">
                                     <li>
                                         <a href="#">Attendee Application</a>
                                     </li>
                                     <li>
-                                        <a href="#">Position</a>
+                                        <a href="#">Unit</a>
                                     </li>
                                     <li className="active">
                                         Form
@@ -93,13 +98,13 @@ class PositionForm extends Component {
                         <div className="row">
                             <div className="col-sm-12">
                                 <div className="card-box">
-                                    <h4 className="m-t-0 header-title"><b>Add New Position</b></h4>
+                                    <h4 className="m-t-0 header-title"><b>Add New Unit</b></h4>
                                     <br />
                                     <form onSubmit={this.handleSubmit}>
 										<div className="form-group clearfix">
                                             <div className="col-sm-6">
-                                                <label>Position *</label>
-                                                <input type="text" name="posisi" onChange={this.handleChange} required placeholder="Eg: Supervisor" className="form-control" />
+                                                <label>Unit *</label>
+                                                <input type="text" name="unit" onChange={this.handleChange} required placeholder="Eg: Supervisor" className="form-control" />
 										    </div>
                                         </div>
 										<div className="form-group clearfix">
@@ -125,4 +130,4 @@ class PositionForm extends Component {
     }
 }
 
-export default PositionForm;
+export default FormUnit;

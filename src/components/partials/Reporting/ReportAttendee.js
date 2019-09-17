@@ -5,7 +5,44 @@ import originalMoment from "moment";
 import { extendMoment } from "moment-range";
 import { MDBDataTable } from 'mdbreact';
 import axios from 'axios';
+import * as Constant from '../../_helpers/constant';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+import { getDay, subDays } from 'date-fns';
+
 const moment = extendMoment(originalMoment);
+
+const stateDefinitions = {
+    available: {
+      color: null,
+      label: 'Available',
+    },
+    enquire: {
+      color: '#ffd200',
+      label: 'Enquire',
+    },
+    unavailable: {
+      color: 'red',
+      label: 'Unavailable',
+    },
+  };
+
+const dateRanges = [
+    {
+      state: 'enquire',
+      range: moment.range(
+        moment().add(2, 'weeks'),
+        moment().add(2, 'weeks').add(6, 'days')
+      ),
+    },
+    {
+      state: 'unavailable',
+      range: moment.range(
+        moment().add(5, 'weeks'),
+        moment().add(5, 'weeks').add(1, 'days')
+      ),
+    },
+  ];
 
 class ReportAttendee extends Component {
     constructor(props) {
@@ -17,9 +54,12 @@ class ReportAttendee extends Component {
             items: [],
             isLoading: false,
             submitted: false,
-            value: moment.range(today.clone().subtract(7, "days"), today.clone())
+            value: moment.range(today.clone().subtract(7, "days"), today.clone()),
+            startDate: new Date()
         }
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleDate = this.handleDate.bind(this);
+        
     }
 
     onSelect = (value, states) => {
@@ -36,10 +76,11 @@ class ReportAttendee extends Component {
         this.setState({ 
             submitted:true, isLoading: true
         });
+        console.log(moment().day());
     }
 
     requestAttendee = async() => {
-        await axios.request('http://localhost:8080/api/attendee-recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD'), {
+        await axios.request(Constant.API_LIVE + '/attendee/recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD'), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -72,27 +113,33 @@ class ReportAttendee extends Component {
         return items;
     }
 
+    handleDate = date => {
+        this.setState({
+          startDate: date
+        });
+      };
+
     downloadReportData = () => {
-        fetch('http://localhost:8080/api/attendee-recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD') + '/report', {
+        fetch(Constant.API_LIVE + '/attendee/recap/start-date/' + this.state.value.start.format('YYYY-MM-DD') + '/end-date/' + this.state.value.end.format('YYYY-MM-DD') + '/report', {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
         .then(response => {
-            if(response.ok){
-                response.blob().then(blob => {
-                    let url = window.URL.createObjectURL(blob);
-                    let a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'AttendeeReport.pdf';
-                    a.click();
+            if (response.ok){
+                response.blob([response.data], 
+                    {type: 'application/pdf'}).then(blob => {
+                    var fileDownload = require('js-file-download');
+                    fileDownload(blob, 'report-attendee.pdf');
                 })
-            } else {
-                console.log(response.status)
-            }
-            
-        }).catch(error => console.log(error))
+                }else{
+                    console.log(response.status)
+                };
+				// window.location.href = response.url;
+		}).catch(error=>
+            console.log(error)
+        );
     }
 
     render(){
@@ -123,7 +170,28 @@ class ReportAttendee extends Component {
 
             rows:this.state.tableRows,
         }
-        const { submitted, isLoading } = this.state;
+        const { submitted, isLoading, startDate } = this.state;
+
+        const isWeekday = date => {
+            const day = getDay(date);
+            return day !== 0 && day !== 6;
+        }
+        
+        const highlightWithRanges = [
+            {
+                "react-datepicker__day--highlighted-custom-1": [
+                    subDays(new Date(), 1),
+                    subDays(new Date(), 2),
+                    subDays(new Date(), 3),
+                    new Date("12-20-2019")
+                    // this.state.items.map((libur) => {
+                    //     new Date
+                    // })
+                    
+                ]
+            }
+        ]
+        console.log(new Date("09-13-2019"));
         return(
             <div>
                 <div className="content-page">
@@ -163,7 +231,7 @@ class ReportAttendee extends Component {
                                                 <div className="form-group clearfix">
                                                     <div className="col-sm-6">
                                                     <label className="control-label">Date Range</label>
-                                                        <div className="input-group" >
+                                                        {/* <div className="input-group" >
                                                             <input type="text" className="form-control" onClick={this.onToggle} readOnly placeholder={this.state.value.start.format('YYYY-MM-DD')}/>
                                                                 <span className="input-group-addon bg-custom b-0 text-white">to</span>
                                                             <input type="text" className="form-control" onClick={this.onToggle} readOnly placeholder={this.state.value.end.format('YYYY-MM-DD')} />
@@ -174,8 +242,18 @@ class ReportAttendee extends Component {
                                                                 value={this.state.value}
                                                                 onSelect={this.onSelect}
                                                                 singleDateRange={true}
+                                                                stateDefinitions={stateDefinitions}
+                                                                dateStates={dateRanges}
+                                                                defaultState="available"
                                                             />
-                                                        )}
+                                                        )} */}
+                                                        <DatePicker
+                                                            placeholderText={startDate}
+                                                            selected={startDate} 
+                                                            onChange={date => this.handleDate(date)} 
+                                                            filterDate={isWeekday}
+                                                            highlightDates={highlightWithRanges}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="form-group">

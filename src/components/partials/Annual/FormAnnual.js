@@ -1,32 +1,54 @@
 import React, { Component } from "react";
-import DateRangePicker from "react-daterange-picker";
-import "react-daterange-picker/dist/css/react-calendar.css";
+import "react-datepicker/dist/react-datepicker.css";
 import originalMoment from "moment";
 import { extendMoment } from "moment-range";
+import * as Constant from '../../_helpers/constant';
+import swal from 'sweetalert';
+import { history } from '../../_helpers';
+import "./../../auth/SpinnerLoader.css";
+import DatePicker from 'react-datepicker';
+import { getDay, subDays } from 'date-fns';
 
 const moment = extendMoment(originalMoment);
 let user = JSON.parse(localStorage.getItem('user'));
 
-class FormPengajuan extends Component {
+class FormAnnual extends Component {
     constructor(props,context){
         super(props,context);
         const today = moment(); 
         this.handleRequest = this.handleRequest.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleStartDate = this.handleStartDate.bind(this);
+        this.handleEndDate = this.handleEndDate.bind(this);
 
         this.state = {
             saldo:[],
             namauser:user.idUser.nama,
-            tglMulai:'',
-            tglAkhir:'',
+            tglMulai: new Date(),
+            tglAkhir: new Date(),
             sisaCuti:'',
             keterangan:'',
             value: moment.range(today.clone().add(1,"day"), today.clone().add(1,"day")),
             submitted: false,
             isLoading: false,
             redirect: false,
-            loadingData:true
+            loadingData:true,
+            startDate: new Date(),
+            endDate: new Date(),
+            libur: []
         }    
+    }
+
+    handleStartDate = date => {
+        this.setState({
+            tglMulai: date, tglAkhir:date
+        })
+    }
+
+    handleEndDate = date => {
+        this.setState({
+            tglAkhir: date
+        })
     }
 
     handleChange = event => {
@@ -34,6 +56,8 @@ class FormPengajuan extends Component {
             [event.target.name]:event.target.value,
         })
     }
+
+    //react-toggle
 
     handleRequest = event => {
         event.preventDefault(); 
@@ -43,24 +67,29 @@ class FormPengajuan extends Component {
 
     onSelect = (value, states) => {
         this.setState({ value, states });
+        
     }
-    renderSelectionValue = () => {
-        return (
-            <div className="input-group">
-                <input type="text" className="form-control" disabled placeholder={this.state.value.start.format("YYYY-MM-DD")} />
-                <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
-                <input type="text" className="form-control"disabled  placeholder= {this.state.value.end.format("YYYY-MM-DD")} />
-            </div>
-        );
-      }
 
-      componentDidMount() {
-        fetch('http://localhost:8080/annual/saldo/user', {
+    getLibur() {
+        fetch(Constant.API_LIVE + '/attendees/libur-company', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            this.setState({ libur: data })
+        })
+    }
+    
+    componentDidMount() {
+        fetch(Constant.API_LIVE +'/annual/saldo', {
             method: 'POST',
             body:JSON.stringify({
                 id:{
-                    kode:user.idUser.kode,
-                    tahun:moment().format("YYYY")
+                    kode:user.idUser.kode
                 }
             }),
             headers:{
@@ -72,18 +101,20 @@ class FormPengajuan extends Component {
             res.json()
         )
         .then(saldo => this.setState({
-            sisaCuti:saldo.sisaCuti,loadingData:false
+            sisaCuti:saldo[0].sisaCuti,loadingData:false
         }))
         .catch(error => {
             console.log('parsing failed', error)
-            window.alert('Request gagal')
-        })       
+            swal("Failed!", "Failed to get annual leave!", "error")
+
+            history.push("/annual/form")
+        });
+        
+        this.getLibur();
     }
 
     Request(){
-        console.log('Success:', this.state.value.start.format("YYYY-MM-DD"))
-        console.log('Success:', this.state.value.end.format("YYYY-MM-DD"))
-        fetch('http://localhost:8080/request', {
+        fetch(Constant.API_LIVE +'/request', {
                 method: 'POST',
                 body: JSON.stringify({
                     
@@ -94,8 +125,8 @@ class FormPengajuan extends Component {
                             id:user.idUser.id
                         }
                     },
-                    tglMulai:this.state.value.start.format("YYYY-MM-DD"),
-                    tglAkhir:this.state.value.end.format("YYYY-MM-DD"),
+                    tglMulai:moment(this.state.tglMulai).format("YYYY-MM-DD"),
+                    tglAkhir:moment(this.state.tglAkhir).format("YYYY-MM-DD"),
                     keterangan:this.state.keterangan
                 
                 }),
@@ -106,16 +137,19 @@ class FormPengajuan extends Component {
             })
             .then(res => {res.json()
                 if (res.ok){
-                    console.log(res.ok) 
-                    this.setState({redirect:true})
+                    swal("Success!", "Request Successfully!", "success")
+
+                    history.push("/dashboard")
+                    this.setState({isLoading:false})
                 }else{
-                    console.log(res.status)
-                    window.alert('Request gagal')
+                    swal("Failed!", "Request Failled!", "erroe")
+
                     this.setState({isLoading:false})
                 }}
                 )
             .catch(error => {console.error('Error:', error)
-                window.alert('Request gagal')
+                swal("Failed!", "Request Failled!", "error")
+                
                 this.setState({isLoading:false})
             }
             )
@@ -123,16 +157,35 @@ class FormPengajuan extends Component {
             ); 
     }
 
-    render() { 
-        const {redirect,submitted, isLoading } = this.state;
-        if(redirect){
-            // return <Redirect to='/annual/list'/>
-            window.location.reload();
-            window.alert('Request berhasil dikirim')
+    render() {
+        const { isLoading, startDate, endDate } = this.state;
+
+        var list=[];
+        this.state.libur.map((libur) => {
+            var d=moment(libur.libur.tglAkhir).diff(moment(libur.libur.tglMulai),'days')
             
+            let s=new Date(libur.libur.tglMulai)
+            for (let index = 0; index <=d; index++) {
+                var result = new Date(libur.libur.tglMulai);
+                result.setDate(s.getDate() + index);
+                list.push(result)
+            }
+        })
+
+        const isWeekday = date => {
+            const day = getDay(date);
+            return day !== 0 && day !== 6;
         }
+       
+        const highlightWithRanges = [
+            {
+                "react-datepicker__day--highlighted-custom-1": 
+                list
+                
+            }
+        ]
         return (
-            <div className="content-page">
+            <div id="render" className="content-page">
 
                 <div className="content">
                     <div className="container">
@@ -157,7 +210,7 @@ class FormPengajuan extends Component {
                                 <div className="card-box">
 
                                     {
-                                    this.state.loadingData && <i className="fa fa-refresh fa-spin"> </i> }
+                                    this.state.loadingData && <div>Please wait, getting your data  <i className="spinner-border"> </i></div> }
                                     { !this.state.loadingData && 
                                     <div>
                                             <div className="form-group clearfix">
@@ -169,7 +222,7 @@ class FormPengajuan extends Component {
                                             <form id="basic-form"  onSubmit={this.handleRequest} >   
                                                 
                                                 <div className="form-group clearfix">
-                                                    <label className="col-sm-2 control-label" >NIK</label>
+                                                    <label className="col-sm-2 control-label" >Kode</label>
                                                     <div className="col-lg-6">
                                                         <input type="text" id="kode" name="kode" className="form-control" disabled value={user.idUser.kode} placeholder="NIK"/>
                                                     </div>
@@ -193,38 +246,35 @@ class FormPengajuan extends Component {
                                             <div className="form-group clearfix">
                                                 <label className="col-md-2 control-label">Tanggal Cuti</label>
                                                 <div className="col-lg-6">
-                                                    <div>
-                                                        {/* {this.renderSelectionValue()} */}
-                                                        <div className="input-group">
-                                                            <input type="text" className="form-control" disabled placeholder={this.state.value.start.format("YYYY-MM-DD")} />
-                                                            <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
-                                                            <input type="text" className="form-control"disabled  placeholder= {this.state.value.end.format("YYYY-MM-DD")} />
-                                                        </div>
-
-                                                        <DateRangePicker
-                                                            value={this.state.value}
-                                                            onSelect={this.onSelect}
-                                                            singleDateRange={true}
-                                                            minimumDate={moment().add(1,"days")}
+                                                    <div className="input-group">
+                                                        <DatePicker
+                                                            placeholderText={this.state.tglMulai}
+                                                            selected={this.state.tglMulai} 
+                                                            minDate={this.state.startDate} 
+                                                            onChange={date => this.handleStartDate(date)} 
+                                                            filterDate={isWeekday}
+                                                            highlightDates={highlightWithRanges}
+                                                            className="form-control"
+                                                        />
+                                                        <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
+                                                        {/* <span>Sampai</span> */}
+                                                        <DatePicker
+                                                            placeholderText={this.state.tglAkhir}
+                                                            selected={this.state.tglAkhir}
+                                                            minDate={this.state.tglMulai} 
+                                                            onChange={date => this.handleEndDate(date)} 
+                                                            filterDate={isWeekday}
+                                                            highlightDates={highlightWithRanges}
+                                                            className="form-control"
                                                         />
                                                     </div>
-
-                                                    {/* <div class="input-daterange input-group" id="date-range">
-
-                                                            <input type="date" name="tglMulai" className="form-control" onChange={this.handleChange} placeholder="YYYY-MM-DD" />
-
-                                                                <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
-
-                                                            <input type="date" className="form-control"  name="tglAkhir" onChange={this.handleChange}  placeholder="DD/MM/YYYY" />
-
-                                                        </div> */}
                                                 </div>
                                             </div>
 
                                             <div className="form-group clearfix">
                                                 <label className="col-md-2 control-label">Keterangan Cuti</label>
                                                 <div className="col-lg-6">
-                                                    <textarea className="form-control" name="keterangan" onChange={this.handleChange} rows="6"></textarea>
+                                                    <textarea className="form-control" name="keterangan" required onChange={this.handleChange} rows="6"></textarea>
                                                 </div>
                                             </div>
 
@@ -238,7 +288,7 @@ class FormPengajuan extends Component {
                                                     <label  className="col-sm-6 control-label"></label>
                                                     <div className="col-sm-2 control-label">
                                                         <button type="submit" className="btn btn-default waves-effect waves-light btn-lg" data-style="contract" id="sa-warning" disabled={isLoading}>
-                                                        { isLoading &&  <i className="fa fa-refresh fa-spin"> </i> }
+                                                        { isLoading &&  <i className="spinner-border">  </i> }
                                                         { isLoading &&  <span> Loading </span> }
                                                         { !isLoading &&  <span> Submit </span> }
                                                         </button>
@@ -261,4 +311,4 @@ class FormPengajuan extends Component {
     }
 }
 
-export default FormPengajuan;
+export default FormAnnual;

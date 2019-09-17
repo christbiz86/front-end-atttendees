@@ -1,97 +1,76 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { MDBDataTable } from 'mdbreact';
 import { NavLink } from 'react-router-dom';
-import Modal from 'react-responsive-modal';
+import * as Constant from '../../_helpers/constant';
+import { Table, Spinner } from 'react-bootstrap';
+import Toggle from 'react-toggle';
+import '../Unit/Toggle.css';
+import swal from 'sweetalert';
 
+let postUpdate = {};
+let isChecked = {};
 class Position extends Component {
     constructor(props) {
         super(props);
+        this.handleClickEdit = this.handleClickEdit.bind(this);
+        this.handleClickReset = this.handleClickReset.bind(this);
 
         this.state = {
-            requiredItem: 0,
             items: [],
-            isLoading: false,
-
-            open: false,
-            selectedPost: null
+            isLoading: true,
+            edit: true
         }
-
     }
 
-    onOpenModal = index => {
-        // console.log(index);
+    updateSubmit(){
         this.setState({
-            open: true,
-            selectedPost: index
+            isLoading: true
+        })
+        fetch(Constant.API_LIVE + '/positions', {
+            method: 'PUT',
+            body: JSON.stringify(postUpdate),
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        .then(res => { res.json()
+            if(res.ok) {
+                swal("Success!", "Data Successfully Updated!", "success");
+                this.setState({ edit: true, isLoading: false })
+            } else {
+                swal("Success!", "Data Failed to Update!", "error");
+                this.setState({ edit: true, isLoading: false })
+            }
+        })
+        .catch(error => {
+            swal("Failed!", "Data Failed to Update!", "error")
+            this.setState({ edit: true, isLoading: false })
         })
     }
 
-    onCloseModal = () => {
-        this.setState({ open:false })
+    componentDidMount() {
+        this.getDataPosition();
     }
 
-    renderModal = () => {
-        if (this.state.selectedPost !== null) {
-            const item = this.state.items[this.state.selectedPost]
-            return (
-                <div className="modal-dialog modal-dialog-centered">
-                    {/* <form key={item.id}> */}
-                    <div className="modal-body">
-                        <div className="row"> 
-                            <div className="col-md-12">
-                                <div className="form-group clearfix">
-                                    <div className="col-sm-12">
-                                        <label>Position</label>
-                                        <input type="text" name="posisi" readOnly value={item.posisi} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="form-group clearfix">
-                                    <div className="col-sm-12">
-                                        <label>Status</label>
-                                        <input type="text" name="status" readOnly value={item.idStatus.status} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="form-group clearfix">
-                                    <div className="col-sm-12">
-                                        <label>Created By</label>
-                                        <input type="text" name="createdBy" readOnly value={item.createdBy.nama} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="form-group clearfix">
-                                    <div className="col-sm-12">
-                                        <label>Created At</label>
-                                        <input type="text" name="createdAt" readOnly value={item.createdAt} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="form-group clearfix">
-                                    <div className="col-sm-12">
-                                        <label>Updated By</label>
-                                        <input type="text" name="status" readOnly value={item.updatedBy} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="form-group clearfix">
-                                    <div className="col-sm-12">
-                                        <label>Updated At</label>
-                                        <input type="text" name="status" readOnly value={item.updatedAt} className="form-control" />
-                                    </div>
-                                </div>
-                            </div> 
-                        </div>
-                    </div>
-
-                    <div className="modal-footer">
-                        <button type="button" onClick={this.onCloseModal} className="btn btn-danger waves-effect waves-light">Close</button>
-                    </div>
-                    {/* </form> */}
-                </div>
-            );
+    changeStatus(posisi, isStatus, index) {
+        let posisiUpdate = posisi;
+        if(isStatus){
+            posisiUpdate.idStatus.status = "Inactive"
+            isChecked[index] = false
+        } else{
+            posisiUpdate.idStatus.status = "Active"
+            isChecked[index] = true
+        }
+        if(postUpdate[index] == undefined || postUpdate[index] == null) {
+            postUpdate[index] = posisiUpdate;
+        } else {
+            delete postUpdate[index]
         }
     }
 
-    componentDidMount = async() => {
-        await axios.request('http://localhost:8080/posisi', {
-            method: 'GET',
+    getDataPosition(){
+        axios.get(Constant.API_LIVE + '/posisi', {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -99,59 +78,31 @@ class Position extends Component {
         })
         .then(response => response.data)
         .then(data => {
-            this.setState({ items: data })
-        })
-        .then(async() => {
-            this.setState({ tableRows:this.assemblePosts() })
-            console.log(this.state.tableRows);
+            this.setState({
+                items: data, isLoading: false
+            })
         })
     }
 
-    assemblePosts = () => {
-        let items = this.state.items.map((position, index) => {
-            return(
-                {
-                    nomor: index + 1,
-                    posisi: position.posisi,
-                    status: position.idStatus.status,
-                    action: <div className="button-list"><button type="button" data-toggle="modal" data-target="#myModal" key={position.id} onClick={() => this.onOpenModal(index)} className="btn btn-icon waves-effect btn-default waves-light"> <i className="fa fa-eye"></i> </button>
-                    <NavLink to={{ pathname: "/position/form-edit", data: position }} key={index} className="btn btn-icon waves-effect waves-light btn-warning"> <i className="fa fa-edit"></i> </NavLink></div>
-                }
-            );
-        });
+    handleClickEdit(event) {
+        event.preventDefault();
+        this.setState({
+            edit: false
+        })
+    }
 
-        return items;
+    handleClickReset = async(event) => {
+        event.preventDefault();
+        this.setState({
+            edit: true, isLoading: true
+        })
+        postUpdate = {};
+        await this.getDataPosition();
     }
 
     render(){
-        const { open } = this.state;
-        const data = {
-            columns: [
-                {
-                    label: '#',
-                    field: 'nomor',
-                    width: 100
-                },
-                {
-                    label: 'Position',
-                    field: 'posisi',
-                    width: 150
-                },
-                {
-                    label: 'Status',
-                    field: 'status',
-                    width: 150
-                },
-                {
-                    label: 'Action',
-                    field: 'action',
-                    width: 100
-                }
-            ],
-
-            rows: this.state.tableRows,
-        }
-
+        const { items, isLoading } = this.state;
+        const spinnerStyle = { width:"100px", height: "100px" };        
         return(
             <div className="content-page">
                 <div className="content">
@@ -177,16 +128,65 @@ class Position extends Component {
                                 <div className="card-box table-responsive">
                                     <h4 className="m-t-0 header-title"><b>Position List</b></h4>
                                     <br />
-                                    <NavLink to={'/position/form'}><button type="button" className="btn btn-default btn-rounded waves-effect waves-light">Create</button></NavLink>
+                                    <div className="button-list">
+                                        {
+                                            this.state.edit &&
+                                            <NavLink to={'/position/form'}><button type="button" className="btn btn-default btn-rounded waves-effect waves-light">Create</button></NavLink>
+                                        }
+                                        {
+                                        !this.state.edit && !this.state.isLoading &&
+                                            <button type="button" className="btn btn-default btn-rounded waves-effect waves-light" onClick={()=>this.updateSubmit()}>Submit</button>    
+                                        }
+                                        {
+                                            this.state.edit && !this.state.isLoading &&
+                                            <button type="button" className="btn btn-default btn-rounded waves-effect waves-light" onClick={this.handleClickEdit}>Edit</button>
+                                        }
+                                        {
+                                            !this.state.edit && !this.state.isLoading &&
+                                            <button type="button" className="btn btn-default btn-rounded waves-effect waves-light" onClick={this.handleClickReset}>Cancel</button>    
+                                        }
+                                    </div>
                                     <hr/>
                                     <div>
-                                        <MDBDataTable striped bordered data={data} />
-                                    </div>
-                                    <div>
-                                        <Modal open={open} onClose={this.onCloseModal} center>
-                                            <h3>Detail Position</h3>
-                                            <div>{this.renderModal()}</div>
-                                        </Modal>
+                                        <Table striped bordered responsive>
+                                            <thead>
+                                                <tr>
+                                                    <td>#</td>
+                                                    <td>Position</td>
+                                                    <td>Status</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    isLoading ?
+                                                        <tr>
+                                                            <td className="text-center" colSpan="3"><Spinner animation="border" variant="primary" style={spinnerStyle} /></td>
+                                                        </tr> :
+                                                        items.length > 0 ? items.map((posisi, index) => {
+                                                            if(posisi.idStatus.status == "Active"){
+                                                                isChecked[index] = true;
+                                                            } else {
+                                                                isChecked[index] = false
+                                                            }
+                                                            return(
+                                                                <tr key={posisi.id}>
+                                                                    <td>{ index + 1 }</td>
+                                                                    <td>{ posisi.posisi }</td>
+                                                                    <td>
+                                                                        <Toggle 
+                                                                            disabled={this.state.edit}
+                                                                            defaultChecked={isChecked[index]}
+                                                                            onClick={() => this.changeStatus(posisi, isChecked[index], index)}
+                                                                        />
+                                                                    </td>
+                                                                </tr>
+                                                            );
+                                                        }) : <tr>
+                                                            <td colSpan="4">No Record</td>
+                                                        </tr>
+                                                }
+                                            </tbody>
+                                        </Table>
                                     </div>
                                 </div>
                             </div>
