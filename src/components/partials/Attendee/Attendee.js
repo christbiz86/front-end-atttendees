@@ -142,16 +142,13 @@ class Attendee extends Component {
             if(result.plus_code != null){
                 temp.push(result.plus_code.global_code)
             };
-            console.log(result);
         })));
-        console.log(temp);
         await this.setState({
             absen: {
                 jam: moment().format('YYYY-MM-DD hh:mm:ss'),
                 kode: temp
             }
         })
-        console.log(this.state.absen);
         await this.absen();
     }
 
