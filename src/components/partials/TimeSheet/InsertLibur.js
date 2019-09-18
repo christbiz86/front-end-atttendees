@@ -1,30 +1,42 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import axios from 'axios';
-import Moment from 'moment';
+import DateRangePicker from 'react-daterange-picker';
 import swal from 'sweetalert';
+import Moment from 'moment';
 import * as Constant from '../../_helpers/constant';
 
 let token = localStorage.getItem('token');
 
-class EditLibur extends Component {
+class InsertLibur extends Component {
     constructor(props){
         super(props);
-
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        const today = Moment();
         this.state = {
-            id: this.props.location.data.id,
-            nama: this.props.location.data.nama,
-            tglMulai: Moment(this.props.location.data.tglMulai).format('YYYY-MM-DD'),
-            tglAkhir: Moment(this.props.location.data.tglAkhir).format('YYYY-MM-DD'),
-            status: this.props.location.data.status.status,
-            createdBy: this.props.location.data.createdBy,
-            updatedBy: this.props.location.data.updatedBy,
-            createdAt: this.props.location.data.createdAt,
-            updatedAt: this.props.location.data.updatedAt,
+            id: '',
+            nama: '',
+            // tglMulai: Moment('', Moment.ISO_8601),
+            // tglAkhir: Moment('', Moment.ISO_8601),
+            tglMulai: '',
+            tglAkhir: '',
+            status: '',
+            createdBy: '',
+            updatedBy: '',
+            createdAt: '',
+            updatedAt: '',
+            dateValue: Moment.range(today.clone(), today.clone()),
+
+            libur: [],
+            error: null
         }
     }
+
+    onSelect = (dateValue, states) => {
+        this.setState({ dateValue, states, isOpen: false });
+    };
+
+    onToggle = () => {
+        this.setState({ isOpen: !this.state.isOpen });
+    };
 
     handleChange = event => {
         this.setState({
@@ -35,21 +47,17 @@ class EditLibur extends Component {
     handleSubmit = event =>{
         event.preventDefault();
 
-        const data = {
-            id: this.state.id,
-            nama: this.state.nama,
-            tglMulai: this.state.tglMulai,
-            tglAkhir: this.state.tglAkhir,
-            status: {
-                status: this.state.status
-            },
-            createdBy: this.state.createdBy,
-            createdAt: this.state.createdAt,
+        const data = { 
+            nama: this.state.nama, 
+            // tglMulai: this.state.tglMulai,
+            // tglAkhir: this.state.tglAkhir
+            tglMulai: this.state.dateValue.start.format("YYYY-MM-DD"),
+            tglAkhir: this.state.dateValue.end.format("YYYY-MM-DD"),
         }
 
         fetch(Constant.API_LIVE + '/libur', { 
-            method: 'PUT',
-            body: JSON.stringify(data),
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
@@ -57,29 +65,24 @@ class EditLibur extends Component {
         })
         .then(res => {res.json()
             if(res.ok){
-                swal("Success!", "Data successfully updated!", "success")
+                swal("Success!", "Data successfully added!", "success")
                 .then(function() {
                     window.location.href = "/timesheet/libur";
                 });
             }
             else {
-                swal("Failed", "Update failed!", "error")
+                swal("Failed", "Insert failed!", "error")
             }
         })
         .catch(error => console.error('Error:', error))
         .then(response => console.log('Success:', response));
     }
 
-    cancel() {
-        window.location.href = "/timesheet/libur"
-    }
-
-    render() {
+    render(){
         return(
             <div className="content-page">
                 <div className="content">
                     <div className="container">
-                        {/* Page Title */}
                         <div className="row">
                             <div className="col-sm-12">
                                 <div className="btn-group pull-right m-t-15">
@@ -93,76 +96,75 @@ class EditLibur extends Component {
 
                                 <h4 className="page-title">Holiday</h4>
                                 <ol className="breadcrumb">
-                                    <li>
-                                        <a href="/">Attendee</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Time Sheet</a>
-                                    </li>
+									<li>
+										<a href="#">Attendee</a>
+									</li>
+									<li>
+										<a href="#">Time Sheet</a>
+									</li>
                                     <li>
                                         <a href="/timesheet/libur">Holiday</a>
                                     </li>
-                                    <li className="active">
-                                        Edit Holiday
-                                    </li>
-                                </ol>
+									<li className="active">
+										Insert Holiday
+									</li>
+								</ol>
                             </div>
                         </div>
+
                         <div className="row">
                             <div className="col-sm-12">
                                 <div className="card-box">
-            			            <h4 className="m-t-0 header-title"><b>Edit Form</b></h4>
+            			            <h4 className="m-t-0 header-title"><b>Holiday Form</b></h4>
                                     <div className="row">
 										<div className="col-lg-6">
                                             <form className="form-horizontal group-border-dashed" onSubmit={this.handleSubmit}>
                                                 <div className="form-group">
                                                     <label className="col-md-2 control-label">Holiday Name</label>
                                                     <div className="col-md-8">
-                                                        <input type="text" name="nama" defaultValue={this.state.nama} className="form-control" readOnly onChange={this.handleChange} />
+                                                        <input type="text" name="nama" className="form-control" required placeholder="Name" onChange={this.handleChange} />
                                                     </div>
                                                 </div>
 
                                                 <div className="form-group">
-                                                    <label className="col-md-2 control-label">Holiday Date</label>
+                                                    <label className="col-md-2 control-label">Date</label>
                                                     <div className="col-md-8">
-                                                        <div className="input-daterange input-group">
-                                                            <input type="date" defaultValue={this.state.tglMulai} className="form-control" readOnly name="tglMulai" onChange={this.handleChange} />
+                                                        {/* <div className="input-daterange input-group">
+                                                            <input type="date" className="form-control" required name="tglMulai" onChange={this.handleChange} />
                                                             <span className="input-group-addon bg-custom b-0 text-white">to</span>
-                                                            <input type="date" defaultValue={this.state.tglAkhir} className="form-control" readOnly name="tglAkhir" onChange={this.handleChange} />
+                                                            <input type="date" className="form-control" required name="tglAkhir" onChange={this.handleChange} />
+                                                        </div> */}
+                                                        <div className="input-group">
+                                                            <input type="text" className="form-control" onClick={this.onToggle} readOnly placeholder={this.state.dateValue.start.format('YYYY-MM-DD')}/>
+                                                            <span className="input-group-addon bg-custom b-0 text-white">to</span>
+                                                            <input type="text" className="form-control" onClick={this.onToggle} readOnly placeholder={this.state.dateValue.end.format('YYYY-MM-DD')} />
                                                         </div>
-                                                    </div>
-                                                </div>
 
-                                                <div className="form-group">
-                                                    <label className="col-md-2 control-label">Status</label>
-                                                    <div className="radio radio-info radio-inline">
-                                                        <input type="radio" id="inlineRadio1" value="Active" name="status" onClick={this.handleChange} />
-                                                        <label for="inlineRadio1"> Active </label>
-                                                    </div>
-                                                    <div className="radio radio-inline">
-                                                        <input type="radio" id="inlineRadio2" value="Inactive" name="status" onClick={this.handleChange} />
-                                                        <label for="inlineRadio2"> Inactive </label>
+                                                        {this.state.isOpen && (
+                                                            <DateRangePicker
+                                                                value={this.state.dateValue}
+                                                                onSelect={this.onSelect}
+                                                                singleDateRange={true}
+                                                            />
+                                                        )}
+                                                        {console.log(this.state.dateValue.start.format("YYYY-MM-DD"))}
                                                     </div>
                                                 </div>
 
                                                 <div className="form-group">
                                                     <div className="col-sm-offset-3 col-sm-9 m-t-15">
-                                                        <button type="submit" className="btn btn-primary">
+                                                        <button type="submit" className="btn btn-primary" value="Submit">
                                                             Submit
                                                         </button>
                                                         <button type="reset" className="btn btn-default m-l-5">
-                                                            Reset
-                                                        </button>
-                                                        {/* <button type="button" className="btn btn-default m-l-5" onClick={this.cancel()}>
                                                             Cancel
-                                                        </button> */}
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
-                                
                             </div>
                         </div>
                     </div>
@@ -173,4 +175,4 @@ class EditLibur extends Component {
 
 }
 
-export default EditLibur;
+export default InsertLibur;

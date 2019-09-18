@@ -32,6 +32,10 @@ import EditProject from './components/partials/TimeSheet/EditProject';
 import EditLibur from './components/partials/TimeSheet/EditLibur';
 import BadRequest from './components/auth/BadRequest';
 import NotFound from './components/auth/NotFound';
+import InsertShift from './components/partials/TimeSheet/InsertShift';
+import InsertProject from './components/partials/TimeSheet/InsertProject';
+import InsertLibur from './components/partials/TimeSheet/InsertLibur';
+import InsertUserShiftProject from './components/partials/TimeSheet/InsertUserShiftProject';
 
 import { PrivateRoute, AdminRoute, SuperAdminRoute, ApproveRoute } from './components/_security/PrivateRoute';
 import AnnualLeave from './components/partials/Annual/AnnualLeave';
@@ -100,6 +104,10 @@ class App extends React.Component {
                     <PrivateRoute exact path="/timesheet/edit-shift" component={EditShift} />
                     <PrivateRoute exact path="/timesheet/edit-project" component={EditProject} />
                     <PrivateRoute exact path="/timesheet/edit-libur" component={EditLibur} />
+                    <PrivateRoute exact path="/timesheet/insert-shift" component={InsertShift} />
+                    <PrivateRoute exact path="/timesheet/insert-project" component={InsertProject} />
+                    <PrivateRoute exact path="/timesheet/insert-libur" component={InsertLibur} />
+                    <PrivateRoute exact path="/timesheet/insert-user-shift-project" component={InsertUserShiftProject} />
                     <Route component={NotFound} />
                   </Switch>
                 </div>
