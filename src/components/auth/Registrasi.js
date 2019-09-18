@@ -66,9 +66,9 @@ export default class Registrasi extends React.Component{
                         <div className="col-sm-2"></div>
                         <div className="col-sm-8">
                             <div className="card-box">
-                                <div className="col-sm-4"></div>
-                                <div className="col-sm-8">
-                                    <h1><b>Registration Form</b></h1>
+                                {/* <div className="col-sm-4"></div> */}
+                                <div className="panel-heading">
+                                    <h1 className="text-center"><b>Registration Form</b></h1>
                                     <p class="m-b-30"/>
                                 </div>
                                 
