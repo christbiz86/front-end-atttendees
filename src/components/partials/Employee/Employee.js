@@ -1,24 +1,24 @@
 import React, {Component} from 'react';
-import { MDBDataTable } from 'mdbreact';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
-import * as Constant from '../../_helpers/constant'
-import swal from 'sweetalert';
+import axios from 'axios';
+import * as Constant from '../../_helpers/constant';
+import { Table, Spinner } from 'react-bootstrap';
+import Pagination from "react-js-pagination";
 
 let token = localStorage.getItem('token');
 let user = JSON.parse(localStorage.getItem('user'));
 export default class Employee extends Component {
     constructor(props){
         super(props);
-        this.activeUsers = this.activeUsers.bind(this);
-        this.allUsers = this.allUsers.bind(this);
-        this.handleClick.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.toggleChange = this.toggleChange.bind(this);
+        this.handleReset = this.handleReset.bind(this);
         this.state = {
-            isActiveLoading: false,
-            isAllLoading: false,
+            isLoading: true,
             submitted: false,
             userCompany: [],
-            tableRows: [],
             nama: null,
             alamat: null,
             email: null,
@@ -29,23 +29,69 @@ export default class Employee extends Component {
             posisi: null,
             tipe: null,
             error: null,
-            data: []
+            data: [],
+            activePage: 1,
+            size: 10,
+            count: null,
+            isChecked: true,
+            status: 'Active'
         }
     }
 
-    activeUsers = event =>{
-        event.preventDefault();
-        this.fetchActiveUserByFilter();
-        this.setState({ submitted:true, isActiveLoading:true })
+    handleChange = event => {
+        this.setState({ 
+            [event.target.name]: event.target.value
+         })
     }
 
-    allUsers = event =>{
+    handleSubmit = async(event) => {
         event.preventDefault();
-        this.fetchAllUserByFilter();
-        this.setState({ submitted:true, isAllLoading:true })
+        await this.changeStatus();
+        this.setState({
+            activePage: 1, isLoading: true
+        })
+        this.fetchUserByFilter(1, this.state.size)
+        this.fetchCount();
     }
 
-    fetchActiveUserByFilter = async() => {
+    toggleChange() {
+        this.setState({ isChecked: !this.state.isChecked });
+    }
+
+    changeStatus(){
+        if(this.state.isChecked){
+            this.setState({ status: 'Active' })
+        } else {
+            this.setState({ status: null })
+        }
+    }
+
+    handleReset = event => {
+        event.preventDefault();
+        this.setState({
+            nama: null,
+            posisi: null,
+            unit: null
+        })
+
+        document.getElementById("form-search").reset();
+    }
+
+    handlePageChange(pageNumber){
+        this.setState({
+            activePage: pageNumber,
+            isLoading: true
+        })
+        this.fetchAllUser(pageNumber, this.state.size);
+        this.fetchCount();
+    }
+
+    componentDidMount() {
+        this.fetchCount();
+        this.fetchAllUser(this.state.activePage, this.state.size)
+    }
+
+    fetchCount() {
         const userCom = {
             idUser:{
                 nama: this.state.nama,
@@ -54,7 +100,7 @@ export default class Employee extends Component {
                 tglLahir: this.state.tglLahir,
                 telp: this.state.telp,
                 idStatus: {
-                    status: 'Active'
+                    status: this.state.status
                 }
             },
             idCompanyUnitPosisi:{
@@ -72,7 +118,7 @@ export default class Employee extends Component {
                 tipe: this.state.tipe,
             }
         }
-        await axios.post(Constant.API_LIVE + `/usercompany/filter`, userCom, {
+        axios.post(Constant.API_LIVE + '/usercompany/count', userCom, {
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -81,15 +127,12 @@ export default class Employee extends Component {
         .then(response => response.data)
         .then(data => {
             this.setState({
-                userCompany: data
+                count: data
             })
-        })
-        .then(async() => {
-            this.setState({ tableRows:this.assemblePosts(), isActiveLoading:false })
         })
     }
 
-    fetchAllUserByFilter = async() => {
+    fetchUserByFilter(pageNumber, size) {
         const userCom = {
             idUser:{
                 nama: this.state.nama,
@@ -98,7 +141,7 @@ export default class Employee extends Component {
                 tglLahir: this.state.tglLahir,
                 telp: this.state.telp,
                 idStatus: {
-                    status: null
+                    status: this.state.status
                 }
             },
             idCompanyUnitPosisi:{
@@ -116,7 +159,7 @@ export default class Employee extends Component {
                 tipe: this.state.tipe,
             }
         }
-        await axios.post(Constant.API_LIVE + `/usercompany/filter`, userCom, {
+        axios.post(Constant.API_LIVE + '/usercompany/filter/' + pageNumber + '/jumlah/' + size, userCom, {
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -125,130 +168,55 @@ export default class Employee extends Component {
         .then(response => response.data)
         .then(data => {
             this.setState({
-                userCompany: data
+                userCompany: data, isLoading: false
             })
         })
-        .then(async() => {
-            this.setState({ tableRows:this.assemblePosts(), isAllLoading:false })
-        })
     }
 
-    handleClick = event =>{
-        event.preventDefault();
-
-        const data = {
-            id: this.state.id,
-            kode: this.state.kode, 
-            nama: this.state.nama, 
-            alamat: this.state.alamat, 
-            tglLahir: this.state.tglLahir, 
-            telp: this.state.telp,
-            email: this.state.email,
-            password: this.state.password,
-            foto: this.state.foto,
-            idStatus: {
-                id: this.state.idStatus
+    fetchAllUser(pageNumber, size) {
+        const userCom = {
+            idUser:{
+                nama: this.state.nama,
+                alamat: this.state.alamat,
+                email: this.state.email,
+                tglLahir: this.state.tglLahir,
+                telp: this.state.telp,
+                idStatus: {
+                    status: this.state.status
+                }
             },
-            createdBy: this.state.createdBy,
-            createdAt: this.state.createdAt,
-            updatedBy: this.state.updatedBy,
-            updatedAt: this.state.updatedAt
+            idCompanyUnitPosisi:{
+                idCompany: {
+                    id: this.state.company,
+                },
+                idUnit: {
+                    unit: this.state.unit,
+                },
+                idPosisi: {
+                    posisi: this.state.posisi,
+                },
+            },
+            idTipeUser:{
+                tipe: this.state.tipe,
+            }
         }
-
-        fetch(Constant.API_LIVE + '/user', { 
-            method: 'PATCH',
-            body: JSON.stringify(data),
+        axios.post(Constant.API_LIVE + '/usercompany/filter/'+ pageNumber+'/jumlah/' + size, userCom, {
             headers:{
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
-        .then(res => { res.json()
-            if(res.ok){
-                swal("Success!", "Data Successfully deleted!", "success")
-                .then(function() {
-                    window.location.href = "/employee";
-                });
-            }
-            else {
-                swal("Failed", "Delete Failed!", "error")
-            }
+        .then(response => response.data)
+        .then(data => {
+            this.setState({
+                userCompany: data, isLoading: false
+            })
         })
-        .catch(error => console.error('Error:', error))
-        .then(response => console.log('Success:', response)); 
-    }
-
-    assemblePosts= () => {
-        const { userCompany } = this.state;
-        let userCom = userCompany.map((user) => {
-            console.log(user);
-            return (
-                {
-                    namaUser: user.idUser.nama,
-                    alamat: user.idUser.alamat,
-                    tglLahir: user.idUser.tglLahir,
-                    telp: user.idUser.telp,
-                    email: user.idUser.email,
-                    unit: user.idCompanyUnitPosisi.idUnit == null ? "-" : user.idCompanyUnitPosisi.idUnit.unit,
-                    posisi: user.idCompanyUnitPosisi.idPosisi == null ? "-" : user.idCompanyUnitPosisi.idPosisi.posisi,
-                    tipeUser: user.idTipeUser.tipe,
-                    view: <Link to={{pathname: "/employee/view", data: user}} className="btn btn-inverse" key={user.id} ><i className="fa fa-user"></i></Link>,
-                    register: <Link to={{pathname: "/attendee/register", data: user}} className="btn btn-purple" key={user.id} ><i className="fa fa-camera"></i></Link>
-                }
-            )
-        });
-        return userCom;
     }
 
     render() {
-        const data = {
-            columns: [
-                {
-                    label: 'Nama User',
-                    field: 'namaUser'
-                },
-                
-                {
-                    label: 'Alamat',
-                    field: 'alamat'
-                },
-                {
-                    label: 'Tanggal Lahir',
-                    field: 'tglLahir'
-                },
-                {
-                    label: 'Telepon',
-                    field: 'telp'
-                },
-                {
-                    label: 'Email',
-                    field: 'email'
-                },
-                {
-                    label: 'Unit',
-                    field: 'unit'
-                },
-                {
-                    label: 'Posisi',
-                    field: 'posisi'
-                },
-                {
-                    label: 'Tipe User',
-                    field: 'tipeUser'
-                },
-                {
-                    label: 'View',
-                    field: 'view'
-                },
-                {
-                    label: 'Face Register',
-                    field: 'register'
-                },
-            ],
-
-            rows:this.state.tableRows,
-        }
-        const { isActiveLoading, isAllLoading } = this.state;
+        const { isLoading, isAllLoading, userCompany } = this.state;
+        const spinnerStyle = { width:"100px", height: "100px" };
         return(
             <div>
                 <div className="content-page">
@@ -274,25 +242,85 @@ export default class Employee extends Component {
                                 <div className="col-sm-12">
                                     <div className="card-box table-responsive">
                                         <h4 className="m-t-0 header-title"><b>Employee List</b></h4>
-                                        <form className="form-horizontal" id="basic-form">
-                                            <div className="form-row">
-                                                <div className="button-list">
-                                                    <button type="submit" className="btn btn-github" onClick={this.activeUsers}>
-                                                        { isActiveLoading &&  <i className="fa fa-refresh fa-spin"> </i> }
-                                                        { isActiveLoading &&  <span> Loading </span> }
-                                                        { !isActiveLoading &&  <span> Get Active Employee </span> }
-                                                    </button>
-
-                                                    <button type="submit" className="btn btn-youtube" onClick={this.allUsers}>
-                                                        { isAllLoading &&  <i className="fa fa-refresh fa-spin"> </i> }
-                                                        { isAllLoading &&  <span> Loading </span> }
-                                                        { !isAllLoading &&  <span> Get All Employee </span> }
-                                                    </button>
+                                        <form className="form-inline" id="form-search" onSubmit={this.handleSubmit}>
+                                            <div className="form-group">
+                                                <label className="sr-only">Employee Name</label>
+                                                <input type="text" className="form-control" name="nama" onChange={this.handleChange} placeholder="Employee Name" />
+                                            </div>
+                                                
+                                            <div className="form-group m-l-10">
+                                                <label className="sr-only">Position</label>
+                                                <input type="text" className="form-control" name="posisi" onChange={this.handleChange} placeholder="Position" />
+                                            </div>
+                                            <div className="form-group m-l-10">
+                                                <label className="sr-only">Unit</label>
+                                                <input type="text" className="form-control" name="unit" onChange={this.handleChange} placeholder="Unit" />
+                                            </div>
+                                            <div className="form-group m-l-10">
+                                                <div className="checkbox checkbox-primary">
+                                                    <input id="checkbox3" type="checkbox" checked={this.state.isChecked} onChange={this.toggleChange} />
+                                                    <label htmlFor="checkbox3">
+                                                        Active
+                                                    </label>
                                                 </div>
                                             </div>
+                                            <button type="submit" className="btn btn-default waves-effect waves-light m-l-10 btn-md">Search</button>
+                                            <button type="button" onClick={this.handleReset} className="btn btn-default waves-effect waves-light m-l-10 btn-md">Reset</button>
                                         </form>
                                         <hr />
-                                        <MDBDataTable striped bordered data={data} />
+                                            <Table striped bordered responsive>
+                                                <thead>
+                                                    <tr>
+                                                        <td>#</td>
+                                                        <td>Nama</td>
+                                                        <td>Email</td>
+                                                        <td>Posisi</td>
+                                                        <td>Unit</td>
+                                                        <td>Tipe User</td>
+                                                        <td>Status</td>
+                                                        <td>Action</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {
+                                                        isLoading ? 
+                                                        <tr>
+                                                            <td className="text-center" colSpan="10"><Spinner animation="border" variant="primary" style={spinnerStyle} /></td>
+                                                        </tr> :
+
+                                                        userCompany.length > 0 ? userCompany.map((user, index) => {
+                                                            return(
+                                                                <tr key={user.idUser.id}>
+                                                                    <td>{ ((index+1)+(this.state.size * (this.state.activePage-1))) }</td>                                                                        
+                                                                    <td>{ user.idUser.nama }</td>
+                                                                    <td>{ user.idUser.email }</td>
+                                                                    <td>{ user.idCompanyUnitPosisi.idPosisi == null ? "-" : user.idCompanyUnitPosisi.idPosisi.posisi }</td>
+                                                                    <td>{ user.idCompanyUnitPosisi.idUnit == null ? "-" : user.idCompanyUnitPosisi.idUnit.unit }</td>
+                                                                    <td>{ user.idTipeUser.tipe }</td>
+                                                                    <td>{ user.idUser.idStatus.status }</td>
+                                                                    <td>
+                                                                        <div className="button-list">
+                                                                            <Link to={{pathname: "/employee/view", data: user}} className="btn btn-inverse"><i className="fa fa-user"></i></Link>
+                                                                            <Link to={{pathname: "/attendee/register", data: user}} className="btn btn-purple"><i className="fa fa-camera"></i></Link>
+                                                                        </div>
+                                                                    </td>                                                                
+                                                                </tr>
+                                                            );
+                                                        }) : <tr>
+                                                            <td colSpan="4">No Record</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </Table>
+                                            <div>
+                                                <Pagination
+                                                    hideFirstLastPages
+                                                    activePage={this.state.activePage}
+                                                    itemsCountPerPage={this.state.size}
+                                                    totalItemsCount={this.state.count}
+                                                    onChange={this.handlePageChange}
+                                                />
+                                            </div>
                                     </div>
                                 </div>
                             </div>
