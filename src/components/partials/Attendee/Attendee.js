@@ -31,7 +31,6 @@ class Attendee extends Component {
                 user: null
             },
             absen: {
-                jam: null,
                 kode: []
             }
         };
@@ -145,7 +144,6 @@ class Attendee extends Component {
         })));
         await this.setState({
             absen: {
-                jam: moment().format('YYYY-MM-DD hh:mm:ss'),
                 kode: temp
             }
         })

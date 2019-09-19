@@ -52,6 +52,7 @@ export default class Employee extends Component {
         })
         this.fetchUserByFilter(1, this.state.size)
         this.fetchCount();
+        console.log(this.state.count)
     }
 
     toggleChange() {
@@ -66,8 +67,7 @@ export default class Employee extends Component {
         }
     }
 
-    handleReset = event => {
-        event.preventDefault();
+    handleReset = () => {
         this.setState({
             nama: null,
             posisi: null,
@@ -87,8 +87,18 @@ export default class Employee extends Component {
     }
 
     componentDidMount() {
-        this.fetchCount();
-        this.fetchAllUser(this.state.activePage, this.state.size)
+        if(sessionStorage.getItem('value') == null||sessionStorage.getItem('value') ==undefined){
+            this.fetchCount();
+            this.fetchAllUser(this.state.activePage, this.state.size)
+        }
+        else{
+            this.setState(
+                JSON.parse(sessionStorage.getItem('value'))
+            )
+            sessionStorage.removeItem("value");
+            this.handleReset();
+        }
+        console.log(JSON.parse(sessionStorage.getItem('value')))
     }
 
     fetchCount() {
@@ -209,9 +219,13 @@ export default class Employee extends Component {
         .then(response => response.data)
         .then(data => {
             this.setState({
-                userCompany: data, isLoading: false
+                userCompany: data , isLoading: false
             })
         })
+    }
+
+    saveSession(userCompany){
+        sessionStorage.setItem("value", JSON.stringify(userCompany));
     }
 
     render() {
@@ -300,7 +314,7 @@ export default class Employee extends Component {
                                                                     <td>{ user.idUser.idStatus.status }</td>
                                                                     <td>
                                                                         <div className="button-list">
-                                                                            <Link to={{pathname: "/employee/view", data: user}} className="btn btn-inverse"><i className="fa fa-user"></i></Link>
+                                                                            <Link to={{pathname: "/employee/view", data: user}} onClick={this.saveSession(this.state)} className="btn btn-inverse"><i className="fa fa-user"></i></Link>
                                                                             <Link to={{pathname: "/attendee/register", data: user}} className="btn btn-purple"><i className="fa fa-camera"></i></Link>
                                                                         </div>
                                                                     </td>                                                                
