@@ -3,6 +3,7 @@ import "react-daterange-picker/dist/css/react-calendar.css";
 import originalMoment from "moment";
 import { extendMoment } from "moment-range";
 import { MDBDataTable } from 'mdbreact';
+import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import * as Constant from '../../_helpers/constant';
 
@@ -108,7 +109,7 @@ class DetailReportAnnual extends Component {
                             <div className="row">
                                 <div className="col-sm-12">
                                     <div className="btn-group pull-right m-t-15">
-                                        <NavLink to='/employee'>
+                                        <NavLink to='/report/annual'>
                                             <button type="button" className="btn btn-default btn-rounded waves-effect waves-light">
                                                 <span className="btn-label"><i className="fa fa-arrow-left"></i></span>
                                                 Back
