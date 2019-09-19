@@ -11,7 +11,7 @@ class Annual extends Component {
                     <li>
                         <a href={"/annual/form"}  className="waves-effect">Annual Form</a>
                     </li>
-                    { isAdmin || isSuperAdmin &&
+                    { (isAdmin || isSuperAdmin) &&
                     <>
                         <li>
                             <a href={"/annual/list"} className="waves-effect">Annual List</a>

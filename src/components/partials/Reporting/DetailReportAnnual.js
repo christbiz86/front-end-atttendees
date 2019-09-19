@@ -107,6 +107,14 @@ class DetailReportAnnual extends Component {
                         <div className="container">
                             <div className="row">
                                 <div className="col-sm-12">
+                                    <div className="btn-group pull-right m-t-15">
+                                        <NavLink to='/employee'>
+                                            <button type="button" className="btn btn-default btn-rounded waves-effect waves-light">
+                                                <span className="btn-label"><i className="fa fa-arrow-left"></i></span>
+                                                Back
+                                            </button>
+                                        </NavLink>
+                                    </div>
                                     <h4 className="page-title">Report Annual</h4>
                                     <ol className="breadcrumb">
                                         <li>

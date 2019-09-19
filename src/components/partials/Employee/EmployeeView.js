@@ -137,7 +137,6 @@ class EmployeeView extends Component {
                                     Detail
                                 </li>
                             </ol>
-
                         </div>
                     </div>
                     <div className="row">

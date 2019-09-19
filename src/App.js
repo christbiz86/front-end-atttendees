@@ -18,9 +18,7 @@ import ReportAnnual from './components/partials/Reporting/ReportAnnual';
 import DetailReportAnnual from './components/partials/Reporting/DetailReportAnnual';
 import ReportAttendee from './components/partials/Reporting/ReportAttendee';
 import DetailReportAttendee from './components/partials/Reporting/DetailReportAttendee';
-import Libur from './components/partials/TimeSheet/Libur';
-import Project from './components/partials/TimeSheet/Project';
-import Shift from './components/partials/TimeSheet/Shift';
+
 import Attendee from './components/partials/Attendee/Attendee';
 import DetailAttendee from './components/partials/Attendee/DetailAttendee';
 import FaceRegister from './components/partials/Attendee/FaceRegister';
@@ -31,6 +29,12 @@ import Position from './components/partials/Position/Position';
 import PositionForm from './components/partials/Position/PositionForm';
 import EditPosition from './components/partials/Position/EditPosition';
 import ListNotifications from './components/partials/ListNotifications/ListNotifications';
+import Libur from './components/partials/TimeSheet/Libur';
+import Project from './components/partials/TimeSheet/Project';
+import Shift from './components/partials/TimeSheet/Shift';
+import EditShift from './components/partials/TimeSheet/EditShift';
+import EditProject from './components/partials/TimeSheet/EditProject';
+import EditLibur from './components/partials/TimeSheet/EditLibur';
 
 import { PrivateRoute, AdminRoute, SuperAdminRoute } from './components/_security/PrivateRoute';
 import AnnualLeave from './components/partials/Annual/AnnualLeave';
@@ -83,9 +87,6 @@ class App extends React.Component {
                     <AdminRoute exact path="/report/annual/detail" component={DetailReportAnnual} />
                     <AdminRoute exact path="/report/attendee" component={ReportAttendee} />
                     <AdminRoute exact path="/report/attendee/detail" component={DetailReportAttendee} />
-                    <PrivateRoute exact path="/timesheet/Libur" component={Libur} />
-                    <PrivateRoute exact path="/timesheet/Project" component={Project} />
-                    <PrivateRoute exact path="/timesheet/Shift" component={Shift} />
                     <AdminRoute exact path="/position" component={Position} />
                     <AdminRoute exact path="/position/form" component={PositionForm} />
                     <AdminRoute exact path="/position/form-edit" component={EditPosition} />
@@ -96,6 +97,12 @@ class App extends React.Component {
                     <PrivateRoute exact path="/attendee/absen" component={Attendee} />
                     <PrivateRoute exact path="/attendee/detail" component={DetailAttendee} />
                     <AdminRoute exact path="/attendee/register" component={FaceRegister} />
+                    <PrivateRoute exact path="/timesheet/libur" component={Libur} />
+                    <PrivateRoute exact path="/timesheet/project" component={Project} />
+                    <PrivateRoute exact path="/timesheet/shift" component={Shift} />
+                    <PrivateRoute exact path="/timesheet/edit-shift" component={EditShift} />
+                    <PrivateRoute exact path="/timesheet/edit-project" component={EditProject} />
+                    <PrivateRoute exact path="/timesheet/edit-libur" component={EditLibur} />
                   </Switch>
                 </div>
               </Router>

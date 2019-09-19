@@ -46,50 +46,6 @@ export default class Employee extends Component {
     }
 
     fetchActiveUserByFilter = async() => {
-        // const userSP = {
-        //     userCompany: {
-        //         idUser:{
-        //             nama: this.state.nama,
-        //             alamat: this.state.alamat,
-        //             email: this.state.email,
-        //             tglLahir: this.state.tglLahir,
-        //             telp: this.state.telp,
-        //             idStatus: {
-        //                 status: 'Active'
-        //             }
-        //         },
-        //         idCompanyUnitPosisi:{
-        //             idCompany: {
-        //                 id: this.state.company,
-        //             },
-        //             idUnit: {
-        //                 unit: this.state.unit,
-        //             },
-        //             idPosisi: {
-        //                 posisi: this.state.posisi,
-        //             },
-        //         },
-        //         idTipeUser:{
-        //             tipe: this.state.tipe,
-        //         }
-        //     },
-        //     shiftProject: {
-        //         shift: {
-        //             masuk: null,
-        //             keluar: null,
-        //             status: {
-        //                 status: null
-        //             }
-        //         },
-        //         project: {
-        //             namaProject: null,
-        //             lokasi: null,
-        //             status: {
-        //                 status: null
-        //             }
-        //         }
-        //     }
-        // }
         const userCom = {
             idUser:{
                 nama: this.state.nama,
@@ -134,50 +90,6 @@ export default class Employee extends Component {
     }
 
     fetchAllUserByFilter = async() => {
-        // const userSP = {
-        //     userCompany: {
-        //         idUser:{
-        //             nama: this.state.nama,
-        //             alamat: this.state.alamat,
-        //             email: this.state.email,
-        //             tglLahir: this.state.tglLahir,
-        //             telp: this.state.telp,
-        //             idStatus: {
-        //                 status: null
-        //             }
-        //         },
-        //         idCompanyUnitPosisi:{
-        //             idCompany: {
-        //                 id: this.state.company,
-        //             },
-        //             idUnit: {
-        //                 unit: this.state.unit,
-        //             },
-        //             idPosisi: {
-        //                 posisi: this.state.posisi,
-        //             },
-        //         },
-        //         idTipeUser:{
-        //             tipe: this.state.tipe,
-        //         }
-        //     },
-        //     shiftProject: {
-        //         shift: {
-        //             masuk: null,
-        //             keluar: null,
-        //             status: {
-        //                 status: null
-        //             }
-        //         },
-        //         project: {
-        //             namaProject: null,
-        //             lokasi: null,
-        //             status: {
-        //                 status: null
-        //             }
-        //         }
-        //     }
-        // }
         const userCom = {
             idUser:{
                 nama: this.state.nama,
@@ -234,8 +146,8 @@ export default class Employee extends Component {
                     unit: user.idCompanyUnitPosisi.idUnit == null ? "-" : user.idCompanyUnitPosisi.idUnit.unit,
                     posisi: user.idCompanyUnitPosisi.idPosisi == null ? "-" : user.idCompanyUnitPosisi.idPosisi.posisi,
                     tipeUser: user.idTipeUser.tipe,
-                    view: <Link to={{pathname: "/employee/view", data: user}} className="btn btn-inverse"><i className="fa fa-user"></i></Link>,
-                    register: <Link to={{pathname: "/attendee/register", data: user}} className="btn btn-purple"><i className="fa fa-camera"></i></Link>
+                    view: <Link to={{pathname: "/employee/view", data: user}} className="btn btn-inverse" key={user.id} ><i className="fa fa-user"></i></Link>,
+                    register: <Link to={{pathname: "/attendee/register", data: user}} className="btn btn-purple" key={user.id} ><i className="fa fa-camera"></i></Link>
                 }
             )
         });
@@ -291,7 +203,6 @@ export default class Employee extends Component {
             rows:this.state.tableRows,
         }
         const { isActiveLoading, isAllLoading } = this.state;
-        // this.state.data = data;
         return(
             <div>
                 <div className="content-page">

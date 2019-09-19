@@ -30,7 +30,7 @@ class ProfileView extends Component {
         }     
     }
 
-    componentDidUpdate() {
+    componentDidMount() {
         this.fetchUser();
     }
 
