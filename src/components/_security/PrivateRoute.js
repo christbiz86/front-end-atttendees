@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
+import {APPROVE_PRIVILAGES} from '../_helpers/constant';
 
 import Layout from '../layout/Layout';
 
@@ -20,6 +21,17 @@ function checkToken(){
 export const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={props => (
         localStorage.getItem('token')
+            ? (checkToken() ? <Redirect to={{ pathname: '/', state: { from: props.location } }} />
+            : <Layout> <Component {...props} /> </Layout>)
+            : <Redirect to={{ pathname: '/forbidden', state: { from: props.location } }} />
+    )} />
+)
+
+export const ApproveRoute = ({ component: Component, ...rest }) => (
+    <Route {...rest} render={props => (
+        (localStorage.getItem('token') 
+            && ((JSON.parse(localStorage.getItem('user')).idTipeUser.tipe.includes('Admin')) 
+            || (JSON.parse(localStorage.getItem('user')).idCompanyUnitPosisi.idUnit.unit === APPROVE_PRIVILAGES)))
             ? (checkToken() ? <Redirect to={{ pathname: '/', state: { from: props.location } }} />
             : <Layout> <Component {...props} /> </Layout>)
             : <Redirect to={{ pathname: '/forbidden', state: { from: props.location } }} />

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import Moment from 'moment';
 import swal from 'sweetalert';
 import * as Constant from '../../_helpers/constant';
-const url = Constant.API_LIVE + '/attendees/libur';
 
 let token = localStorage.getItem('token');
 
@@ -47,7 +47,7 @@ class EditLibur extends Component {
             createdAt: this.state.createdAt,
         }
 
-        fetch(Constant.API_LIVE + '/attendees/libur', { 
+        fetch(Constant.API_LIVE + '/libur', { 
             method: 'PUT',
             body: JSON.stringify(data),
             headers:{
@@ -82,6 +82,15 @@ class EditLibur extends Component {
                         {/* Page Title */}
                         <div className="row">
                             <div className="col-sm-12">
+                                <div className="btn-group pull-right m-t-15">
+                                    <NavLink to='/timesheet/libur'>
+                                        <button type="button" className="btn btn-default btn-rounded waves-effect waves-light">
+                                            <span className="btn-label"><i className="fa fa-arrow-left"></i></span>
+                                            Back
+                                        </button>
+                                    </NavLink>
+                                </div>
+
                                 <h4 className="page-title">Holiday</h4>
                                 <ol className="breadcrumb">
                                     <li>
@@ -109,28 +118,28 @@ class EditLibur extends Component {
                                                 <div className="form-group">
                                                     <label className="col-md-2 control-label">Holiday Name</label>
                                                     <div className="col-md-8">
-                                                        <input type="text" name="nama" defaultValue={this.state.nama} className="form-control" required onChange={this.handleChange} />
+                                                        <input type="text" name="nama" defaultValue={this.state.nama} className="form-control" readOnly onChange={this.handleChange} />
                                                     </div>
                                                 </div>
 
                                                 <div className="form-group">
                                                     <label className="col-md-2 control-label">Holiday Date</label>
                                                     <div className="col-md-8">
-                                                        <div class="input-daterange input-group">
-                                                            <input type="date" defaultValue={this.state.tglMulai} class="form-control" required name="tglMulai" onChange={this.handleChange} />
-                                                            <span class="input-group-addon bg-custom b-0 text-white">to</span>
-                                                            <input type="date" defaultValue={this.state.tglAkhir} class="form-control" required name="tglAkhir" onChange={this.handleChange} />
+                                                        <div className="input-daterange input-group">
+                                                            <input type="date" defaultValue={this.state.tglMulai} className="form-control" readOnly name="tglMulai" onChange={this.handleChange} />
+                                                            <span className="input-group-addon bg-custom b-0 text-white">to</span>
+                                                            <input type="date" defaultValue={this.state.tglAkhir} className="form-control" readOnly name="tglAkhir" onChange={this.handleChange} />
                                                         </div>
                                                     </div>
                                                 </div>
 
                                                 <div className="form-group">
                                                     <label className="col-md-2 control-label">Status</label>
-                                                    <div class="radio radio-info radio-inline">
+                                                    <div className="radio radio-info radio-inline">
                                                         <input type="radio" id="inlineRadio1" value="Active" name="status" onClick={this.handleChange} />
                                                         <label for="inlineRadio1"> Active </label>
                                                     </div>
-                                                    <div class="radio radio-inline">
+                                                    <div className="radio radio-inline">
                                                         <input type="radio" id="inlineRadio2" value="Inactive" name="status" onClick={this.handleChange} />
                                                         <label for="inlineRadio2"> Inactive </label>
                                                     </div>

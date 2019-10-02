@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import DateRangePicker from "react-daterange-picker";
-import "react-daterange-picker/dist/css/react-calendar.css";
+import "react-datepicker/dist/react-datepicker.css";
 import originalMoment from "moment";
 import { extendMoment } from "moment-range";
 import * as Constant from '../../_helpers/constant';
 import swal from 'sweetalert';
 import { history } from '../../_helpers';
 import "./../../auth/SpinnerLoader.css";
+import DatePicker from 'react-datepicker';
+import { getDay, subDays } from 'date-fns';
 
 const moment = extendMoment(originalMoment);
 let user = JSON.parse(localStorage.getItem('user'));
@@ -17,20 +18,37 @@ class FormAnnual extends Component {
         const today = moment(); 
         this.handleRequest = this.handleRequest.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleStartDate = this.handleStartDate.bind(this);
+        this.handleEndDate = this.handleEndDate.bind(this);
 
         this.state = {
             saldo:[],
             namauser:user.idUser.nama,
-            tglMulai:'',
-            tglAkhir:'',
+            tglMulai: new Date(),
+            tglAkhir: new Date(),
             sisaCuti:'',
             keterangan:'',
             value: moment.range(today.clone().add(1,"day"), today.clone().add(1,"day")),
             submitted: false,
             isLoading: false,
             redirect: false,
-            loadingData:true
+            loadingData:true,
+            startDate: new Date(),
+            endDate: new Date(),
+            libur: []
         }    
+    }
+
+    handleStartDate = date => {
+        this.setState({
+            tglMulai: date, tglAkhir:date
+        })
+    }
+
+    handleEndDate = date => {
+        this.setState({
+            tglAkhir: date
+        })
     }
 
     handleChange = event => {
@@ -38,6 +56,8 @@ class FormAnnual extends Component {
             [event.target.name]:event.target.value,
         })
     }
+
+    //react-toggle
 
     handleRequest = event => {
         event.preventDefault(); 
@@ -48,6 +68,20 @@ class FormAnnual extends Component {
     onSelect = (value, states) => {
         this.setState({ value, states });
         
+    }
+
+    getLibur() {
+        fetch(Constant.API_LIVE + '/attendees/libur-company', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            this.setState({ libur: data })
+        })
     }
     
     componentDidMount() {
@@ -74,12 +108,12 @@ class FormAnnual extends Component {
             swal("Failed!", "Failed to get annual leave!", "error")
 
             history.push("/annual/form")
-        })       
+        });
+        
+        this.getLibur();
     }
 
     Request(){
-        console.log('Success:', this.state.value.start.format("YYYY-MM-DD"))
-        console.log('Success:', this.state.value.end.format("YYYY-MM-DD"))
         fetch(Constant.API_LIVE +'/request', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -91,8 +125,8 @@ class FormAnnual extends Component {
                             id:user.idUser.id
                         }
                     },
-                    tglMulai:this.state.value.start.format("YYYY-MM-DD"),
-                    tglAkhir:this.state.value.end.format("YYYY-MM-DD"),
+                    tglMulai:moment(this.state.tglMulai).format("YYYY-MM-DD"),
+                    tglAkhir:moment(this.state.tglAkhir).format("YYYY-MM-DD"),
                     keterangan:this.state.keterangan
                 
                 }),
@@ -103,13 +137,11 @@ class FormAnnual extends Component {
             })
             .then(res => {res.json()
                 if (res.ok){
-                    console.log(res.ok) 
                     swal("Success!", "Request Successfully!", "success")
 
                     history.push("/dashboard")
                     this.setState({isLoading:false})
                 }else{
-                    console.log(res.status)
                     swal("Failed!", "Request Failled!", "erroe")
 
                     this.setState({isLoading:false})
@@ -125,8 +157,33 @@ class FormAnnual extends Component {
             ); 
     }
 
-    render() { 
-        const { isLoading } = this.state;
+    render() {
+        const { isLoading, startDate, endDate } = this.state;
+
+        var list=[];
+        this.state.libur.map((libur) => {
+            var d=moment(libur.libur.tglAkhir).diff(moment(libur.libur.tglMulai),'days')
+            
+            let s=new Date(libur.libur.tglMulai)
+            for (let index = 0; index <=d; index++) {
+                var result = new Date(libur.libur.tglMulai);
+                result.setDate(s.getDate() + index);
+                list.push(result)
+            }
+        })
+
+        const isWeekday = date => {
+            const day = getDay(date);
+            return day !== 0 && day !== 6;
+        }
+       
+        const highlightWithRanges = [
+            {
+                "react-datepicker__day--highlighted-custom-1": 
+                list
+                
+            }
+        ]
         return (
             <div id="render" className="content-page">
 
@@ -189,30 +246,28 @@ class FormAnnual extends Component {
                                             <div className="form-group clearfix">
                                                 <label className="col-md-2 control-label">Tanggal Cuti</label>
                                                 <div className="col-lg-6">
-                                                    <div>
-                                                        <div className="input-group">
-                                                            <input type="text" className="form-control" disabled placeholder={this.state.value.start.format("YYYY-MM-DD")} />
-                                                            <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
-                                                            <input type="text" className="form-control"disabled  placeholder= {this.state.value.end.format("YYYY-MM-DD")} />
-                                                        </div>
-
-                                                        <DateRangePicker
-                                                            value={this.state.value}
-                                                            onSelect={this.onSelect}
-                                                            singleDateRange={true}
-                                                            minimumDate={moment().add(1,"days")}
+                                                    <div className="input-group">
+                                                        <DatePicker
+                                                            placeholderText={this.state.tglMulai}
+                                                            selected={this.state.tglMulai} 
+                                                            minDate={this.state.startDate} 
+                                                            onChange={date => this.handleStartDate(date)} 
+                                                            filterDate={isWeekday}
+                                                            highlightDates={highlightWithRanges}
+                                                            className="form-control"
+                                                        />
+                                                        <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
+                                                        {/* <span>Sampai</span> */}
+                                                        <DatePicker
+                                                            placeholderText={this.state.tglAkhir}
+                                                            selected={this.state.tglAkhir}
+                                                            minDate={this.state.tglMulai} 
+                                                            onChange={date => this.handleEndDate(date)} 
+                                                            filterDate={isWeekday}
+                                                            highlightDates={highlightWithRanges}
+                                                            className="form-control"
                                                         />
                                                     </div>
-
-                                                    {/* <div class="input-daterange input-group" id="date-range">
-
-                                                            <input type="date" name="tglMulai" className="form-control" onChange={this.handleChange} placeholder="YYYY-MM-DD" />
-
-                                                                <span className="input-group-addon bg-custom b-0 text-white"> sampai </span>
-
-                                                            <input type="date" className="form-control"  name="tglAkhir" onChange={this.handleChange}  placeholder="DD/MM/YYYY" />
-
-                                                        </div> */}
                                                 </div>
                                             </div>
 

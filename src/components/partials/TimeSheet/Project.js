@@ -1,37 +1,33 @@
 import React, { Component } from 'react';
-import { MDBDataTable } from 'mdbreact';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import swal from 'sweetalert';
 import * as Constant from '../../_helpers/constant';
-const url = Constant.API_LIVE + '/api/project';
+import { Table, Spinner } from 'react-bootstrap';
+import Toggle from 'react-toggle';
+import './Toggle.css';
 
 let token = localStorage.getItem('token');
+let postUpdate = {};
+let isChecked = {};
 
 class Project extends Component {
     constructor(props){
         super(props);
 
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleClickEdit = this.handleClickEdit.bind(this);
+        this.handleClickReset = this.handleClickReset.bind(this);
+
         this.state = {
-            kode: '',
-            namaProject: '',
-            lokasi: '',
-            status: '',
-            createdBy: '',
-            updatedBy: '',
-            createdAt: '',
-            updatedAt: '',
+            items: [],
 
             isLoading: true,
-            project: [],
-            error: null
+            edit: true
         }
     }
 
-    componentDidMount = async() => {
-        await axios.request(Constant.API_LIVE + '/api/project', {
+    fetchProject() {
+        axios.request(Constant.API_LIVE + '/project', {
             method: 'GET',
             headers:{
                 'Content-Type': 'application/json',
@@ -40,178 +36,186 @@ class Project extends Component {
         })
         .then(response => response.data)
         .then(data => {
-            // console.log(data);
-            // if (err) throw err;
-            this.setState({ posts: data })
-        })
-        .then(async() => {
-            this.setState({ tableRows:this.assemblePosts(), isLoading:false })
-            // console.log(this.state.tableRows);
-        });
-    }
-
-    assemblePosts= () => {
-        let posts = this.state.posts.map((post, i) => {
-            return ({
-                code: post.kode,
-                name: post.namaProject,
-                loc: post.lokasi,
-                status: post.status.status,
-                action: <Link to={{pathname: "/timesheet/edit-project", data: post}} className="btn btn-warning" ><i className="fa fa-pencil"></i></Link>
+            this.setState({
+                items: data,
+                isLoading: false
             })
         });
-        console.log(posts);
-        return posts;
     }
 
-    handleChange = event => {
+    handleUpdate() {
         this.setState({
-            [event.target.name] : event.target.value
+            isLoading:true
         })
-    }
-
-    handleSubmit = event =>{
-        event.preventDefault();
-
-        const data = {
-            namaProject: this.state.namaProject,
-            lokasi: this.state.lokasi
-        }
-
-        fetch(Constant.API_LIVE + '/api/project', { 
-            method: 'POST', // or 'PUT'
-            body: JSON.stringify(data), // data can be `string` or {object}!
+        fetch(Constant.API_LIVE + '/projects', {
+            method: 'PUT',
+            body: JSON.stringify(postUpdate),
             headers:{
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
-        .then(res => {res.json()
-            if(res.ok){
-                swal("Success!", "Data successfully added!", "success")
-                .then(function() {
-                    window.location.href = "/timesheet/project";
-                });
-            }
-            else {
-                swal("Failed", "Insert failed!", "error")
+        .then(res => { res.json()
+            if(res.ok) {
+                swal("Success!", "Data successfully updated!", "success");
+
+                this.setState({
+                    disabled:true,
+                    edit:true,
+                    isLoading:false
+                })
+                this.fetchProject()
+            } else {
+                swal("Failed!", "Update failed!", "error");
+
+                this.setState({
+                    disabled:true,
+                    edit:true,
+                    isLoading:false
+                })
             }
         })
         .catch(error => console.error('Error:', error))
-        .then(response => console.log('Success:', response));
+    }
+
+    changeStatus(project, isStatus, index){
+        let proUpdate = project;
+
+        if(isStatus){
+            proUpdate.status.status = "Inactive"
+            isChecked[index] = false
+        } else {
+            proUpdate.status.status = "Active"
+            isChecked[index] = true
+        }
+        if(postUpdate[index] === undefined || postUpdate[index] == null){
+            postUpdate[index] = proUpdate;
+        } else {
+            delete postUpdate[index];
+        }
+    }
+
+    handleClickEdit = event => {
+        event.preventDefault();
+
+        this.setState({
+            edit: false
+        })
+    }
+
+    handleClickReset = async(event) => {
+        event.preventDefault();
+
+        this.setState({
+            edit: true,
+            isLoading: true
+        })
+        postUpdate = {};
+        await this.fetchProject();
+    }
+
+    componentDidMount = async() => {
+        this.fetchProject();
     }
 
     render(){
-        const { open } = this.state;
-        const data = {
-            columns: [
-                {
-                    label:'Project Code',
-                    field:'code',
-                },
-                {
-                    label:'Project Name',
-                    field:'name',
-                },
-                {
-                    label:'Location',
-                    field:'loc',
-                },
-                {
-                    label:'Status',
-                    field:'status',
-                },
-                {
-                    label:'Action',
-                    field:'action',
-                }
-            ],
-            rows:this.state.tableRows,
-        }
+        const { items, isLoading } = this.state;
+        const spinnerStyle = { width:"100px", height: "100px" };
 
         return(
             <div className="content-page">
                 <div className="content">
                     <div className="container">
-                        {/* Page Title */}
                         <div className="row">
                             <div className="col-sm-12">
                                 <h4 className="page-title">Project</h4>
                                 <ol className="breadcrumb">
-									<li>
-										<a>Attendee</a>
-									</li>
-									<li>
-										<a>Time Sheet</a>
-									</li>
-									<li class="active">
-										Project
-									</li>
-								</ol>
+                                    <li>
+                                        <a href="/">Attendee</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Time Sheet</a>
+                                    </li>
+                                    <li className="active">
+                                        Project
+                                    </li>
+                                </ol>
                             </div>
                         </div>
-
                         <div className="row">
                             <div className="col-sm-12">
-                                <ul className="nav nav-tabs tabs">
-                                    <li className="active tab">
-                                        <a href="#project-list" data-toggle="tab" aria-expanded="false"> 
-                                            <span className="visible-xs"><i className="fa fa-home"></i></span> 
-                                            <span className="hidden-xs">Project List</span> 
-                                        </a> 
-                                    </li>
-                                    <li className="tab">
-                                        <a href="#insert-form" data-toggle="tab" aria-expanded="true">
-                                            <span className="visible-xs"><i className="fa fa-envelope-o"></i></span>
-                                            <span className="hidden-xs">Insert Form</span>
-                                        </a>
-                                    </li>
-                                </ul>
+                                <div className="card-box table-responsive">
+                                    <h4 className="m-t-0 header-title"><b>Project List</b></h4>
+                                    <br />
+                                    {
+                                        this.state.edit &&
+                                        <NavLink to={'/timesheet/insert-project'}><button type="button" className="btn btn-default btn-rounded waves-effect waves-light">Create</button></NavLink>
+                                    }
+                                    {
+                                        !this.state.edit && !this.state.isLoading &&
+                                        <button type="button" className="btn btn-default btn-rounded waves-effect waves-light" onClick={()=>this.handleUpdate()}>Submit</button>
+                                    }
+                                    {
+                                        this.state.edit && !this.state.isLoading &&
+                                        <button type="button" className="btn btn-default btn-rounded waves-effect waves-light" onClick={this.handleClickEdit}>Edit</button>
+                                    }
+                                    {
+                                        !this.state.edit && !this.state.isLoading &&
+                                        <button type="button" className="btn btn-default btn-rounded waves-effect waves-light" onClick={this.handleClickReset}>Cancel</button>    
+                                    }
+                                    <hr/>
+                                    <div>
+                                        <Table striped bordered responsive>
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Project Name</th>
+                                                    <th>Project Location</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
 
-                                <div className="card-box" id="insert-form">
-            			            <h4 className="m-t-0 header-title"><b>Project Form</b></h4>
-                                    <div class="row">
-										<div class="col-lg-6">
-                                            <form className="form-horizontal group-border-dashed" onSubmit={this.handleSubmit}>
-                                                <div className="form-group">
-                                                    <label className="col-md-2 control-label">Name</label>
-                                                    <div className="col-md-8">
-                                                        <input type="text" name="namaProject" className="form-control" required placeholder="Project Name" onChange={this.handleChange} />
-                                                    </div>
-                                                </div>
-
-                                                <div className="form-group">
-                                                    <label className="col-md-2 control-label">Location</label>
-                                                    <div className="col-md-8">
-                                                        <input type="text" name="lokasi" className="form-control" required placeholder="Project Location" onChange={this.handleChange} />
-                                                    </div>
-                                                </div>
-
-                                                <div className="form-group">
-                                                    <div className="col-sm-offset-3 col-sm-9 m-t-15">
-                                                        <button type="submit" className="btn btn-primary" value="Submit">
-                                                            Submit
-                                                        </button>
-                                                        <button type="reset" className="btn btn-default m-l-5">
-                                                            Cancel
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
+                                            <tbody>
+                                                {
+                                                    isLoading ?
+                                                        <tr>
+                                                            <td className="text-center" colSpan="3"><Spinner animation="border" variant="primary" style={spinnerStyle} /></td>
+                                                        </tr> :
+                                                        items.length > 0 ? items.map((project, index) => {
+                                                            if(project.status.status === "Active") {
+                                                                isChecked[index] = true;
+                                                            } else {
+                                                                isChecked[index] = false
+                                                            }
+                                                            return(
+                                                                <tr key={project.id}>
+                                                                    <td>{index + 1}</td>
+                                                                    <td>{project.namaProject}</td>
+                                                                    <td>{project.lokasi}</td>
+                                                                    <td>
+                                                                        <Toggle 
+                                                                            disabled={this.state.edit}
+                                                                            defaultChecked={isChecked[index]}
+                                                                            onClick={() => this.changeStatus(project, isChecked[index], index)}
+                                                                        />
+                                                                    </td>
+                                                                </tr>
+                                                            );
+                                                        }) : null
+                                                }
+                                            </tbody>
+                                        </Table>
                                     </div>
                                 </div>
-
-                                <div className="card-box table-responsive" id="project-list">
-            			            <h4 className="m-t-0 header-title"><b>Project List</b></h4>
-                                    <MDBDataTable striped bordered hover data={data} />
-                                </div>
-
                             </div>
                         </div>
-
                     </div>
                 </div>
+
+                <footer className="footer">
+                    © 2019. All rights reserved.
+                </footer>
+
             </div>
         );
     }

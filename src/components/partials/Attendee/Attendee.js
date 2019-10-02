@@ -4,6 +4,7 @@ import { loadModels, getFullFaceDescription, createMatcher } from '../../../api/
 import swal from 'sweetalert';
 import moment from 'moment';
 import * as Constant from '../../_helpers/constant';
+import {history} from '../../_helpers/history';
 
 const WIDTH = 420;
 const HEIGHT = 420;
@@ -30,8 +31,7 @@ class Attendee extends Component {
                 user: null
             },
             absen: {
-                jam: null,
-                lokasi: null
+                kode: []
             }
         };
     }
@@ -40,7 +40,8 @@ class Attendee extends Component {
         loadModels();
         this.setInputDevice();
         this.matcher();
-        setInterval(() => this.currentTime(), 500)
+        setTimeout(() => window.location.href = '/dashboard', 180000);
+        setInterval(() => this.currentTime(), 500);
     }
 
     currentTime(){
@@ -110,16 +111,16 @@ class Attendee extends Component {
 
     checkGeo = async () =>{
         if(this.state.match[0]._label===JSON.parse(localStorage.getItem('user')).idUser.id){
-            this.setState({
-                absen: {
-                    jam: moment().format('YYYY-MM-DD hh:mm:ss'),
-                    lokasi: "Wisma Staco"
-                }
-            });
-            this.absen();
-            // if (navigator.geolocation) {
-                // navigator.geolocation.getCurrentPosition(this.setLocation);
-            // }
+            // this.setState({
+            //     absen: {
+            //         jam: moment().format('YYYY-MM-DD hh:mm:ss'),
+            //         lokasi: "Wisma Staco"
+            //     }
+            // });
+            // this.absen();
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(this.setLocation);
+            }
         }
         else{
             this.setState({capture: true});
@@ -130,17 +131,22 @@ class Attendee extends Component {
     setLocation = async (position) => {
         const lng = position.coords.longitude;
         const lat = position.coords.latitude;
-        const __KEY = 'AIzaSyCsjiM8-cwH_7aFchKjbZU-pugT_ptG0sU';
+        const __KEY = '*******';
         const latlng = lat + "," + lng;
-               
+        
+        var temp=[];
         await fetch( `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}&key=${__KEY}` )
         .then(async res => await res.json())
-        .then(async data => await this.setState({
+        .then(async data => await Promise.all(data.results.map(result => {
+            if(result.plus_code != null){
+                temp.push(result.plus_code.global_code)
+            };
+        })));
+        await this.setState({
             absen: {
-                jam: moment().format('YYYY-MM-DD hh:mm:ss'),
-                lokasi: data.results[1].formatted_address
+                kode: temp
             }
-        }))
+        })
         await this.absen();
     }
 
@@ -156,6 +162,11 @@ class Attendee extends Component {
         .then(res => {res.json()
                 if(res.ok){
                     swal("Success!", "Absen Berhasil!", "success")
+                    .then(function() {
+                        window.location.href = "/dashboard";
+                    });
+                }else{
+                    swal("Failed!", "Silakan Absen Ulang!", "error")
                     .then(function() {
                         window.location.href = "/dashboard";
                     });

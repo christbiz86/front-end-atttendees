@@ -13,7 +13,9 @@ class DetailAnnual extends Component {
 
         this.handleApprove = this.handleApprove.bind(this);
         this.handleReject = this.handleReject.bind(this);
-        
+        if(this.props.location.data == null) {
+            window.location.href = '/bad-request'
+        }
         this.state = {
             namauser: '',
             tglMulai: '',

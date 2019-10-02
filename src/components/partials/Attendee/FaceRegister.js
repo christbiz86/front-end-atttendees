@@ -23,6 +23,9 @@ const INIT_STATE = {
 class FaceRegister extends Component {
   constructor(props) {
     super(props);
+    if(this.props.location.data == null) {
+      window.location.href = '/bad-request'
+    }
     this.state = {
       ...INIT_STATE,
       showDescriptors: false,

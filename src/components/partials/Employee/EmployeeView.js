@@ -4,7 +4,7 @@ import { Link, NavLink } from 'react-router-dom';
 import axios from 'axios';
 import swal from 'sweetalert';
 import * as Constant from '../../_helpers/constant';
-// import ReactImageAppear from 'react-image-appear';
+import { history } from '../../_helpers';
 
 let token = localStorage.getItem('token');
 let user = JSON.parse(localStorage.getItem('user'));
@@ -118,12 +118,12 @@ class EmployeeView extends Component {
                     <div className="row">
                         <div className="col-sm-12">
                             <div className="btn-group pull-right m-t-15">
-                            <NavLink to='/employee'>
-                                <button type="button" className="btn btn-default btn-rounded waves-effect waves-light">
-                                    <span className="btn-label"><i className="fa fa-arrow-left"></i></span>
-                                    Back
-                                </button>
-                            </NavLink>
+                                {/* <Link to='/employee'> */}
+                                    <button onClick={history.goBack} className="btn btn-default btn-rounded waves-effect waves-light">
+                                        <span className="btn-label"><i className="fa fa-arrow-left"></i></span>
+                                        Back
+                                    </button>
+                                {/* </Link> */}
                             </div>
                             <h4 className="page-title">Detail Profile</h4>
                             <ol className="breadcrumb">

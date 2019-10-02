@@ -38,7 +38,7 @@ class Sidebar extends Component {
         const { isSuperAdmin, isAdmin } = this.state;
         const scrollNavigasi = { width:"auto", maxHeight: "100% auto" }
         return(
-            <div className="left side-menu">
+            <div className="left side-menu" >
                 <div className="sidebar sidebar-inner slimscrollleft mx-auto" style={scrollNavigasi}>
                     <div id="sidebar-menu">
                         <ul>

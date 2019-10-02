@@ -35,8 +35,14 @@ import Shift from './components/partials/TimeSheet/Shift';
 import EditShift from './components/partials/TimeSheet/EditShift';
 import EditProject from './components/partials/TimeSheet/EditProject';
 import EditLibur from './components/partials/TimeSheet/EditLibur';
+import BadRequest from './components/auth/BadRequest';
+import NotFound from './components/auth/NotFound';
+import InsertShift from './components/partials/TimeSheet/InsertShift';
+import InsertProject from './components/partials/TimeSheet/InsertProject';
+import InsertLibur from './components/partials/TimeSheet/InsertLibur';
+import InsertUserShiftProject from './components/partials/TimeSheet/InsertUserShiftProject';
 
-import { PrivateRoute, AdminRoute, SuperAdminRoute } from './components/_security/PrivateRoute';
+import { PrivateRoute, AdminRoute, SuperAdminRoute, ApproveRoute } from './components/_security/PrivateRoute';
 import AnnualLeave from './components/partials/Annual/AnnualLeave';
 import Unit from './components/partials/Unit/Unit';
 import FomUnit from './components/partials/Unit/FormUnit';
@@ -48,7 +54,7 @@ import { alertActions } from './components/_actions';
 class App extends React.Component {
   constructor(props) {
       super(props);
-
+      
       history.listen((location, action) => {
           // clear alert on location change
           this.props.clearAlerts();
@@ -71,9 +77,9 @@ class App extends React.Component {
                     <Route exact path="/forbidden" component={Forbidden} />
                     <Route exact path="/bad-request" component={BadRequest} />
                     <PrivateRoute exact path="/dashboard" component={Dashboard} />
-                    <AdminRoute exact path="/annual/list" component={ListAnnual} />
+                    <ApproveRoute exact path="/annual/list" component={ListAnnual} />
                     <PrivateRoute exact path="/annual/form" component={FormAnnual} />
-                    <AdminRoute exact path="/annual/request" component={AnnualRequest} />
+                    <ApproveRoute exact path="/annual/request" component={AnnualRequest} />
                     <PrivateRoute exact path="/annual/detail" component={DetailAnnual} />
                     <AdminRoute exact path="/annual/leave" component={AnnualLeave} />
                     <PrivateRoute exact path="/company" component={Company} />
@@ -103,6 +109,11 @@ class App extends React.Component {
                     <PrivateRoute exact path="/timesheet/edit-shift" component={EditShift} />
                     <PrivateRoute exact path="/timesheet/edit-project" component={EditProject} />
                     <PrivateRoute exact path="/timesheet/edit-libur" component={EditLibur} />
+                    <PrivateRoute exact path="/timesheet/insert-shift" component={InsertShift} />
+                    <PrivateRoute exact path="/timesheet/insert-project" component={InsertProject} />
+                    <PrivateRoute exact path="/timesheet/insert-libur" component={InsertLibur} />
+                    <PrivateRoute exact path="/timesheet/insert-user-shift-project" component={InsertUserShiftProject} />
+                    <Route component={NotFound} />
                   </Switch>
                 </div>
               </Router>

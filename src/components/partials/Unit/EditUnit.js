@@ -13,7 +13,6 @@ class EditUnit extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-
         this.state = {
             isLoading: false,
             id: this.props.location.data.id,
